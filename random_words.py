@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script to output 50 random words.
+Script to output 100 random words.
 """
 
 import random
@@ -26,11 +26,11 @@ def get_word_list():
     return words
 
 
-def generate_random_words(count=50):
+def generate_random_words(count=100):
     """Generate a specified number of random words.
 
     Args:
-        count: Number of random words to generate (default: 50)
+        count: Number of random words to generate (default: 100)
 
     Returns:
         List of randomly selected words
@@ -40,10 +40,10 @@ def generate_random_words(count=50):
 
 
 def main():
-    """Main function to output 50 random words."""
-    random_words = generate_random_words(50)
+    """Main function to output 100 random words."""
+    random_words = generate_random_words(100)
 
-    print("50 Random Words:")
+    print("100 Random Words:")
     print("=" * 50)
     for i, word in enumerate(random_words, 1):
         print(f"{i:2d}. {word}")
