@@ -2,7 +2,7 @@
 """
 Random Words Generator
 
-A simple utility script that outputs 50 random words.
+A simple utility script that outputs 100 random words.
 """
 
 import random
@@ -55,12 +55,12 @@ def get_word_list():
     return words
 
 
-def generate_random_words(count=50):
+def generate_random_words(count=100):
     """
     Generate and return a list of random words.
 
     Args:
-        count (int): Number of random words to generate (default: 50)
+        count (int): Number of random words to generate (default: 100)
 
     Returns:
         list: A list of randomly selected words
@@ -71,11 +71,11 @@ def generate_random_words(count=50):
 
 def main():
     """
-    Main function to generate and print 50 random words.
+    Main function to generate and print 100 random words.
     """
-    random_words = generate_random_words(50)
+    random_words = generate_random_words(100)
 
-    print("50 Random Words:")
+    print("100 Random Words:")
     print("-" * 40)
     for i, word in enumerate(random_words, 1):
         print(f"{i:2d}. {word}")
