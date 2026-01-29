@@ -44,10 +44,10 @@ def main():
     random_words = generate_random_words(100)
 
     print("100 Random Words:")
-    print("=" * 50)
+    print("=" * 100)
     for i, word in enumerate(random_words, 1):
-        print(f"{i:2d}. {word}")
-    print("=" * 50)
+        print(f"{i:3d}. {word}")
+    print("=" * 100)
     print(f"Total: {len(random_words)} words")
 
 
