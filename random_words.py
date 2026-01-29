@@ -26,11 +26,11 @@ def get_word_list():
     return words
 
 
-def generate_random_words(count=50):
+def generate_random_words(count=100):
     """Generate a specified number of random words.
 
     Args:
-        count: Number of random words to generate (default: 50)
+        count: Number of random words to generate (default: 100)
 
     Returns:
         List of randomly selected words

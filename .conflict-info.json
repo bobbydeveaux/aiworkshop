@@ -1,0 +1,10 @@
+{
+  "prNumber": 11,
+  "baseBranch": "main",
+  "headBranch": "feature/7-sprint-1-issue-7",
+  "conflictedFiles": [
+    ".pr-number",
+    "random_words.py"
+  ],
+  "conflictCount": 2
+}
