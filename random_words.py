@@ -4,10 +4,25 @@ Script to output 10 random words.
 """
 
 import random
+import logging
+import sys
+
+
+def setup_logging():
+    """Configure logging for the script."""
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler('random_words.log', mode='a')
+        ]
+    )
 
 
 def get_word_list():
     """Return a list of words to randomly select from."""
+    logging.info("Loading word list")
     words = [
         "apple", "banana", "cherry", "dragon", "eagle", "falcon", "giraffe", "hamster",
         "iguana", "jaguar", "kangaroo", "leopard", "monkey", "newt", "octopus", "penguin",
@@ -23,6 +38,7 @@ def get_word_list():
         "kindness", "light", "magic", "nature", "optimism", "peace", "quest", "radiance",
         "strength", "tranquility", "understanding", "virtue", "wonder", "xanadu", "yearning", "zeal"
     ]
+    logging.info(f"Loaded {len(words)} words")
     return words
 
 
@@ -35,20 +51,34 @@ def generate_random_words(count=10):
     Returns:
         List of randomly selected words
     """
+    logging.info(f"Generating {count} random words")
     words = get_word_list()
-    return random.choices(words, k=count)
+    selected_words = random.choices(words, k=count)
+    logging.info(f"Successfully generated {len(selected_words)} random words")
+    logging.debug(f"Generated words: {', '.join(selected_words)}")
+    return selected_words
 
 
 def main():
     """Main function to output 10 random words."""
-    random_words = generate_random_words(10)
+    setup_logging()
+    logging.info("Starting random words script")
 
-    print("10 Random Words:")
-    print("=" * 50)
-    for i, word in enumerate(random_words, 1):
-        print(f"{i:3d}. {word}")
-    print("=" * 50)
-    print(f"Total: {len(random_words)} words")
+    try:
+        random_words = generate_random_words(10)
+
+        logging.info("Displaying random words to user")
+        print("10 Random Words:")
+        print("=" * 100)
+        for i, word in enumerate(random_words, 1):
+            print(f"{i:3d}. {word}")
+        print("=" * 100)
+        print(f"Total: {len(random_words)} words")
+
+        logging.info("Script completed successfully")
+    except Exception as e:
+        logging.error(f"An error occurred: {e}", exc_info=True)
+        raise
 
 
 if __name__ == "__main__":
