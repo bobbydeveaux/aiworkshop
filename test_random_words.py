@@ -4,7 +4,10 @@ Tests for random_words.py script
 """
 
 import unittest
-from random_words import get_word_list, generate_random_words
+import logging
+import io
+from unittest.mock import patch
+from random_words import get_word_list, generate_random_words, setup_logging
 
 
 class TestRandomWords(unittest.TestCase):
@@ -33,7 +36,7 @@ class TestRandomWords(unittest.TestCase):
 
     def test_generate_custom_count(self):
         """Test that generate_random_words can generate different counts."""
-        for count in [10, 25, 100]:
+        for count in [10, 25, 50, 150]:
             random_words = generate_random_words(count)
             self.assertEqual(len(random_words), count, f"Should generate exactly {count} words")
 
@@ -49,6 +52,38 @@ class TestRandomWords(unittest.TestCase):
         random_words = generate_random_words(100)
         for word in random_words:
             self.assertIn(word, word_list, f"{word} should be from the word list")
+
+    def test_setup_logging_configures_logger(self):
+        """Test that setup_logging configures the logger correctly."""
+        # Clear existing handlers
+        logger = logging.getLogger()
+        logger.handlers.clear()
+
+        # Setup logging
+        setup_logging()
+
+        # Check that handlers are configured
+        self.assertGreater(len(logger.handlers), 0, "Logger should have handlers after setup")
+        self.assertEqual(logger.level, logging.INFO, "Logger level should be INFO")
+
+    @patch('random_words.logging')
+    def test_get_word_list_logs_info(self, mock_logging):
+        """Test that get_word_list logs appropriate info messages."""
+        get_word_list()
+
+        # Verify logging calls
+        mock_logging.info.assert_any_call("Loading word list")
+        # Check that it logs the count (should be 100 words)
+        mock_logging.info.assert_any_call("Loaded 100 words")
+
+    @patch('random_words.logging')
+    def test_generate_random_words_logs_info(self, mock_logging):
+        """Test that generate_random_words logs appropriate info messages."""
+        generate_random_words(5)
+
+        # Verify logging calls
+        mock_logging.info.assert_any_call("Generating 5 random words")
+        mock_logging.info.assert_any_call("Successfully generated 5 random words")
 
 
 if __name__ == '__main__':
