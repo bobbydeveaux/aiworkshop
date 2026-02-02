@@ -1,0 +1,69 @@
+# Sprint Slices (Horizontal Decomposition)
+
+sprints:
+  - number: 1
+    features:
+      - id: test-website-feat-deployment-pipeline
+        name: CI/CD Deployment Pipeline
+        type: enabler
+        files: [.github/workflows/deploy-frontend.yml .github/workflows/deploy-cms.yml docker/cms.Dockerfile vercel.json]
+      - id: test-website-feat-frontend-setup
+        name: Next.js Frontend Setup
+        type: enabler
+        files: [frontend/package.json frontend/next.config.js frontend/tailwind.config.js frontend/tsconfig.json frontend/src/app/layout.tsx frontend/src/lib/strapi.ts]
+      - id: test-website-feat-cms-setup
+        name: Strapi CMS Setup and Configuration
+        type: enabler
+        files: [cms/package.json cms/config/database.js cms/config/server.js cms/config/plugins.js cms/src/api/article/content-types/article/schema.json cms/src/api/brand/content-types/brand/schema.json cms/src/api/pen-type/content-types/pen-type/schema.json]
+      - id: test-website-feat-seo-optimization
+        name: SEO and Metadata Optimization
+        type: feature
+        files: [frontend/src/app/sitemap.ts frontend/src/app/robots.ts frontend/src/lib/metadata.ts frontend/src/components/seo/StructuredData.tsx]
+      - id: test-website-feat-search-integration
+        name: Algolia Search Integration
+        type: enabler
+        files: [frontend/src/lib/algolia.ts scripts/sync-search-index.js scripts/optimize-search-index.js]
+      - id: test-website-feat-content-browsing
+        name: Category-based Content Browsing
+        type: feature
+        files: [frontend/src/app/categories/[slug]/page.tsx frontend/src/components/navigation/CategoryNav.tsx frontend/src/components/content/CategoryGrid.tsx cms/src/api/category/services/category.js]
+      - id: test-website-feat-article-pages
+        name: Article Detail Pages
+        type: feature
+        files: [frontend/src/app/articles/[slug]/page.tsx frontend/src/components/content/ArticleContent.tsx frontend/src/components/content/ImageGallery.tsx frontend/src/components/content/RelatedArticles.tsx cms/src/api/article/services/article.js]
+      - id: test-website-feat-brand-profiles
+        name: Brand Profile Pages
+        type: feature
+        files: [frontend/src/app/brands/[slug]/page.tsx frontend/src/components/content/BrandProfile.tsx frontend/src/app/brands/page.tsx cms/src/api/brand/services/brand.js]
+      - id: test-website-feat-pen-comparison
+        name: Pen Comparison Tool
+        type: feature
+        files: [frontend/src/components/comparison/ComparisonTable.tsx frontend/src/components/comparison/PenSelector.tsx frontend/src/app/compare/page.tsx frontend/src/app/api/compare/route.ts]
+      - id: test-website-feat-glossary
+        name: Pen Terminology Glossary
+        type: feature
+        files: [frontend/src/app/glossary/page.tsx frontend/src/app/glossary/[slug]/page.tsx frontend/src/components/content/GlossaryList.tsx cms/src/api/glossary-term/content-types/glossary-term/schema.json]
+      - id: test-website-feat-homepage
+        name: Homepage with Featured Content
+        type: feature
+        files: [frontend/src/app/page.tsx frontend/src/components/home/Hero.tsx frontend/src/components/home/FeaturedContent.tsx frontend/src/components/home/CategoryTiles.tsx]
+      - id: test-website-feat-search-functionality
+        name: Full-text Search with Filters
+        type: feature
+        files: [frontend/src/components/search/SearchBox.tsx frontend/src/components/search/SearchResults.tsx frontend/src/components/search/SearchFilters.tsx frontend/src/app/search/page.tsx]
+  - number: 2
+    features:
+      - id: test-website-feat-image-optimization
+        name: Image Optimization Pipeline
+        type: enabler
+        files: [frontend/next.config.js frontend/src/components/ui/OptimizedImage.tsx cms/config/plugins.js]
+      - id: test-website-feat-analytics
+        name: Analytics and Monitoring
+        type: enabler
+        files: [frontend/src/lib/performance.ts frontend/src/app/layout.tsx frontend/src/app/api/analytics/web-vitals/route.ts frontend/src/lib/sentry.ts]
+  - number: 3
+    features:
+      - id: test-website-feat-cms-webhooks
+        name: CMS Webhook Integration for Builds
+        type: enabler
+        files: [cms/config/plugins.js cms/src/api/article/content-types/article/lifecycles.js frontend/src/app/api/webhooks/content-updated/route.ts frontend/src/app/api/revalidate/route.ts]
