@@ -1,7 +1,7 @@
 # Project Timeline
 
 metadata:
-  generated: 2026-02-02T18:18:38Z
+  generated: 2026-02-02T21:18:15Z
   totalSprints: 1
   totalDuration: 14 days
 
@@ -11,43 +11,58 @@ sprints:
     endDate: 2026-02-16
     duration: 14 days
     features:
-      - id: feat-database-schema
-        name: Database Schema and Models
+      - id: task-tracker-feat-infrastructure-setup
+        name: Infrastructure and Environment Setup
         type: enabler
-      - id: feat-backend-infrastructure
-        name: Backend Server Infrastructure
+      - id: task-tracker-feat-database-schema
+        name: Database Schema and Migrations
         type: enabler
-      - id: feat-authentication-backend
-        name: User Authentication System
+      - id: task-tracker-feat-authentication-utilities
+        name: Authentication Utilities and Middleware
+        type: enabler
+      - id: task-tracker-feat-user-registration
+        name: User Registration
         type: feature
-      - id: feat-task-management-backend
-        name: Task CRUD Operations
+      - id: task-tracker-feat-user-login
+        name: User Login and Session Management
         type: feature
-      - id: feat-frontend-infrastructure
-        name: Frontend Application Setup
-        type: enabler
-      - id: feat-authentication-frontend
-        name: Authentication UI
+      - id: task-tracker-feat-task-crud-backend
+        name: Task CRUD Operations Backend
         type: feature
-      - id: feat-task-management-frontend
-        name: Task Management UI
+      - id: task-tracker-feat-backend-server
+        name: Express Server Configuration
+        type: enabler
+      - id: task-tracker-feat-frontend-infrastructure
+        name: Frontend Infrastructure and Routing
+        type: enabler
+      - id: task-tracker-feat-frontend-auth-ui
+        name: Frontend Authentication UI
         type: feature
-      - id: feat-backend-testing
-        name: Backend Test Suite
+      - id: task-tracker-feat-frontend-task-ui
+        name: Frontend Task Management UI
+        type: feature
+      - id: task-tracker-feat-backend-tests
+        name: Backend Unit and Integration Tests
         type: enabler
-      - id: feat-e2e-testing
-        name: End-to-End Test Suite
+      - id: task-tracker-feat-e2e-tests
+        name: End-to-End Tests
         type: enabler
-      - id: feat-containerization
-        name: Docker Containerization
+      - id: task-tracker-feat-deployment
+        name: Docker Containerization and Deployment
         type: enabler
-      - id: feat-api-documentation
-        name: API Documentation
+      - id: task-tracker-feat-documentation
+        name: API Documentation and README
         type: enabler
 
 criticalPath:
-  - feat-database-schema
-  - feat-authentication-backend
-  - feat-authentication-frontend
-  - feat-task-management-frontend
-  - feat-e2e-testing
+  - task-tracker-feat-infrastructure-setup
+  - task-tracker-feat-database-schema
+  - task-tracker-feat-authentication-utilities
+  - task-tracker-feat-user-registration
+  - task-tracker-feat-user-login
+  - task-tracker-feat-task-crud-backend
+  - task-tracker-feat-backend-server
+  - task-tracker-feat-backend-tests
+  - task-tracker-feat-e2e-tests
+  - task-tracker-feat-deployment
+  - task-tracker-feat-documentation
