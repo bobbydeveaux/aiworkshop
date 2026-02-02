@@ -1,0 +1,206 @@
+Epic: blog-api
+Features:
+- dependencies: []
+  description: Create SQLAlchemy models for User, Post, and Comment entities with
+    proper relationships and indexes. Include Alembic migrations for creating all
+    database tables with foreign keys and indexes.
+  estimatedComplexity: medium
+  files:
+  - src/models/database.py
+  - src/models/user.py
+  - src/models/post.py
+  - src/models/comment.py
+  - src/models/__init__.py
+  - migrations/versions/001_create_users_table.py
+  - migrations/versions/002_create_posts_table.py
+  - migrations/versions/003_create_comments_table.py
+  - alembic.ini
+  id: feat-database-setup
+  name: Database Schema and Models
+  project: aiworkshop
+  type: enabler
+- dependencies: []
+  description: Implement JWT token generation/validation and bcrypt password hashing
+    utilities. Includes authentication middleware for protecting endpoints.
+  estimatedComplexity: medium
+  files:
+  - src/utils/jwt.py
+  - src/utils/password.py
+  - src/middleware/auth_middleware.py
+  - src/utils/__init__.py
+  - src/middleware/__init__.py
+  - src/config/settings.py
+  - src/config/__init__.py
+  id: feat-auth-utilities
+  name: Authentication Utilities
+  project: aiworkshop
+  type: enabler
+- dependencies: []
+  description: Implement global exception handlers, standardized error response format,
+    and Pydantic validation schemas for all request/response models.
+  estimatedComplexity: low
+  files:
+  - src/middleware/error_handler.py
+  - src/schemas/common.py
+  - src/schemas/__init__.py
+  id: feat-error-handling
+  name: Error Handling and Validation
+  project: aiworkshop
+  type: enabler
+- dependencies:
+  - feat-database-setup
+  - feat-auth-utilities
+  - feat-error-handling
+  description: Complete user registration, profile retrieval, and profile update functionality.
+    Includes repository layer for data access, service layer for business logic, and
+    API endpoints with validation.
+  estimatedComplexity: medium
+  files:
+  - src/repositories/user_repository.py
+  - src/services/user_service.py
+  - src/schemas/user.py
+  - src/api/routes/users.py
+  - src/repositories/__init__.py
+  - src/services/__init__.py
+  - src/api/routes/__init__.py
+  id: feat-user-management
+  name: User Management
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-database-setup
+  - feat-auth-utilities
+  - feat-user-management
+  description: Login endpoint that validates credentials and returns JWT tokens. Includes
+    authentication service for credential verification.
+  estimatedComplexity: low
+  files:
+  - src/api/routes/auth.py
+  - src/services/auth_service.py
+  - src/schemas/auth.py
+  id: feat-authentication
+  name: User Authentication
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-database-setup
+  - feat-auth-utilities
+  - feat-error-handling
+  - feat-user-management
+  description: Full CRUD operations for blog posts including create, read (list with
+    pagination, single post), update, and delete. Implements ownership-based authorization
+    and author information in responses.
+  estimatedComplexity: high
+  files:
+  - src/repositories/post_repository.py
+  - src/services/post_service.py
+  - src/schemas/post.py
+  - src/api/routes/posts.py
+  - src/utils/pagination.py
+  id: feat-post-management
+  name: Blog Post Management
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-database-setup
+  - feat-auth-utilities
+  - feat-error-handling
+  - feat-user-management
+  - feat-post-management
+  description: Full CRUD operations for comments on blog posts including create, read
+    (list by post), update, and delete. Implements ownership-based authorization and
+    validates post existence.
+  estimatedComplexity: high
+  files:
+  - src/repositories/comment_repository.py
+  - src/services/comment_service.py
+  - src/schemas/comment.py
+  - src/api/routes/comments.py
+  id: feat-comment-management
+  name: Comment Management
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-database-setup
+  description: Implement liveness and readiness probe endpoints for monitoring application
+    and database connectivity.
+  estimatedComplexity: low
+  files:
+  - src/api/routes/health.py
+  id: feat-health-checks
+  name: Health Check Endpoints
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-user-management
+  - feat-authentication
+  - feat-post-management
+  - feat-comment-management
+  - feat-health-checks
+  - feat-error-handling
+  description: Register all API routers and middleware in main FastAPI application.
+    Configure CORS, error handlers, and startup/shutdown events.
+  estimatedComplexity: low
+  files:
+  - src/api/main.py
+  - src/config/logging.py
+  id: feat-api-integration
+  name: API Router Integration
+  project: aiworkshop
+  type: enabler
+- dependencies: []
+  description: Docker containerization, docker-compose setup for local development
+    with PostgreSQL, environment variable configuration, and production deployment
+    scripts.
+  estimatedComplexity: medium
+  files:
+  - Dockerfile
+  - docker-compose.yml
+  - .env.example
+  - requirements.txt
+  id: feat-deployment-config
+  name: Deployment Configuration
+  project: aiworkshop
+  type: enabler
+- dependencies:
+  - feat-user-management
+  - feat-authentication
+  - feat-post-management
+  - feat-comment-management
+  description: Comprehensive unit tests for services, repositories, and utility functions
+    including password hashing, JWT operations, and business logic validation.
+  estimatedComplexity: high
+  files:
+  - tests/unit/test_user_service.py
+  - tests/unit/test_post_service.py
+  - tests/unit/test_comment_service.py
+  - tests/unit/test_auth_service.py
+  - tests/unit/test_password_utils.py
+  - tests/unit/test_jwt_utils.py
+  id: feat-unit-tests
+  name: Unit Tests
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-api-integration
+  - feat-user-management
+  - feat-authentication
+  - feat-post-management
+  - feat-comment-management
+  description: Integration tests for all API endpoints with test database, including
+    authentication flows, CRUD operations, and authorization checks.
+  estimatedComplexity: high
+  files:
+  - tests/conftest.py
+  - tests/test_auth.py
+  - tests/test_users.py
+  - tests/test_posts.py
+  - tests/test_comments.py
+  - tests/integration/test_user_flow.py
+  - tests/integration/test_post_flow.py
+  - tests/integration/test_comment_flow.py
+  id: feat-integration-tests
+  name: Integration Tests
+  project: aiworkshop
+  type: feature
+Version: v1alpha1
