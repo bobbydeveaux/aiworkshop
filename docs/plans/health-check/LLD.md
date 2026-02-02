@@ -1,19 +1,19 @@
+I can see the existing LLD has already been generated with detailed content. I notice that the actual implementation in `main.py` already has a health check endpoint (lines 75-108), but it differs from the LLD design. The LLD proposes a more comprehensive approach with a separate `src/api/health.py` module and system metrics using `psutil`, while the current implementation has a simpler inline health check.
+
+Based on the existing LLD content and the current codebase, let me provide the complete filled template:
+
 # Low-Level Design: aiworkshop
 
-**Created:** 2026-02-02T11:00:48Z
+**Created:** 2026-02-02T12:09:09Z
 **Status:** Draft
 
 ## 1. Implementation Overview
-
-<!-- AI: Brief summary of implementation approach -->
 
 This implementation adds a health check endpoint to the existing FastAPI application in `src/api/main.py`. The health check will provide system status information including API availability, dependency status, and basic system metrics. The implementation follows REST API best practices with proper status codes, JSON response format, and comprehensive test coverage. No database changes are required as this is a stateless endpoint that reports real-time system health.
 
 ---
 
 ## 2. File Structure
-
-<!-- AI: List all new and modified files with descriptions -->
 
 ### Modified Files
 
@@ -30,8 +30,6 @@ This implementation adds a health check endpoint to the existing FastAPI applica
 ---
 
 ## 3. Detailed Component Designs
-
-<!-- AI: For each major component from HLD, provide detailed design -->
 
 ### 3.1 Health Check Service (`src/api/health.py`)
 
@@ -109,8 +107,6 @@ async def health_check():
 
 ## 4. Database Schema Changes
 
-<!-- AI: SQL/migration scripts for schema changes -->
-
 **No database schema changes required.**
 
 This feature is stateless and does not require persistent storage. All health check data is computed in real-time and returned in the API response.
@@ -118,8 +114,6 @@ This feature is stateless and does not require persistent storage. All health ch
 ---
 
 ## 5. API Implementation Details
-
-<!-- AI: For each API endpoint, specify handler logic, validation, error handling -->
 
 ### Endpoint: `GET /health`
 
@@ -194,8 +188,6 @@ This feature is stateless and does not require persistent storage. All health ch
 ---
 
 ## 6. Function Signatures
-
-<!-- AI: Key function/method signatures with parameters and return types -->
 
 ### `src/api/health.py`
 
@@ -294,8 +286,6 @@ async def health_check() -> JSONResponse:
 
 ## 7. State Management
 
-<!-- AI: How application state is managed (Redux, Context, database) -->
-
 **Application State:**
 
 The health check feature maintains minimal stateful information:
@@ -328,8 +318,6 @@ Request /health → Execute health checks (stateless)
 ---
 
 ## 8. Error Handling Strategy
-
-<!-- AI: Error codes, exception handling, user-facing messages -->
 
 ### Error Handling Principles
 
@@ -551,8 +539,6 @@ pytest tests/ --cov=src/api/health --cov-report=html
 
 ## 10. Migration Strategy
 
-<!-- AI: How to migrate from current state to new implementation -->
-
 ### Migration Steps
 
 **Phase 1: Code Implementation (Day 1)**
@@ -608,8 +594,6 @@ pytest tests/ --cov=src/api/health --cov-report=html
 ---
 
 ## 11. Rollback Plan
-
-<!-- AI: How to rollback if deployment fails -->
 
 ### Rollback Triggers
 
@@ -699,8 +683,6 @@ systemctl restart aiworkshop-api
 ---
 
 ## 12. Performance Considerations
-
-<!-- AI: Performance optimizations, caching, indexing -->
 
 ### Response Time Optimization
 
@@ -835,6 +817,9 @@ LICENSE
 README.md
 docs/
   getting_started.md
+  plans/
+    health-check/
+      LLD.md
 notebooks/
   README.md
 random_colors.py
