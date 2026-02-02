@@ -1,57 +1,55 @@
-Based on my exploration of the codebase, I now understand that this is an F1 Analytics Workshop project with an existing health check endpoint. Let me create a comprehensive HLD that enhances the current basic health check with more sophisticated monitoring and observability capabilities.
+Now I have the PRD. Let me fill in the HLD template based on this PRD content.
 
 # High-Level Design: aiworkshop
 
-**Created:** 2026-02-02T10:56:47Z
+**Created:** 2026-02-02T12:05:49Z
 **Status:** Draft
 
 ## 1. Architecture Overview
 
-The F1 Analytics Workshop follows a **layered monolithic architecture** with clear separation of concerns:
+The F1 Analytics Workshop follows a **layered monolithic architecture** with clear separation of concerns. For the health check enhancement, we adopt a **lightweight monitoring pattern** that integrates seamlessly with existing FastAPI infrastructure:
 
-- **Presentation Layer**: FastAPI-based REST API exposing F1 analytics endpoints
-- **Service Layer**: Business logic and external API integration (F1APIService)
-- **Data Layer**: External API integration (Ergast F1 API) with future support for caching and database persistence
+- **Presentation Layer**: FastAPI REST API with dedicated health endpoint at `/health`
+- **Service Layer**: Health check orchestration logic that validates service readiness
+- **Integration Layer**: External dependency validation (Ergast F1 API connectivity checks)
 
-The health check enhancement will adopt a **hierarchical health monitoring pattern** where the system provides:
-- **Liveness probes**: Basic "is the service running?" checks
-- **Readiness probes**: Comprehensive dependency health validation
-- **Deep health checks**: Detailed component-level diagnostics with metrics
+The health check implementation follows a **stateless, non-blocking design** optimized for high-frequency polling by load balancers and orchestration platforms. The endpoint operates independently of application state, ensuring availability even during partial service degradation.
 
-The architecture supports both synchronous REST endpoints and asynchronous background health monitoring for proactive alerting.
+**Architecture Pattern**: Single unified health endpoint initially, with future extensibility for separate liveness/readiness probes following Kubernetes conventions.
 
 ---
 
 ## 2. System Components
 
 ### Core API Server (`src/api/main.py`)
-- FastAPI application handling HTTP requests
+- FastAPI application serving all HTTP endpoints
 - CORS middleware for cross-origin support
-- OpenAPI documentation auto-generation
-- Current health check endpoint at `/health`
+- OpenAPI/Swagger documentation generation
+- Entry point for the new `/health` endpoint
 
-### Health Check Service (`src/services/health_service.py`) - **NEW**
-- Centralized health monitoring orchestration
-- Dependency health checkers (pluggable architecture)
-- Health state aggregation and reporting
-- Circuit breaker pattern for failing dependencies
+### Health Check Handler (`src/api/main.py` - new route)
+- Lightweight HTTP GET endpoint at `/health`
+- Returns JSON response with health status
+- Performs basic service readiness validation
+- Response time target: <500ms (99th percentile)
 
-### Dependency Health Checkers - **NEW**
-- **ExternalAPIHealthChecker**: Monitors Ergast F1 API connectivity and latency
-- **CacheHealthChecker**: Validates cache layer availability (future: Redis/memcached)
-- **DatabaseHealthChecker**: Monitors database connection pool (future: PostgreSQL/MySQL)
-- **SystemResourceChecker**: CPU, memory, disk usage monitoring
+### Health Validation Service (`src/services/health_service.py` - NEW)
+- Centralizes health check logic
+- Validates critical dependencies (Ergast F1 API connectivity)
+- Aggregates health status into unified response
+- Implements timeout protection (1 second max)
 
-### F1 API Service (`src/api/main.py:F1APIService`)
-- Existing service for Ergast F1 API integration
-- HTTP client with retry logic and timeout handling
-- Session management with custom User-Agent
+### Ergast F1 API Validator
+- Performs lightweight connectivity check to external F1 data API
+- Uses minimal request (e.g., HEAD request or `/seasons.json?limit=1`)
+- Implements 5-second timeout to prevent slow responses blocking health checks
+- Returns degraded status on timeout rather than complete failure
 
-### Metrics & Observability Layer - **NEW**
-- Health check metrics collection
-- Dependency response time tracking
-- Error rate monitoring
-- Integration with monitoring systems (Prometheus, CloudWatch, etc.)
+### Response Builder
+- Constructs standardized JSON health response
+- Includes status, timestamp, and optional metadata
+- Ensures consistent response format across all scenarios
+- Sanitizes error messages to avoid exposing sensitive information
 
 ---
 
@@ -60,55 +58,47 @@ The architecture supports both synchronous REST endpoints and asynchronous backg
 ### HealthCheckResponse
 ```python
 {
-  "status": str,              # "healthy" | "degraded" | "unhealthy"
-  "timestamp": str,            # ISO-8601 format
-  "service": str,              # Service identifier
-  "version": str,              # API version
-  "uptime_seconds": int,       # Service uptime
-  "checks": {
-    "ergast_api": HealthCheckDetail,
-    "cache": HealthCheckDetail,
-    "database": HealthCheckDetail,
-    "system_resources": HealthCheckDetail
-  }
+  "status": str,              # "healthy" | "unhealthy"
+  "timestamp": str,            # ISO-8601 format (e.g., "2026-02-02T12:05:49Z")
+  "service": str,              # Service identifier (e.g., "F1 Analytics Workshop API")
+  "version": str               # API version (e.g., "1.0.0")
 }
 ```
 
-### HealthCheckDetail
-```python
+**Healthy Response Example**:
+```json
 {
-  "status": str,               # "healthy" | "degraded" | "unhealthy"
-  "response_time_ms": float,   # Check execution time
-  "last_check_time": str,      # ISO-8601 timestamp
-  "message": str,              # Human-readable status
-  "details": dict              # Component-specific metadata
+  "status": "healthy",
+  "timestamp": "2026-02-02T12:05:49Z",
+  "service": "F1 Analytics Workshop API",
+  "version": "1.0.0"
 }
 ```
 
-### HealthCheckConfig
-```python
+**Unhealthy Response Example**:
+```json
 {
-  "timeout_seconds": int,      # Per-check timeout
-  "check_interval_seconds": int, # Background check frequency
-  "cache_ttl_seconds": int,    # Health status cache duration
-  "thresholds": {
-    "response_time_warning_ms": float,
-    "response_time_critical_ms": float,
-    "memory_usage_warning_percent": float,
-    "memory_usage_critical_percent": float
-  }
+  "status": "unhealthy",
+  "timestamp": "2026-02-02T12:05:49Z",
+  "service": "F1 Analytics Workshop API",
+  "version": "1.0.0"
 }
 ```
 
-### MetricsData
+### HealthCheckStatus (Internal Enum)
+```python
+class HealthStatus(str, Enum):
+    HEALTHY = "healthy"
+    UNHEALTHY = "unhealthy"
+```
+
+### DependencyCheckResult (Internal Model)
 ```python
 {
-  "total_checks": int,
-  "successful_checks": int,
-  "failed_checks": int,
-  "average_response_time_ms": float,
-  "error_rate_percent": float,
-  "check_history": List[HealthCheckSnapshot]
+  "name": str,                 # Dependency identifier
+  "available": bool,           # Is dependency reachable
+  "response_time_ms": float,   # Check duration
+  "error": Optional[str]       # Error message if check failed
 }
 ```
 
@@ -116,118 +106,87 @@ The architecture supports both synchronous REST endpoints and asynchronous backg
 
 ## 4. API Contracts
 
-### GET /health (Enhanced - existing endpoint)
-**Purpose**: Quick liveness probe for load balancers and orchestrators
+### GET /health
 
-**Response** (200 OK):
-```json
+**Purpose**: Health check endpoint for monitoring systems, load balancers, and orchestration platforms.
+
+**Request**:
+- Method: `GET`
+- Path: `/health`
+- Headers: None required
+- Body: None
+- Query Parameters: None
+
+**Response - Healthy (200 OK)**:
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
 {
   "status": "healthy",
-  "timestamp": "2026-02-02T10:56:47Z",
+  "timestamp": "2026-02-02T12:05:49Z",
   "service": "F1 Analytics Workshop API",
   "version": "1.0.0"
 }
 ```
 
-**Response** (503 Service Unavailable):
-```json
+**Response - Unhealthy (503 Service Unavailable)**:
+```http
+HTTP/1.1 503 Service Unavailable
+Content-Type: application/json
+
 {
   "status": "unhealthy",
-  "timestamp": "2026-02-02T10:56:47Z",
+  "timestamp": "2026-02-02T12:05:49Z",
   "service": "F1 Analytics Workshop API",
-  "version": "1.0.0",
-  "error": "Critical dependencies unavailable"
+  "version": "1.0.0"
 }
 ```
 
-### GET /health/ready - **NEW**
-**Purpose**: Readiness probe with comprehensive dependency validation
+**Response Codes**:
+- `200 OK`: Service is healthy and ready to handle requests
+- `503 Service Unavailable`: Service is unhealthy or critical dependencies are unavailable
+- `500 Internal Server Error`: Health check endpoint itself encountered an error
 
-**Query Parameters**:
-- `detailed` (boolean, default: false): Include detailed check results
-- `include_metrics` (boolean, default: false): Include historical metrics
+**Performance SLA**:
+- Response time: <500ms (99th percentile), <1 second maximum
+- Throughput: Supports 100+ requests/second
+- Resource usage: <1% CPU/memory overhead
 
-**Response** (200 OK):
-```json
-{
-  "status": "healthy",
-  "timestamp": "2026-02-02T10:56:47Z",
-  "service": "F1 Analytics Workshop API",
-  "version": "1.0.0",
-  "uptime_seconds": 3600,
-  "checks": {
-    "ergast_api": {
-      "status": "healthy",
-      "response_time_ms": 45.3,
-      "last_check_time": "2026-02-02T10:56:47Z",
-      "message": "Ergast F1 API responding normally",
-      "details": {
-        "url": "https://api.jolpi.ca/ergast/f1",
-        "rate_limit_remaining": 195
-      }
-    }
-  }
-}
-```
-
-**Response** (503 Service Unavailable): Similar structure with `status: "unhealthy"` or `"degraded"`
-
-### GET /health/live - **NEW**
-**Purpose**: Kubernetes-style liveness probe (minimal overhead)
-
-**Response** (200 OK):
-```json
-{
-  "alive": true,
-  "timestamp": "2026-02-02T10:56:47Z"
-}
-```
-
-### GET /health/metrics - **NEW**
-**Purpose**: Prometheus-compatible metrics endpoint
-
-**Response** (200 OK, text/plain):
-```
-# HELP health_check_total Total number of health checks performed
-# TYPE health_check_total counter
-health_check_total{component="ergast_api"} 1234
-
-# HELP health_check_duration_seconds Health check duration in seconds
-# TYPE health_check_duration_seconds histogram
-health_check_duration_seconds_bucket{component="ergast_api",le="0.1"} 1000
-```
+**Security**:
+- No authentication required (publicly accessible for monitoring)
+- Rate limiting: 100 requests/minute per IP address
+- No sensitive information exposed in responses
 
 ---
 
 ## 5. Technology Stack
 
 ### Backend
-- **Framework**: FastAPI 0.104+ (async-capable, high-performance Python web framework)
+- **Framework**: FastAPI 0.104+ (async-capable Python web framework)
 - **ASGI Server**: Uvicorn (production-grade async server)
-- **HTTP Client**: httpx 0.25+ (async HTTP client replacing requests for health checks)
-- **Async Runtime**: asyncio (native Python async/await support)
-- **Dependency Injection**: FastAPI's built-in DI system
-- **Python Version**: 3.8+ (with type hints)
+- **HTTP Client**: httpx 0.25+ (async HTTP client for dependency checks)
+- **Async Runtime**: asyncio (native Python async/await for non-blocking I/O)
+- **Validation**: Pydantic v2 (data validation and settings management)
+- **Python Version**: 3.8+ (with type hints and async support)
 
 ### Frontend
-- **API Documentation**: OpenAPI/Swagger UI (auto-generated by FastAPI)
-- **Redoc**: Alternative API documentation interface
-- **No dedicated frontend**: This is a backend API service
+- **API Documentation**: OpenAPI/Swagger UI (auto-generated by FastAPI at `/docs`)
+- **Redoc**: Alternative documentation interface at `/redoc`
+- **No dedicated frontend UI**: Health endpoint is machine-readable JSON for monitoring systems
 
 ### Infrastructure
-- **Containerization**: Docker (multi-stage builds for optimization)
-- **Orchestration**: Kubernetes (health probes integration)
-- **Configuration Management**: Environment variables with pydantic Settings
-- **Secrets Management**: Kubernetes Secrets / AWS Secrets Manager / HashiCorp Vault
-- **Reverse Proxy**: Nginx / AWS ALB / GCP Load Balancer
-- **Container Registry**: Docker Hub / AWS ECR / GCP Artifact Registry
+- **Containerization**: Docker (multi-stage builds for optimized images)
+- **Orchestration**: Kubernetes (health probe integration via livenessProbe/readinessProbe)
+- **Configuration**: Environment variables with Pydantic Settings
+- **Secrets Management**: Kubernetes Secrets, AWS Secrets Manager, or environment variables
+- **Reverse Proxy**: Nginx, AWS ALB, or GCP Load Balancer
+- **Container Registry**: Docker Hub, AWS ECR, or GCP Artifact Registry
 
 ### Data Storage
-- **Primary Data Source**: Ergast F1 API (external REST API)
-- **Cache Layer** (future): Redis 7+ or Memcached (for API response caching)
-- **Metrics Storage**: Prometheus (time-series metrics database)
-- **Database** (future): PostgreSQL 14+ (for analytics persistence, user data)
-- **Log Aggregation**: ELK Stack (Elasticsearch, Logstash, Kibana) or CloudWatch Logs
+- **External API**: Ergast F1 API (https://api.jolpi.ca/ergast/f1) - primary data source
+- **No database required**: Health check is stateless and requires no persistent storage
+- **Future caching**: Redis or in-memory cache for health check result caching (optional optimization)
 
 ---
 
@@ -235,226 +194,248 @@ health_check_duration_seconds_bucket{component="ergast_api",le="0.1"} 1000
 
 ### External Systems
 
-**Ergast F1 API** (Primary Dependency)
+**Ergast F1 API** (Dependency Validation)
 - **URL**: https://api.jolpi.ca/ergast/f1
-- **Protocol**: REST over HTTPS
-- **Rate Limits**: 200 requests/hour, 4 requests/second
-- **Health Check Method**: Lightweight `/seasons.json?limit=1` endpoint
-- **Timeout**: 30 seconds
-- **Retry Strategy**: 3 attempts with exponential backoff
-
-**Monitoring & Observability Platforms** (Future)
-- **Prometheus**: Metrics scraping via `/health/metrics` endpoint
-- **Grafana**: Dashboard visualization of health metrics
-- **PagerDuty / Opsgenie**: Alerting integration for health failures
-- **AWS CloudWatch**: CloudWatch Logs and CloudWatch Metrics integration
-- **Datadog / New Relic**: APM and infrastructure monitoring
+- **Protocol**: HTTPS REST API
+- **Health Check Method**: Lightweight GET request to `/seasons.json?limit=1` or HEAD request to base URL
+- **Timeout**: 5 seconds (prevents slow external API from blocking health checks)
+- **Purpose**: Validates that the primary data source is accessible
+- **Failure Handling**: Returns unhealthy status if unreachable or timeout exceeded
 
 **Load Balancers / API Gateways**
-- **Health Check Endpoint**: `/health/live` for liveness probes
-- **Readiness Endpoint**: `/health/ready` for traffic routing decisions
+- **Integration Type**: HTTP health probe
+- **Check Endpoint**: `GET /health`
 - **Expected Response**: HTTP 200 for healthy, 503 for unhealthy
-- **Check Interval**: Configurable (recommended: 10-30 seconds)
+- **Check Interval**: Configurable (typical: 10-30 seconds)
+- **Failure Threshold**: 2-3 consecutive failures before removing from rotation
+- **Examples**: AWS Application Load Balancer, GCP Load Balancer, Nginx upstream health checks
 
 **Container Orchestrators (Kubernetes)**
-- **Liveness Probe**: `httpGet` on `/health/live`
-- **Readiness Probe**: `httpGet` on `/health/ready`
-- **Startup Probe**: `httpGet` on `/health/live` with longer timeout
-- **Probe Configuration**: initialDelaySeconds, periodSeconds, timeoutSeconds, failureThreshold
+- **Liveness Probe**: `httpGet` on `/health` (detects if pod is alive and should be restarted)
+- **Readiness Probe**: `httpGet` on `/health` (detects if pod is ready to receive traffic)
+- **Probe Configuration**:
+  - `initialDelaySeconds: 15` (allow service startup time)
+  - `periodSeconds: 10` (check every 10 seconds)
+  - `timeoutSeconds: 5` (fail if health check takes >5 seconds)
+  - `failureThreshold: 3` (restart/mark unready after 3 failures)
+  - `successThreshold: 1` (mark ready after 1 success)
+
+**Monitoring Systems**
+- **Prometheus**: Can scrape `/health` and convert to metrics (up/down status)
+- **Datadog / New Relic**: HTTP check monitors for uptime tracking
+- **CloudWatch**: Health check via Route 53 health checks or custom Lambda monitors
+- **PagerDuty / Opsgenie**: Alerting integration when health checks fail consistently
 
 ### Internal Integrations
 
-**Cache Layer** (Future)
-- **Technology**: Redis/Memcached
-- **Health Check**: PING command or GET on sentinel key
-- **Purpose**: Cache F1 API responses to reduce external API calls
+**FastAPI Application**
+- Health endpoint registered as standard FastAPI route
+- Shares same server instance and port (8000)
+- Uses FastAPI dependency injection for health service
 
-**Database** (Future)
-- **Technology**: PostgreSQL
-- **Health Check**: Simple SELECT 1 query with connection pool validation
-- **Purpose**: Store analytics results, user preferences, cached data
+**Logging System**
+- Health check failures logged at WARNING or ERROR level
+- Successful checks not logged (avoid log spam)
+- Includes error details for debugging without exposing sensitive data
 
 ---
 
 ## 7. Security Architecture
 
 ### Authentication & Authorization
-- **Current State**: Open API (no authentication)
-- **Future**: API key-based authentication via headers (`X-API-Key`)
-- **Health Endpoints**: Liveness probe (`/health/live`) remains public; detailed endpoints (`/health/ready`, `/health/metrics`) restricted to internal networks or authenticated monitoring systems
+- **Public Access**: `/health` endpoint is publicly accessible without authentication
+- **Rationale**: Monitoring systems, load balancers, and orchestrators need unauthenticated access
+- **No credentials required**: Ensures simplicity and compatibility with all monitoring tools
+
+### Rate Limiting
+- **Limit**: 100 requests per minute per IP address
+- **Implementation**: FastAPI middleware or reverse proxy (Nginx `limit_req`)
+- **Purpose**: Prevent DoS attacks or accidental request storms
+- **Behavior**: Return HTTP 429 (Too Many Requests) when limit exceeded
+
+### Information Disclosure Protection
+- **No sensitive data**: Response excludes credentials, API keys, internal IPs, stack traces
+- **Error sanitization**: Generic "unhealthy" status without detailed error messages in production
+- **No system details**: Avoid exposing OS version, Python version, internal architecture
+- **Version information**: Service version included (e.g., "1.0.0") but not library versions
 
 ### Network Security
-- **CORS Policy**: Currently allows all origins (`*`); production should whitelist specific domains
-- **TLS/SSL**: HTTPS enforced in production via reverse proxy (Nginx/ALB)
-- **Internal Network**: Health check endpoints accessible from monitoring systems within VPC/private network
-- **Rate Limiting**: Implement rate limiting on public endpoints to prevent abuse
+- **CORS**: Health endpoint exempt from CORS restrictions (monitoring systems need cross-origin access)
+- **HTTPS**: Enforce TLS 1.2+ in production via reverse proxy
+- **Internal network access**: No firewall restrictions; must be accessible from load balancers and monitoring systems
+- **DDoS mitigation**: Rate limiting + reverse proxy DDoS protection (Cloudflare, AWS Shield)
 
-### Secrets Management
-- **API Keys**: External API keys (future) stored in environment variables, loaded from secure vaults
-- **Database Credentials**: Stored in Kubernetes Secrets / AWS Secrets Manager
-- **Configuration**: Sensitive configuration never committed to version control
-- **Credential Rotation**: Support for dynamic credential updates without service restart
+### Input Validation
+- **No parameters**: Endpoint accepts no query parameters, headers, or body (minimal attack surface)
+- **HTTP method restriction**: Only GET method allowed (405 Method Not Allowed for POST/PUT/DELETE)
 
-### Data Protection
-- **In-Transit Encryption**: HTTPS/TLS 1.2+ for all external communication
-- **At-Rest Encryption**: Encrypted storage volumes for databases (future)
-- **PII Handling**: No personally identifiable information currently stored; F1 data is public
-- **Audit Logging**: Log all health check failures and access to sensitive endpoints
-
-### Dependency Security
-- **External API**: Validate SSL certificates for Ergast F1 API calls
-- **Timeout Protection**: 30-second timeouts prevent hanging connections
-- **Input Validation**: Validate all external API responses before processing
-- **Dependency Scanning**: Regular security audits of Python dependencies (Dependabot/Snyk)
+### Logging & Auditing
+- **Health check failures logged**: Includes timestamp, error type, dependency status
+- **No PII logging**: No user-identifiable information in health check logs
+- **Audit trail**: Failed health checks trigger alerts for investigation
 
 ---
 
 ## 8. Deployment Architecture
 
-### Containerization Strategy
-**Docker Multi-Stage Build**:
-1. **Builder Stage**: Install dependencies, compile if needed
-2. **Runtime Stage**: Minimal Python slim image with only runtime dependencies
-3. **Image Size**: Optimized <200MB
+### Containerization
 
-**Dockerfile Structure**:
+**Dockerfile Strategy** (Multi-stage build):
 ```dockerfile
+# Stage 1: Dependencies
 FROM python:3.11-slim AS builder
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --user -r requirements.txt
 
+# Stage 2: Runtime
 FROM python:3.11-slim
 WORKDIR /app
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /root/.local /root/.local
 COPY src/ /app/src/
+ENV PATH=/root/.local/bin:$PATH
 EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
 CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
+**Image Characteristics**:
+- Base image: `python:3.11-slim` (minimal Debian-based image)
+- Size: ~150-200MB (optimized multi-stage build)
+- Health check: Built-in Docker `HEALTHCHECK` using the `/health` endpoint
+
 ### Kubernetes Deployment
 
-**Deployment Manifest**:
-- **Replicas**: 3 (minimum for high availability)
-- **Rolling Update Strategy**: MaxSurge=1, MaxUnavailable=0 (zero-downtime)
-- **Resource Requests**: CPU 100m, Memory 256Mi
-- **Resource Limits**: CPU 500m, Memory 512Mi
-
-**Health Probe Configuration**:
+**Deployment Manifest** (`k8s/deployment.yaml`):
 ```yaml
-livenessProbe:
-  httpGet:
-    path: /health/live
-    port: 8000
-  initialDelaySeconds: 30
-  periodSeconds: 10
-  timeoutSeconds: 5
-  failureThreshold: 3
-
-readinessProbe:
-  httpGet:
-    path: /health/ready
-    port: 8000
-  initialDelaySeconds: 10
-  periodSeconds: 5
-  timeoutSeconds: 3
-  failureThreshold: 2
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: f1-analytics-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: f1-analytics-api
+  template:
+    metadata:
+      labels:
+        app: f1-analytics-api
+    spec:
+      containers:
+      - name: api
+        image: f1-analytics-api:1.0.0
+        ports:
+        - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        env:
+        - name: API_VERSION
+          value: "1.0.0"
+        - name: LOG_LEVEL
+          value: "INFO"
 ```
 
-**Service Configuration**:
-- **Type**: ClusterIP (internal) or LoadBalancer (external)
-- **Port**: 8000 (HTTP)
-- **Session Affinity**: None (stateless service)
+**Service Configuration** (`k8s/service.yaml`):
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: f1-analytics-api
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+  selector:
+    app: f1-analytics-api
+```
 
 ### Environment Configuration
 
-**Configuration Layers**:
-1. **Default Values**: Hardcoded sensible defaults in code
-2. **Environment Variables**: Override via `ENV` in Kubernetes ConfigMap
-3. **Secrets**: Sensitive values injected via Kubernetes Secrets
+**Environment Variables**:
+- `API_VERSION`: Service version string (e.g., "1.0.0")
+- `SERVICE_NAME`: Display name for health check response (default: "F1 Analytics Workshop API")
+- `LOG_LEVEL`: Logging verbosity (DEBUG, INFO, WARNING, ERROR)
+- `HEALTH_CHECK_TIMEOUT`: Maximum time for health check execution (default: 1 second)
+- `ERGAST_API_URL`: Base URL for Ergast F1 API (default: https://api.jolpi.ca/ergast/f1)
+- `CORS_ALLOWED_ORIGINS`: Comma-separated list of allowed origins for CORS
 
-**Key Environment Variables**:
-- `API_VERSION`: 1.0.0
-- `LOG_LEVEL`: INFO (DEBUG for dev, ERROR for production)
-- `ERGAST_API_URL`: https://api.jolpi.ca/ergast/f1
-- `HEALTH_CHECK_TIMEOUT`: 30
-- `HEALTH_CHECK_CACHE_TTL`: 30
-- `CORS_ALLOWED_ORIGINS`: Comma-separated list
+**Configuration Management**:
+- **Development**: `.env` file or environment variables
+- **Staging/Production**: Kubernetes ConfigMap for non-sensitive values, Secrets for sensitive data
 
 ### Deployment Environments
 
 **Development**:
-- Local Docker Compose setup
-- Hot-reload enabled (Uvicorn `--reload`)
-- Detailed logging and error traces
-- CORS allows all origins
+- Local Docker Compose or direct Python execution
+- Health check enabled for testing load balancer integration
+- Verbose logging (DEBUG level)
 
 **Staging**:
 - Kubernetes cluster (separate namespace)
 - Mirrors production configuration
-- Integration testing environment
-- Monitoring and alerting enabled
+- Automated health check testing in CI/CD pipeline
 
 **Production**:
-- Kubernetes cluster with auto-scaling
-- Multiple availability zones
-- Strict CORS policy
-- Comprehensive monitoring and alerting
-- Blue-green deployment strategy
+- Kubernetes cluster with multiple replicas (3+)
+- Load balancer health checks enabled
+- Automated rollout with health-based readiness gates
+- Blue-green or rolling deployment strategy
 
 ---
 
 ## 9. Scalability Strategy
 
 ### Horizontal Scaling
-- **Stateless Design**: No session state stored in application memory
-- **Kubernetes HPA (Horizontal Pod Autoscaler)**:
-  - Target Metric: CPU utilization > 70%
-  - Min Replicas: 3
-  - Max Replicas: 10
-  - Scale-up: Add pods when CPU exceeds threshold for 2 minutes
-  - Scale-down: Remove pods when CPU below threshold for 5 minutes
+- **Stateless Design**: Health check logic contains no session state or shared memory
+- **Replica Independence**: Each pod performs health checks independently without coordination
+- **Kubernetes HPA**: Horizontal Pod Autoscaler based on CPU/memory usage (not health check specific)
+- **Load Balancing**: Round-robin distribution with health-based routing (unhealthy pods excluded)
 
-### Vertical Scaling
-- **Resource Limits**: Adjust CPU/memory requests based on observed usage
-- **Current Baseline**: 100m CPU, 256Mi memory (requests)
-- **Monitoring**: Track actual resource usage and adjust limits proactively
-- **Headroom**: 2x resource limits for burst capacity
+### Health Check Performance Optimization
+- **Lightweight Checks**: Minimal external API calls (single HEAD request or cached result)
+- **Timeout Protection**: 5-second timeout for external dependency checks prevents cascading delays
+- **Async I/O**: Non-blocking HTTP client (httpx) for concurrent dependency validation
+- **No Database Queries**: Avoids expensive I/O operations that could slow response time
 
-### Caching Strategy (Future)
-- **Redis Cache Layer**:
-  - Cache F1 API responses (TTL: 1 hour for historical data, 5 minutes for current season)
-  - Reduce external API calls by 80-90%
-  - Handle Ergast API rate limits gracefully
-- **Application-Level Caching**:
-  - In-memory LRU cache for frequently accessed data
-  - Cache health check results (TTL: 30 seconds) to reduce check overhead
+### Caching Strategy (Future Optimization)
+- **Health Check Result Caching**: Cache external dependency status for 30-60 seconds
+- **Rationale**: Load balancers may poll every 5-10 seconds; caching reduces external API calls by 80-90%
+- **Implementation**: In-memory cache with TTL (e.g., `TTLCache` or Redis)
+- **Trade-off**: 30-second staleness acceptable for health monitoring vs. reduced API load
 
-### Database Scaling (Future)
-- **Read Replicas**: PostgreSQL read replicas for analytics queries
-- **Connection Pooling**: PgBouncer or SQLAlchemy connection pool (10-20 connections per pod)
-- **Query Optimization**: Indexes on frequently queried columns, materialized views for complex analytics
+### Rate Limiting for Monitoring Systems
+- **Challenge**: Multiple monitoring systems may poll health endpoint simultaneously
+- **Solution**: Rate limiting (100 req/min per IP) prevents excessive load
+- **Graceful Degradation**: Health check responds quickly even under rate limiting (HTTP 429)
 
-### Load Balancing
-- **Layer 7 Load Balancer**: AWS ALB, GCP Load Balancer, or Nginx
-- **Routing Strategy**: Round-robin with health check validation
-- **Session Affinity**: Not required (stateless service)
-- **Failover**: Automatic removal of unhealthy pods from rotation
-
-### Rate Limiting & Throttling
-- **External API Protection**:
-  - Respect Ergast API limits (200 req/hour, 4 req/sec)
-  - Implement token bucket algorithm for outgoing requests
-  - Queue requests during rate limit periods
-- **API Gateway Rate Limiting** (Future):
-  - Per-client rate limits (1000 req/hour)
-  - Burst allowance for legitimate traffic spikes
-
-### Performance Optimization
-- **Async I/O**: FastAPI + asyncio for non-blocking external API calls
-- **HTTP Connection Pooling**: Reuse connections to Ergast API (httpx.AsyncClient)
-- **Response Compression**: Gzip compression for large JSON responses
-- **Lazy Loading**: Load dependency health checks in parallel (asyncio.gather)
+### Resource Isolation
+- **CPU/Memory Limits**: Kubernetes resource limits prevent health check from consuming excessive resources
+- **Health Check Thread Pool**: Separate async task pool for health checks (future enhancement)
 
 ---
 
@@ -463,279 +444,233 @@ readinessProbe:
 ### Logging Strategy
 
 **Log Levels**:
-- **DEBUG**: Development only (detailed request/response data)
-- **INFO**: Standard operation logs (startup, health checks, API calls)
-- **WARNING**: Degraded performance (slow external API, approaching rate limits)
-- **ERROR**: Failures (external API errors, timeout exceptions)
-- **CRITICAL**: Service unavailable (all dependencies down, unrecoverable errors)
+- **INFO**: Health check failures (when service transitions to unhealthy)
+- **WARNING**: Slow external dependency responses (>3 seconds)
+- **ERROR**: Health check endpoint errors (500 responses)
+- **DEBUG**: Not used for health checks (too noisy)
 
 **Structured Logging**:
-- **Format**: JSON logs for machine parsing
-- **Fields**: timestamp, level, service, version, request_id, component, message, metadata
-- **Correlation IDs**: Track requests across services (X-Request-ID header)
+```json
+{
+  "timestamp": "2026-02-02T12:05:49Z",
+  "level": "WARNING",
+  "service": "f1-analytics-api",
+  "component": "health_check",
+  "message": "Ergast API slow response",
+  "duration_ms": 3200,
+  "dependency": "ergast_api"
+}
+```
 
 **Log Aggregation**:
-- **Stdout/Stderr**: Logs to console (captured by Kubernetes)
-- **Centralized Storage**: ELK Stack, CloudWatch Logs, or Datadog
-- **Retention**: 30 days for INFO, 90 days for ERROR/CRITICAL
+- Kubernetes stdout/stderr logs collected by logging agent (Fluentd, Fluent Bit)
+- Centralized storage: ELK Stack, CloudWatch Logs, or Splunk
+- Retention: 30 days for INFO, 90 days for WARNING/ERROR
 
-### Metrics Collection
+### Metrics Collection (Future)
 
-**Health Check Metrics**:
-- `health_check_total{component, status}`: Counter of health checks
-- `health_check_duration_seconds{component}`: Histogram of check latency
-- `health_check_last_success_timestamp{component}`: Gauge of last successful check
-- `dependency_status{component}`: Gauge (1=healthy, 0=unhealthy)
+**Prometheus Metrics** (optional future enhancement):
+- `health_check_duration_seconds{status}`: Histogram of health check response times
+- `health_check_total{status}`: Counter of health checks by status (healthy/unhealthy)
+- `dependency_available{dependency}`: Gauge indicating dependency availability (1=up, 0=down)
 
-**API Metrics**:
-- `http_requests_total{method, endpoint, status_code}`: Request counter
-- `http_request_duration_seconds{method, endpoint}`: Request latency histogram
-- `ergast_api_calls_total{status}`: External API call counter
-- `ergast_api_rate_limit_remaining`: Current rate limit headroom
-
-**System Metrics**:
-- CPU usage, memory usage, disk I/O
-- Network throughput, connection counts
-- Python GC metrics (via prometheus_client)
-
-**Metrics Exposure**:
-- **Endpoint**: `/health/metrics` (Prometheus format)
-- **Scrape Interval**: 30 seconds (Prometheus scraper)
-- **Retention**: 15 days in Prometheus, long-term in Thanos/Cortex
-
-### Distributed Tracing
-
-**Future Implementation**:
-- **Technology**: OpenTelemetry + Jaeger/Zipkin
-- **Trace Spans**: HTTP request → F1 API call → health check execution
-- **Context Propagation**: W3C Trace Context headers
-- **Sampling**: 10% in production, 100% in staging
+**Metrics Endpoint** (future): `/metrics` in Prometheus text format
 
 ### Alerting Strategy
 
 **Critical Alerts** (PagerDuty/Opsgenie):
-- All health check dependencies unhealthy for >5 minutes
-- Service unavailable (returning 503) for >3 minutes
-- Error rate >10% sustained for 5 minutes
-- External API timeout rate >50%
+- Health check returning 503 for >5 minutes (sustained outage)
+- All replicas failing health checks (complete service unavailability)
+- External dependency (Ergast API) unreachable for >10 minutes
 
 **Warning Alerts** (Slack/Email):
-- Health check degraded state (slow responses)
-- External API rate limit approaching (>80% consumed)
-- Memory usage >80% sustained for 10 minutes
-- Response time p95 >1 second
+- Health check response time >500ms (approaching SLA threshold)
+- Single replica failing health checks (potential deployment issue)
+- Rate limiting triggered frequently (monitoring system misconfiguration)
 
-**Alert Routing**:
-- Critical: 24/7 on-call engineer
-- Warning: Team channel notification
-- Informational: Dashboard visibility only
+**Alert Sources**:
+- **Kubernetes**: Pod restart alerts when liveness probe fails repeatedly
+- **Load Balancer**: Alerts when all targets marked unhealthy
+- **Monitoring System**: Direct health check polling (Datadog, Prometheus Alertmanager)
 
-### Dashboards
+### Dashboards (Future)
 
-**Grafana Dashboards**:
-1. **Service Health Overview**:
-   - Real-time health status for all dependencies
-   - Health check success rate (24h)
-   - Average response times per component
-   - Error rate trends
-
-2. **API Performance**:
-   - Request rate (requests/minute)
-   - Latency percentiles (p50, p95, p99)
-   - Error rate by endpoint
-   - External API call statistics
-
-3. **Infrastructure**:
-   - Pod count and CPU/memory usage
-   - Kubernetes health probe success rate
-   - Network I/O and connection counts
-   - Container restart count
+**Grafana Dashboard** (example):
+- Health check success rate (last 24 hours)
+- Average health check response time
+- External dependency availability timeline
+- Kubernetes pod health status
 
 ### Health Check Monitoring Flow
 
-1. **Continuous Background Checks**: Health service runs checks every 30 seconds
-2. **Metrics Emission**: Results published to Prometheus
-3. **Dashboard Update**: Grafana displays real-time health status
-4. **Alert Evaluation**: Prometheus Alertmanager evaluates rules
-5. **Notification**: Critical alerts trigger PagerDuty incidents
-6. **Incident Response**: On-call engineer investigates via dashboards and logs
+1. **Load Balancer Polling**: Checks `/health` every 10 seconds
+2. **Health Check Execution**: Service validates readiness and external dependencies
+3. **Response**: Returns 200 (healthy) or 503 (unhealthy)
+4. **Load Balancer Action**: Routes traffic only to healthy pods
+5. **Logging**: Failed checks logged for investigation
+6. **Alerting**: Sustained failures trigger PagerDuty incidents
 
 ---
 
 ## 11. Architectural Decisions (ADRs)
 
-### ADR-001: Use FastAPI for REST API Framework
-**Status**: Accepted (Already Implemented)
+### ADR-001: Single Unified Health Endpoint Initially
+**Status**: Accepted
 
-**Context**: Need a modern Python web framework for F1 analytics API with automatic documentation and high performance.
+**Context**: Kubernetes and cloud platforms support separate liveness and readiness probes, but PRD specifies single combined endpoint initially.
 
-**Decision**: Use FastAPI with Uvicorn ASGI server.
+**Decision**: Implement single `/health` endpoint that serves as both liveness and readiness probe. Future versions can introduce `/health/live` and `/health/ready` if needed.
 
 **Rationale**:
-- Native async/await support for non-blocking I/O
-- Automatic OpenAPI documentation generation
-- Built-in request validation with Pydantic
-- High performance (comparable to Node.js and Go)
-- Type hints for better code quality
+- Simplicity: Single endpoint easier to implement, test, and maintain
+- PRD Non-Goals: Separate liveness/readiness endpoints explicitly out of scope
+- Sufficient for initial use case: Load balancers and basic monitoring needs met
+- Extensibility: Architecture allows easy addition of separate endpoints later
 
 **Consequences**:
-- Requires Python 3.8+ for async features
-- Team needs familiarity with async programming patterns
-- Excellent developer experience and productivity
+- Load balancers and Kubernetes use same endpoint for both liveness and readiness
+- Cannot distinguish "service is alive but not ready" from "service is dead" initially
+- Acceptable trade-off for MVP; can enhance later based on operational needs
 
 ---
 
-### ADR-002: Implement Hierarchical Health Check Pattern
-**Status**: Proposed
+### ADR-002: Minimal Dependency Health Checks
+**Status**: Accepted
 
-**Context**: Current health check is basic (single endpoint). Need comprehensive dependency monitoring for production reliability.
+**Context**: Could implement comprehensive dependency checks (database, cache, external APIs), but PRD specifies initial version should be lightweight.
 
-**Decision**: Implement three-tier health check system:
-1. Liveness probe (`/health/live`): Minimal overhead, just process alive check
-2. Basic health (`/health`): Quick check with external API validation
-3. Readiness probe (`/health/ready`): Comprehensive dependency validation
+**Decision**: Health check validates only critical external dependency (Ergast F1 API) with lightweight connectivity check. No database or cache health checks initially.
 
 **Rationale**:
-- Kubernetes best practices distinguish liveness vs readiness
-- Liveness prevents unnecessary pod restarts (quick check)
-- Readiness ensures traffic only routes to fully-ready pods
-- Detailed endpoint provides diagnostics without affecting load balancer behavior
+- PRD Out of Scope: "Detailed dependency health checks" explicitly excluded from initial version
+- Performance: Keeps health check response time <500ms (meeting SLA)
+- Simplicity: Reduces complexity and potential failure points
+- Current architecture: No database or cache in current implementation to check
 
 **Consequences**:
-- Three endpoints to maintain instead of one
-- Clear separation of concerns improves reliability
-- Supports gradual rollout with readiness-based traffic shifting
+- Health check only detects external API failures, not internal resource issues
+- Future enhancements can add database/cache checks when those components exist
+- Meets stated performance and simplicity requirements
 
 ---
 
-### ADR-003: Use Circuit Breaker Pattern for External Dependencies
-**Status**: Proposed
+### ADR-003: No Authentication for Health Endpoint
+**Status**: Accepted
 
-**Context**: Ergast F1 API has rate limits and may become temporarily unavailable. Repeated failing health checks waste resources.
+**Context**: Could implement API key authentication or IP whitelisting for health endpoint.
 
-**Decision**: Implement circuit breaker pattern for external API health checks:
-- **Closed**: Normal operation, all checks execute
-- **Open**: Repeated failures trigger fast-fail (skip actual check)
-- **Half-Open**: Periodic retry to test if service recovered
+**Decision**: Health endpoint publicly accessible without authentication.
 
 **Rationale**:
-- Prevents cascading failures and resource exhaustion
-- Reduces load on failing external services
-- Faster health check response when dependency is known to be down
-- Aligns with resilience engineering best practices
+- PRD Requirement: "Implementing authentication or authorization for the health endpoint" is a non-goal
+- Monitoring compatibility: Load balancers and monitoring systems need unauthenticated access
+- Security: No sensitive information exposed in response (status, timestamp only)
+- Industry standard: Health endpoints typically public for operational tooling
 
 **Consequences**:
-- Adds complexity to health check logic
-- Need to tune thresholds (failure count, timeout, recovery interval)
-- Improved overall system resilience
+- Anyone can query health status (acceptable - no sensitive data exposed)
+- Rate limiting protects against abuse
+- Simplifies integration with monitoring tools
 
 ---
 
-### ADR-004: Cache Health Check Results
-**Status**: Proposed
+### ADR-004: Return 503 for Unhealthy State
+**Status**: Accepted
 
-**Context**: Health checks are expensive (external API calls, network I/O). Frequent checks by multiple load balancers multiply the cost.
+**Context**: Could return 200 with `"status": "unhealthy"` or use different HTTP codes (503, 500).
 
-**Decision**: Cache health check results with 30-second TTL. Background task refreshes cache proactively.
+**Decision**: Return HTTP 503 (Service Unavailable) when health check determines service is unhealthy.
 
 **Rationale**:
-- Load balancers may check every 5-10 seconds
-- Uncached: 100 req/minute to external API (hits rate limits)
-- Cached (30s TTL): 2 req/minute to external API (sustainable)
-- 30-second staleness acceptable for health monitoring
-- Background refresh ensures cache never fully expires
+- HTTP semantics: 503 indicates temporary unavailability, appropriate for health checks
+- Load balancer compatibility: Most load balancers expect non-2xx status for unhealthy targets
+- Kubernetes convention: Liveness/readiness probes treat non-2xx as failure
+- PRD Acceptance Criteria: Explicitly requires 503 for unhealthy status
 
 **Consequences**:
-- Health status may be stale for up to 30 seconds
-- Requires thread-safe cache implementation (asyncio.Lock)
-- Significantly reduces external API load
+- Clear distinction between healthy (200) and unhealthy (503) for monitoring systems
+- Load balancers automatically remove 503-responding pods from rotation
+- Aligns with industry best practices
 
 ---
 
-### ADR-005: Expose Prometheus Metrics Endpoint
-**Status**: Proposed
+### ADR-005: Async Health Check Implementation
+**Status**: Accepted
 
-**Context**: Need production observability into health check performance and dependency status.
+**Context**: Could implement health check as synchronous blocking code or async non-blocking code.
 
-**Decision**: Expose `/health/metrics` endpoint in Prometheus text format. Use `prometheus_client` Python library.
+**Decision**: Use FastAPI's async capabilities with `async def` endpoint and `httpx.AsyncClient` for external dependency checks.
 
 **Rationale**:
-- Industry-standard metrics format
-- Native Prometheus integration (no agent required)
-- Rich metric types (counter, gauge, histogram, summary)
-- Time-series data enables trend analysis and alerting
+- FastAPI native support: Async endpoints are first-class in FastAPI
+- Performance: Non-blocking I/O prevents external API delays from blocking other requests
+- Concurrency: Allows future parallel health checks if multiple dependencies added
+- Consistency: Aligns with FastAPI's async-first design philosophy
 
 **Consequences**:
-- Additional dependency (`prometheus_client`)
-- Metrics endpoint should be secured (internal network only)
-- Requires Prometheus server deployment
+- Slightly more complex code (async/await syntax)
+- Better performance under load
+- Future-proof for adding multiple parallel dependency checks
 
 ---
 
-### ADR-006: Use Async HTTP Client (httpx) for Health Checks
-**Status**: Proposed
+### ADR-006: 5-Second Timeout for External Dependency Check
+**Status**: Accepted
 
-**Context**: Current implementation uses `requests` library (synchronous). Health checks for multiple dependencies should run in parallel.
+**Context**: PRD requires health check to respond within 1 second (99th percentile). External API check needs timeout to prevent hanging.
 
-**Decision**: Migrate from `requests` to `httpx` with async support. Use `asyncio.gather()` for parallel checks.
+**Decision**: Set 5-second timeout for Ergast F1 API connectivity check, with 1-second overall health endpoint response target.
 
 **Rationale**:
-- Async I/O reduces check latency (parallel vs sequential)
-- Sequential: 3 dependencies × 100ms = 300ms total
-- Parallel: max(100ms, 100ms, 100ms) = 100ms total
-- `httpx` API similar to `requests` (easy migration)
-- FastAPI is already async-native
+- PRD Performance Requirement: Health check must respond <1 second
+- External API variability: Ergast API may occasionally be slow
+- Fail-fast: Timeout prevents slow external API from blocking health checks indefinitely
+- Balance: 5 seconds allows reasonable validation while preventing excessive delays
 
 **Consequences**:
-- Need to refactor existing synchronous `requests` code
-- All health check functions must be async (`async def`)
-- Improved performance justifies migration effort
+- Health check may timeout and return unhealthy if Ergast API is slow (>5 seconds)
+- Acceptable: Slow external API means service cannot fulfill requests anyway
+- Meets PRD requirement for <1 second response (most checks complete quickly; timeout prevents worst-case)
 
 ---
 
-### ADR-007: Degraded State for Partial Failures
-**Status**: Proposed
+### ADR-007: Stateless Health Check Design
+**Status**: Accepted
 
-**Context**: Binary healthy/unhealthy doesn't capture partial failures. Service may be usable even if one non-critical dependency is down.
+**Context**: Could cache health check results or maintain health state across requests.
 
-**Decision**: Introduce "degraded" health status:
-- **Healthy**: All dependencies operational
-- **Degraded**: Some non-critical dependencies failing (e.g., cache down but API functional)
-- **Unhealthy**: Critical dependencies failing (e.g., external API unreachable)
+**Decision**: Health check is fully stateless; each request performs fresh validation.
 
 **Rationale**:
-- More nuanced status reporting
-- Load balancers can still route to degraded instances if needed
-- Alerts can distinguish critical vs warning scenarios
-- Better reflects real-world failure modes
+- Scalability: Stateless design allows horizontal scaling without coordination
+- Accuracy: Fresh checks provide real-time health status
+- Simplicity: No cache invalidation or state synchronization logic needed
+- Performance: Lightweight checks (single external API HEAD request) are fast enough without caching
 
 **Consequences**:
-- Need to classify dependencies as critical vs non-critical
-- Load balancer configuration must handle 3 states (not just 2)
-- More complex alerting logic
+- Each health check independently validates dependencies (no shared state)
+- Minor performance impact from repeated external API calls (mitigated by timeout and lightweight check)
+- Future optimization: Can add caching layer if health check becomes performance bottleneck
 
 ---
 
-### ADR-008: Environment-Based Configuration with Defaults
-**Status**: Proposed
+### ADR-008: JSON Response Format with Timestamp
+**Status**: Accepted
 
-**Context**: Health check behavior needs to vary by environment (dev, staging, production). Avoid hardcoded values.
+**Context**: Could return plain text ("OK"), JSON, or XML.
 
-**Decision**: Use Pydantic Settings for configuration management:
-- Default values in code (sensible for most environments)
-- Override via environment variables
-- Validation and type checking via Pydantic
+**Decision**: Return structured JSON response with status, timestamp, service name, and version.
 
 **Rationale**:
-- Environment variables are 12-factor app best practice
-- Pydantic provides type safety and validation
-- Easy to test with different configurations
-- No secret values in code (loaded from environment)
+- PRD Requirement: Response must include JSON body with "status" field and ISO 8601 timestamp
+- Machine-readable: JSON enables programmatic parsing by monitoring systems
+- Metadata: Service name and version aid debugging and multi-service monitoring
+- Industry standard: JSON is universal format for REST APIs
 
 **Consequences**:
-- Configuration class to maintain
-- Must document all environment variables
-- Better configuration management overall
+- Slightly larger response payload than plain text (acceptable overhead)
+- Easy integration with monitoring tools that parse JSON
+- Extensible: Can add additional fields in future without breaking compatibility
 
 ---
 
