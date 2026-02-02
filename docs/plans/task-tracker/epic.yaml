@@ -1,0 +1,197 @@
+Epic: task-tracker
+Features:
+- dependencies: []
+  description: Create PostgreSQL database schema with users and tasks tables, including
+    Sequelize models with associations, indexes, and migrations
+  estimatedComplexity: medium
+  files:
+  - src/models/user.model.ts
+  - src/models/task.model.ts
+  - src/models/index.ts
+  - src/models/migrations/001-create-users-table.ts
+  - src/models/migrations/002-create-tasks-table.ts
+  - src/models/migrations/003-add-indexes.ts
+  - src/api/config/database.config.ts
+  id: feat-database-schema
+  name: Database Schema and Models
+  project: aiworkshop
+  type: enabler
+- dependencies: []
+  description: Set up Express server with TypeScript, middleware (CORS, helmet, compression),
+    routing, error handling, and logging infrastructure
+  estimatedComplexity: medium
+  files:
+  - src/api/server.ts
+  - src/api/app.ts
+  - src/api/routes/index.ts
+  - src/api/middleware/error.middleware.ts
+  - src/api/middleware/validation.middleware.ts
+  - src/api/middleware/rate-limit.middleware.ts
+  - src/api/utils/logger.ts
+  - src/api/utils/constants.ts
+  - src/api/types/index.ts
+  - src/api/types/express.d.ts
+  id: feat-backend-infrastructure
+  name: Backend Server Infrastructure
+  project: aiworkshop
+  type: enabler
+- dependencies:
+  - feat-database-schema
+  - feat-backend-infrastructure
+  description: Implement JWT-based authentication with user registration, login, logout,
+    password hashing (bcrypt), and authentication middleware
+  estimatedComplexity: high
+  files:
+  - src/api/controllers/auth.controller.ts
+  - src/api/services/auth.service.ts
+  - src/api/services/user.service.ts
+  - src/api/repositories/user.repository.ts
+  - src/api/routes/auth.routes.ts
+  - src/api/middleware/auth.middleware.ts
+  - src/api/validators/auth.validator.ts
+  - src/api/utils/jwt.util.ts
+  - src/api/utils/password.util.ts
+  id: feat-authentication-backend
+  name: User Authentication System
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-database-schema
+  - feat-backend-infrastructure
+  - feat-authentication-backend
+  description: Implement complete task management with create, read, update, delete
+    operations, status tracking, and user-level authorization
+  estimatedComplexity: high
+  files:
+  - src/api/controllers/tasks.controller.ts
+  - src/api/services/tasks.service.ts
+  - src/api/repositories/task.repository.ts
+  - src/api/routes/tasks.routes.ts
+  - src/api/validators/task.validator.ts
+  id: feat-task-management-backend
+  name: Task CRUD Operations
+  project: aiworkshop
+  type: feature
+- dependencies: []
+  description: Set up React application with TypeScript, Vite, React Router, Tailwind
+    CSS, and API service layer with Axios interceptors
+  estimatedComplexity: medium
+  files:
+  - frontend/package.json
+  - frontend/vite.config.ts
+  - frontend/tsconfig.json
+  - frontend/index.html
+  - frontend/src/main.tsx
+  - frontend/src/App.tsx
+  - frontend/src/services/api.service.ts
+  - frontend/src/utils/storage.ts
+  - frontend/src/utils/validators.ts
+  - frontend/src/types/index.ts
+  - frontend/src/styles/index.css
+  id: feat-frontend-infrastructure
+  name: Frontend Application Setup
+  project: aiworkshop
+  type: enabler
+- dependencies:
+  - feat-frontend-infrastructure
+  - feat-authentication-backend
+  description: Implement login and registration pages with form validation, authentication
+    context provider, protected routes, and token management
+  estimatedComplexity: medium
+  files:
+  - frontend/src/pages/LoginPage.tsx
+  - frontend/src/pages/RegisterPage.tsx
+  - frontend/src/context/AuthContext.tsx
+  - frontend/src/hooks/useAuth.ts
+  - frontend/src/services/auth.service.ts
+  - frontend/src/components/PrivateRoute.tsx
+  id: feat-authentication-frontend
+  name: Authentication UI
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-frontend-infrastructure
+  - feat-authentication-frontend
+  - feat-task-management-backend
+  description: Build task dashboard with list view, create/edit forms, status filtering,
+    delete confirmation, and real-time state management
+  estimatedComplexity: high
+  files:
+  - frontend/src/pages/TasksDashboard.tsx
+  - frontend/src/components/TaskList.tsx
+  - frontend/src/components/TaskItem.tsx
+  - frontend/src/components/TaskForm.tsx
+  - frontend/src/components/TaskFilter.tsx
+  - frontend/src/components/Header.tsx
+  - frontend/src/components/LoadingSpinner.tsx
+  - frontend/src/services/task.service.ts
+  - frontend/src/hooks/useTasks.ts
+  id: feat-task-management-frontend
+  name: Task Management UI
+  project: aiworkshop
+  type: feature
+- dependencies:
+  - feat-authentication-backend
+  - feat-task-management-backend
+  description: Implement comprehensive unit and integration tests for authentication,
+    task management, utilities, and API endpoints using Jest and Supertest
+  estimatedComplexity: high
+  files:
+  - tests/unit/services/auth.service.test.ts
+  - tests/unit/services/tasks.service.test.ts
+  - tests/unit/utils/jwt.util.test.ts
+  - tests/unit/utils/password.util.test.ts
+  - tests/integration/auth.routes.test.ts
+  - tests/integration/tasks.routes.test.ts
+  - tests/fixtures/users.fixture.ts
+  - tests/fixtures/tasks.fixture.ts
+  - tests/helpers/db-setup.ts
+  - tests/helpers/auth-helper.ts
+  - jest.config.js
+  id: feat-backend-testing
+  name: Backend Test Suite
+  project: aiworkshop
+  type: enabler
+- dependencies:
+  - feat-authentication-frontend
+  - feat-task-management-frontend
+  description: Implement E2E tests covering complete user flows including registration,
+    login, task CRUD operations, and session persistence using Playwright
+  estimatedComplexity: medium
+  files:
+  - tests/e2e/user-flow.test.ts
+  id: feat-e2e-testing
+  name: End-to-End Test Suite
+  project: aiworkshop
+  type: enabler
+- dependencies:
+  - feat-backend-infrastructure
+  - feat-frontend-infrastructure
+  description: Create Docker containers for backend, frontend, and PostgreSQL with
+    docker-compose orchestration for development and production environments
+  estimatedComplexity: medium
+  files:
+  - Dockerfile.backend
+  - Dockerfile.frontend
+  - docker-compose.yml
+  - nginx.conf
+  - .env.example
+  - .env.development
+  - .env.production
+  id: feat-containerization
+  name: Docker Containerization
+  project: aiworkshop
+  type: enabler
+- dependencies:
+  - feat-authentication-backend
+  - feat-task-management-backend
+  description: Generate OpenAPI/Swagger documentation for all REST API endpoints with
+    request/response schemas and authentication requirements
+  estimatedComplexity: low
+  files:
+  - docs/api/openapi.yaml
+  id: feat-api-documentation
+  name: API Documentation
+  project: aiworkshop
+  type: enabler
+Version: v1alpha1
