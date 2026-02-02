@@ -1,84 +1,98 @@
 Epic: task-tracker
 Features:
 - dependencies: []
-  description: Initialize Node.js/TypeScript backend and React frontend projects with
-    all dependencies, Docker configuration, and environment setup
+  description: Initialize Node.js backend and React frontend projects with TypeScript,
+    configure build tools, Docker containers, and development environment
   estimatedComplexity: medium
   files:
   - package.json
   - tsconfig.json
   - frontend/package.json
-  - frontend/tsconfig.json
   - frontend/vite.config.ts
   - docker-compose.yml
   - Dockerfile.backend
   - Dockerfile.frontend
-  - .env.example
-  id: task-tracker-feat-infrastructure-setup
-  name: Infrastructure and Project Setup
+  id: task-tracker-feat-project-setup
+  name: Project Infrastructure Setup
   project: task-tracker
   type: enabler
 - dependencies:
-  - task-tracker-feat-infrastructure-setup
-  description: Create PostgreSQL database tables for users and tasks with Sequelize
-    models and migrations including indexes for performance
+  - task-tracker-feat-project-setup
+  description: Create PostgreSQL database schema with users and tasks tables, implement
+    Sequelize models and migrations with proper indexes
   estimatedComplexity: medium
   files:
+  - src/models/user.model.ts
+  - src/models/task.model.ts
   - src/models/migrations/001-create-users-table.ts
   - src/models/migrations/002-create-tasks-table.ts
   - src/models/migrations/003-add-indexes.ts
-  - src/models/user.model.ts
-  - src/models/task.model.ts
-  - src/models/index.ts
   - src/api/config/database.config.ts
   id: task-tracker-feat-database-schema
-  name: Database Schema and Models
+  name: Database Schema and Migrations
   project: task-tracker
   type: enabler
 - dependencies:
-  - task-tracker-feat-infrastructure-setup
-  description: Setup Express server with middleware for CORS, authentication, validation,
-    error handling, and rate limiting
-  estimatedComplexity: medium
+  - task-tracker-feat-project-setup
+  description: Implement JWT token generation/verification and bcrypt password hashing
+    utilities
+  estimatedComplexity: low
   files:
-  - src/api/server.ts
-  - src/api/app.ts
-  - src/api/routes/index.ts
+  - src/api/utils/jwt.util.ts
+  - src/api/utils/password.util.ts
+  - src/api/utils/constants.ts
+  id: task-tracker-feat-auth-utilities
+  name: Authentication Utilities
+  project: task-tracker
+  type: enabler
+- dependencies:
+  - task-tracker-feat-project-setup
+  description: Global error handling middleware with custom error classes, validation
+    middleware, and standardized error responses
+  estimatedComplexity: low
+  files:
   - src/api/middleware/error.middleware.ts
   - src/api/middleware/validation.middleware.ts
-  - src/api/middleware/rate-limit.middleware.ts
   - src/api/utils/logger.ts
-  - src/api/utils/constants.ts
-  - src/api/config/app.config.ts
-  id: task-tracker-feat-backend-server
-  name: Backend API Server Foundation
+  id: task-tracker-feat-error-handling
+  name: Error Handling Middleware
   project: task-tracker
   type: enabler
 - dependencies:
   - task-tracker-feat-database-schema
-  - task-tracker-feat-backend-server
-  description: Implement user registration and login with JWT tokens, bcrypt password
-    hashing, and authentication middleware
-  estimatedComplexity: high
+  - task-tracker-feat-auth-utilities
+  - task-tracker-feat-error-handling
+  description: User registration endpoint with email validation, password strength
+    requirements, and duplicate email checking
+  estimatedComplexity: medium
   files:
   - src/api/controllers/auth.controller.ts
   - src/api/services/auth.service.ts
-  - src/api/services/user.service.ts
   - src/api/repositories/user.repository.ts
   - src/api/routes/auth.routes.ts
-  - src/api/middleware/auth.middleware.ts
   - src/api/validators/auth.validator.ts
-  - src/api/utils/jwt.util.ts
-  - src/api/utils/password.util.ts
-  id: task-tracker-feat-user-authentication
-  name: User Authentication System
+  id: task-tracker-feat-user-registration
+  name: User Registration
   project: task-tracker
   type: feature
 - dependencies:
-  - task-tracker-feat-database-schema
-  - task-tracker-feat-user-authentication
-  description: Implement complete task management API with create, read, update, delete
-    operations and authorization to ensure users can only access their own tasks
+  - task-tracker-feat-user-registration
+  description: User login endpoint with credential validation, JWT token generation,
+    and authentication middleware for protected routes
+  estimatedComplexity: medium
+  files:
+  - src/api/controllers/auth.controller.ts
+  - src/api/services/auth.service.ts
+  - src/api/middleware/auth.middleware.ts
+  - src/api/routes/auth.routes.ts
+  id: task-tracker-feat-user-login
+  name: User Login and Authentication
+  project: task-tracker
+  type: feature
+- dependencies:
+  - task-tracker-feat-user-login
+  description: Complete task management API with create, read, update, delete operations,
+    status filtering, and user ownership validation
   estimatedComplexity: high
   files:
   - src/api/controllers/tasks.controller.ts
@@ -86,37 +100,72 @@ Features:
   - src/api/repositories/task.repository.ts
   - src/api/routes/tasks.routes.ts
   - src/api/validators/task.validator.ts
-  id: task-tracker-feat-task-management
+  id: task-tracker-feat-task-crud
   name: Task CRUD Operations
   project: task-tracker
   type: feature
 - dependencies:
-  - task-tracker-feat-infrastructure-setup
-  - task-tracker-feat-user-authentication
-  description: Build React components for user registration and login with form validation,
-    authentication context, and protected routes
+  - task-tracker-feat-error-handling
+  description: Express server setup with middleware (CORS, helmet, compression, rate
+    limiting), route registration, and health check endpoint
   estimatedComplexity: medium
   files:
-  - frontend/src/App.tsx
-  - frontend/src/main.tsx
-  - frontend/src/pages/LoginPage.tsx
-  - frontend/src/pages/RegisterPage.tsx
+  - src/api/server.ts
+  - src/api/app.ts
+  - src/api/routes/index.ts
+  - src/api/middleware/rate-limit.middleware.ts
+  id: task-tracker-feat-backend-server
+  name: Express Server Configuration
+  project: task-tracker
+  type: enabler
+- dependencies:
+  - task-tracker-feat-project-setup
+  description: React authentication context for global auth state management, token
+    storage in localStorage, and protected route wrapper
+  estimatedComplexity: medium
+  files:
   - frontend/src/context/AuthContext.tsx
   - frontend/src/hooks/useAuth.ts
   - frontend/src/components/PrivateRoute.tsx
+  - frontend/src/utils/storage.ts
+  id: task-tracker-feat-frontend-auth-context
+  name: Frontend Authentication Context
+  project: task-tracker
+  type: enabler
+- dependencies:
+  - task-tracker-feat-project-setup
+  description: Axios-based API service with request/response interceptors, authentication
+    token injection, and error handling
+  estimatedComplexity: low
+  files:
   - frontend/src/services/api.service.ts
   - frontend/src/services/auth.service.ts
-  - frontend/src/utils/storage.ts
-  - frontend/src/utils/validators.ts
-  id: task-tracker-feat-frontend-auth-ui
-  name: Frontend Authentication UI
+  - frontend/src/services/task.service.ts
+  id: task-tracker-feat-frontend-api-service
+  name: Frontend API Service
+  project: task-tracker
+  type: enabler
+- dependencies:
+  - task-tracker-feat-frontend-auth-context
+  - task-tracker-feat-frontend-api-service
+  - task-tracker-feat-user-login
+  description: Login and registration pages with form validation, error display, and
+    integration with authentication API
+  estimatedComplexity: medium
+  files:
+  - frontend/src/pages/LoginPage.tsx
+  - frontend/src/pages/RegisterPage.tsx
+  - frontend/src/App.tsx
+  id: task-tracker-feat-login-register-ui
+  name: Login and Registration UI
   project: task-tracker
   type: feature
 - dependencies:
-  - task-tracker-feat-frontend-auth-ui
-  - task-tracker-feat-task-management
-  description: Build React components for task dashboard with list view, create/edit
-    forms, status filtering, and task operations
+  - task-tracker-feat-frontend-auth-context
+  - task-tracker-feat-frontend-api-service
+  - task-tracker-feat-task-crud
+  description: Main task dashboard with task list display, status filtering, create/edit/delete
+    operations, and real-time updates using custom hooks
   estimatedComplexity: high
   files:
   - frontend/src/pages/TasksDashboard.tsx
@@ -125,95 +174,44 @@ Features:
   - frontend/src/components/TaskForm.tsx
   - frontend/src/components/TaskFilter.tsx
   - frontend/src/components/Header.tsx
-  - frontend/src/components/LoadingSpinner.tsx
-  - frontend/src/services/task.service.ts
   - frontend/src/hooks/useTasks.ts
-  id: task-tracker-feat-frontend-task-ui
-  name: Frontend Task Management UI
+  id: task-tracker-feat-task-dashboard
+  name: Task Dashboard UI
   project: task-tracker
   type: feature
 - dependencies:
-  - task-tracker-feat-frontend-task-ui
-  description: Implement Tailwind CSS styling for all components with responsive design
-    and consistent visual design system
-  estimatedComplexity: low
-  files:
-  - frontend/src/styles/index.css
-  - frontend/tailwind.config.js
-  - frontend/postcss.config.js
-  id: task-tracker-feat-styling
-  name: UI Styling and Design
-  project: task-tracker
-  type: feature
-- dependencies:
-  - task-tracker-feat-task-management
-  description: Implement comprehensive unit tests for services and utilities, integration
-    tests for API endpoints, and test fixtures
+  - task-tracker-feat-task-crud
+  - task-tracker-feat-user-login
+  description: Comprehensive unit and integration tests for authentication, task management,
+    and API endpoints using Jest and Supertest
   estimatedComplexity: high
   files:
   - tests/unit/services/auth.service.test.ts
   - tests/unit/services/tasks.service.test.ts
   - tests/unit/utils/jwt.util.test.ts
-  - tests/unit/utils/password.util.test.ts
   - tests/integration/auth.routes.test.ts
   - tests/integration/tasks.routes.test.ts
-  - tests/fixtures/users.fixture.ts
-  - tests/fixtures/tasks.fixture.ts
-  - tests/helpers/db-setup.ts
-  - tests/helpers/auth-helper.ts
   - jest.config.js
-  id: task-tracker-feat-backend-tests
+  id: task-tracker-feat-testing-suite
   name: Backend Testing Suite
   project: task-tracker
   type: enabler
 - dependencies:
-  - task-tracker-feat-frontend-task-ui
-  - task-tracker-feat-backend-tests
-  description: Implement Playwright E2E tests covering complete user journeys from
-    registration through task management
+  - task-tracker-feat-backend-server
+  - task-tracker-feat-task-dashboard
+  description: Production deployment setup with Docker containerization, Nginx reverse
+    proxy configuration, environment management, and CI/CD pipeline
   estimatedComplexity: medium
   files:
-  - tests/e2e/user-flow.test.ts
-  id: task-tracker-feat-e2e-tests
-  name: End-to-End Testing
-  project: task-tracker
-  type: enabler
-- dependencies:
-  - task-tracker-feat-e2e-tests
-  description: Configure Nginx reverse proxy, production environment variables, SSL/HTTPS
-    setup, and CI/CD pipeline with GitHub Actions
-  estimatedComplexity: medium
-  files:
+  - docker-compose.yml
+  - Dockerfile.backend
+  - Dockerfile.frontend
   - nginx.conf
+  - .env.example
   - .env.production
   - .github/workflows/ci.yml
-  - docs/deployment/setup-guide.md
-  - docs/deployment/docker-guide.md
-  id: task-tracker-feat-deployment
-  name: Production Deployment Configuration
-  project: task-tracker
-  type: enabler
-- dependencies:
-  - task-tracker-feat-backend-server
-  description: Implement structured logging with Winston, performance monitoring middleware,
-    and health check endpoints
-  estimatedComplexity: low
-  files:
-  - src/api/utils/logger.ts
-  - src/api/middleware/performance.middleware.ts
-  id: task-tracker-feat-monitoring
-  name: Monitoring and Observability
-  project: task-tracker
-  type: feature
-- dependencies:
-  - task-tracker-feat-task-management
-  description: Generate OpenAPI 3.0 specification and Swagger UI for API endpoints
-    documentation
-  estimatedComplexity: low
-  files:
-  - docs/api/openapi.yaml
-  id: task-tracker-feat-api-documentation
-  name: API Documentation
+  id: task-tracker-feat-deployment-config
+  name: Deployment Configuration
   project: task-tracker
   type: enabler
 Version: v1alpha1
