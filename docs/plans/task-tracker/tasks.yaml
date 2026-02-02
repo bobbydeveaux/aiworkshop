@@ -1,3 +1,2226 @@
-GeneratedAt: "2026-02-02T20:15:01Z"
+GeneratedAt: "2026-02-02T21:31:01Z"
 Plan: task-tracker-plan
-Sprints: []
+Sprints:
+- Features:
+  - FeatureID: task-tracker-feat-infrastructure-setup
+    FeatureTitle: Infrastructure and Environment Setup
+    Tasks:
+    - AcceptanceCriteria:
+      - package.json exists with all required backend dependencies
+      - node_modules directory created and dependencies installed
+      - src/ directory structure created
+      - npm run dev and npm run build scripts configured
+      - TypeScript and ts-node installed as dev dependencies
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create root package.json with backend dependencies (Express, Sequelize,
+        PostgreSQL driver, bcrypt, JWT, TypeScript, ts-node). Initialize npm project,
+        install dependencies, and set up basic project structure with src/ directory.
+        Configure npm scripts for development and production builds.
+      EstimatedEffort: S
+      Files:
+      - package.json
+      ID: task-task-tracker-feat-infrastructure-setup-1
+      Title: Initialize backend project structure and dependencies
+    - AcceptanceCriteria:
+      - tsconfig.json configured with strict mode and proper paths
+      - .eslintrc.js configured with TypeScript parser and rules
+      - .prettierrc configured with formatting preferences
+      - npm run lint and npm run format scripts work correctly
+      - ESLint and Prettier do not conflict
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-infrastructure-setup-1
+      Description: Set up tsconfig.json for Node.js backend with strict mode, module
+        resolution, and output directory. Create .eslintrc.js with TypeScript-ESLint
+        parser and recommended rules. Configure .prettierrc for consistent code formatting.
+        Add lint and format scripts to package.json.
+      EstimatedEffort: S
+      Files:
+      - tsconfig.json
+      - .eslintrc.js
+      - .prettierrc
+      - package.json
+      ID: task-task-tracker-feat-infrastructure-setup-2
+      Title: Configure TypeScript and code quality tools
+    - AcceptanceCriteria:
+      - docker-compose.yml created with PostgreSQL service
+      - PostgreSQL runs on port 5432 with health checks
+      - Volume configured for data persistence
+      - docker-compose up starts PostgreSQL successfully
+      - Database accessible from host machine
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Create docker-compose.yml with PostgreSQL service definition including
+        database name, user, password, and port mapping. Set up volume persistence
+        for database data. Add healthcheck configuration. Include environment variable
+        references for configuration.
+      EstimatedEffort: M
+      Files:
+      - docker-compose.yml
+      ID: task-task-tracker-feat-infrastructure-setup-3
+      Title: Configure Docker Compose and PostgreSQL setup
+    - AcceptanceCriteria:
+      - .env.example created with all variables documented
+      - .env.development configured for local development
+      - .env.production configured with production placeholders
+      - .env added to .gitignore
+      - All database connection variables present
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-infrastructure-setup-3
+      Description: Create .env.example template with all required environment variables
+        (DATABASE_URL, JWT_SECRET, PORT, NODE_ENV). Create .env.development and .env.production
+        with appropriate values for each environment. Document each variable's purpose.
+        Add .env to .gitignore.
+      EstimatedEffort: S
+      Files:
+      - .env.example
+      - .env.development
+      - .env.production
+      - .gitignore
+      ID: task-task-tracker-feat-infrastructure-setup-4
+      Title: Create environment configuration files
+    - AcceptanceCriteria:
+      - frontend/package.json exists with React and dependencies
+      - Vite configured with TypeScript support
+      - frontend/vite.config.ts configured with API proxy
+      - frontend/index.html created as entry point
+      - npm run dev starts development server successfully
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create frontend directory and initialize Vite React TypeScript
+        project. Install React, React Router, Axios, and Tailwind CSS dependencies.
+        Set up frontend/package.json with all required dependencies. Configure vite.config.ts
+        with proxy settings for backend API. Create index.html entry point.
+      EstimatedEffort: M
+      Files:
+      - frontend/package.json
+      - frontend/vite.config.ts
+      - frontend/index.html
+      - frontend/tsconfig.json
+      ID: task-task-tracker-feat-infrastructure-setup-5
+      Title: Initialize frontend project with Vite and React
+    - AcceptanceCriteria:
+      - frontend/tsconfig.json configured for React and JSX
+      - frontend/vite-env.d.ts contains Vite type declarations
+      - Tailwind CSS configured and integrated with Vite
+      - frontend/src/styles/index.css contains Tailwind directives
+      - Tailwind classes work in React components
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-infrastructure-setup-5
+      Description: Set up frontend/tsconfig.json for React with JSX support and proper
+        module resolution. Create frontend/vite-env.d.ts for Vite type declarations.
+        Initialize Tailwind CSS with tailwind.config.js and postcss.config.js. Create
+        frontend/src/styles/index.css with Tailwind directives.
+      EstimatedEffort: M
+      Files:
+      - frontend/tsconfig.json
+      - frontend/vite-env.d.ts
+      - frontend/tailwind.config.js
+      - frontend/postcss.config.js
+      - frontend/src/styles/index.css
+      ID: task-task-tracker-feat-infrastructure-setup-6
+      Title: Configure frontend TypeScript and Tailwind CSS
+    - AcceptanceCriteria:
+      - Dockerfile.backend created with multi-stage build
+      - Dockerfile.frontend created with Nginx configuration
+      - nginx.conf routes /api requests to backend
+      - Docker images build successfully
+      - Containers run and communicate correctly
+      AgentType: devops-engineer
+      Dependencies:
+      - task-task-tracker-feat-infrastructure-setup-1
+      - task-task-tracker-feat-infrastructure-setup-5
+      Description: Create Dockerfile.backend for Node.js backend with multi-stage
+        build (dependencies, build, production). Create Dockerfile.frontend for React
+        app with Nginx serving. Create nginx.conf for reverse proxy configuration
+        routing API requests to backend and serving frontend static files.
+      EstimatedEffort: M
+      Files:
+      - Dockerfile.backend
+      - Dockerfile.frontend
+      - nginx.conf
+      ID: task-task-tracker-feat-infrastructure-setup-7
+      Title: Create Docker configurations for deployment
+    - AcceptanceCriteria:
+      - All frontend directories created as per structure
+      - frontend/src/main.tsx renders React app
+      - frontend/src/App.tsx contains root component structure
+      - frontend/public/favicon.ico exists
+      - Application runs without errors in browser
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-infrastructure-setup-6
+      Description: Create all required frontend directories (pages, components, services,
+        context, hooks, types, utils, public). Create frontend/src/main.tsx as React
+        entry point with router setup. Create frontend/src/App.tsx as root component.
+        Add favicon.ico to public directory.
+      EstimatedEffort: S
+      Files:
+      - frontend/src/main.tsx
+      - frontend/src/App.tsx
+      - frontend/public/favicon.ico
+      ID: task-task-tracker-feat-infrastructure-setup-8
+      Title: Create frontend directory structure and entry points
+    - AcceptanceCriteria:
+      - jest.config.js configured for TypeScript
+      - npm run test executes Jest successfully
+      - Coverage reporting configured
+      - Sample test file runs and passes
+      - Test scripts added to package.json
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-infrastructure-setup-2
+      Description: Install Jest, ts-jest, and testing utilities. Create jest.config.js
+        with TypeScript support and coverage configuration. Add test scripts to package.json.
+        Create initial test directory structure and sample test file to verify setup.
+      EstimatedEffort: M
+      Files:
+      - jest.config.js
+      - package.json
+      ID: task-task-tracker-feat-infrastructure-setup-9
+      Title: Configure Jest for backend testing
+    - AcceptanceCriteria:
+      - docker-compose.yml includes all three services
+      - Services start in correct dependency order
+      - Backend connects to PostgreSQL successfully
+      - Frontend can reach backend API
+      - README.md documents setup and usage
+      AgentType: devops-engineer
+      Dependencies:
+      - task-task-tracker-feat-infrastructure-setup-3
+      - task-task-tracker-feat-infrastructure-setup-7
+      Description: Update docker-compose.yml to include backend and frontend services
+        alongside PostgreSQL. Configure service dependencies, networking, and volume
+        mounts. Add environment variable loading. Ensure all services start correctly
+        and can communicate. Create README.md with setup instructions.
+      EstimatedEffort: M
+      Files:
+      - docker-compose.yml
+      - README.md
+      ID: task-task-tracker-feat-infrastructure-setup-10
+      Title: Integrate all services in Docker Compose
+  - FeatureID: task-tracker-feat-database-schema
+    FeatureTitle: Database Schema and Migrations
+    Tasks:
+    - AcceptanceCriteria:
+      - Migration file created at src/models/migrations/001-create-users-table.ts
+      - Users table schema includes all required fields with correct data types
+      - Unique index on email column is created
+      - Up and down migrations execute successfully
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Implement migration 001 to create the users table with id, email,
+        password_hash, created_at, and updated_at columns. Add UUID primary key, email
+        validation, and unique index on email for faster lookups. Include both up
+        and down migration methods.
+      EstimatedEffort: S
+      Files:
+      - src/models/migrations/001-create-users-table.ts
+      ID: task-task-tracker-feat-database-schema-1
+      Title: Create users table migration
+    - AcceptanceCriteria:
+      - Migration file created at src/models/migrations/002-create-tasks-table.ts
+      - Tasks table schema includes all required fields with correct data types
+      - Foreign key relationship to users table is established with CASCADE
+      - Status ENUM type created and dropped properly in down migration
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-database-schema-1
+      Description: Implement migration 002 to create the tasks table with id, user_id,
+        title, description, status, created_at, and updated_at columns. Add foreign
+        key constraint to users table with CASCADE operations. Define ENUM type for
+        status field (pending, completed). Include proper validation rules and down
+        migration to clean up ENUM type.
+      EstimatedEffort: M
+      Files:
+      - src/models/migrations/002-create-tasks-table.ts
+      ID: task-task-tracker-feat-database-schema-2
+      Title: Create tasks table migration
+    - AcceptanceCriteria:
+      - Migration file created at src/models/migrations/003-add-indexes.ts
+      - Index on user_id column is created
+      - Compound index on (user_id, status) is created
+      - Index on created_at column is created
+      - Down migration properly removes all indexes
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-database-schema-2
+      Description: Implement migration 003 to add performance-optimized indexes on
+        the tasks table. Create index on user_id for filtering tasks by user, compound
+        index on (user_id, status) for filtered queries, and index on created_at for
+        date-based sorting. Include down migration to drop all indexes.
+      EstimatedEffort: S
+      Files:
+      - src/models/migrations/003-add-indexes.ts
+      ID: task-task-tracker-feat-database-schema-3
+      Title: Create performance indexes migration
+    - AcceptanceCriteria:
+      - User model file created at src/models/user.model.ts
+      - All fields defined with correct types and validations
+      - Password hashing method implemented
+      - Password comparison method implemented
+      - Model properly exports TypeScript interfaces
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-database-schema-1
+      Description: Create the User model class extending Sequelize Model with id,
+        email, password_hash, created_at, and updated_at fields. Add email validation,
+        password hashing methods, and instance methods for password comparison. Configure
+        model associations and timestamps.
+      EstimatedEffort: M
+      Files:
+      - src/models/user.model.ts
+      ID: task-task-tracker-feat-database-schema-4
+      Title: Implement User Sequelize model
+    - AcceptanceCriteria:
+      - Task model file created at src/models/task.model.ts
+      - All fields defined with correct types and validations
+      - BelongsTo association to User model is configured
+      - Status validation ensures only valid ENUM values
+      - Model properly exports TypeScript interfaces
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-database-schema-2
+      - task-task-tracker-feat-database-schema-4
+      Description: Create the Task model class extending Sequelize Model with id,
+        user_id, title, description, status, created_at, and updated_at fields. Define
+        association to User model (belongsTo relationship). Add validation rules for
+        title length and status ENUM values. Include methods for status transitions.
+      EstimatedEffort: M
+      Files:
+      - src/models/task.model.ts
+      ID: task-task-tracker-feat-database-schema-5
+      Title: Implement Task Sequelize model
+    - AcceptanceCriteria:
+      - Index file created at src/models/index.ts
+      - All models imported and registered with Sequelize
+      - Bidirectional associations configured (User hasMany Tasks, Task belongsTo
+        User)
+      - Sequelize instance and all models exported
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-database-schema-4
+      - task-task-tracker-feat-database-schema-5
+      Description: Create the models index file to initialize Sequelize, register
+        all models, and configure bidirectional associations between User and Task
+        models. Set up hasMany relationship from User to Tasks and belongsTo from
+        Task to User. Export all models and Sequelize instance.
+      EstimatedEffort: S
+      Files:
+      - src/models/index.ts
+      ID: task-task-tracker-feat-database-schema-6
+      Title: Create models index and configure associations
+    - AcceptanceCriteria:
+      - Database config file created at src/api/config/database.config.ts
+      - Environment-based configuration supported
+      - Connection pooling configured with appropriate limits
+      - Migration paths properly configured
+      - Connection retry logic implemented
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create database configuration file with PostgreSQL connection settings,
+        Sequelize options, and migration configuration. Support environment-based
+        configuration (development, test, production). Include connection pooling
+        settings, logging configuration, and migration path setup. Add retry logic
+        for connection failures.
+      EstimatedEffort: M
+      Files:
+      - src/api/config/database.config.ts
+      ID: task-task-tracker-feat-database-schema-7
+      Title: Implement database configuration
+    - AcceptanceCriteria:
+      - All three migrations execute successfully in order
+      - Tables created with correct schema and constraints
+      - All indexes created and named correctly
+      - Rollback migrations clean up all database objects
+      - Migration runner handles errors gracefully
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-database-schema-1
+      - task-task-tracker-feat-database-schema-2
+      - task-task-tracker-feat-database-schema-3
+      - task-task-tracker-feat-database-schema-7
+      Description: Set up migration runner script to execute all migrations in order.
+        Test migration up and down operations in a local PostgreSQL instance. Verify
+        all tables, indexes, and constraints are created correctly. Validate that
+        rollback operations clean up properly without leaving artifacts.
+      EstimatedEffort: M
+      Files:
+      - src/models/migrations/001-create-users-table.ts
+      - src/models/migrations/002-create-tasks-table.ts
+      - src/models/migrations/003-add-indexes.ts
+      ID: task-task-tracker-feat-database-schema-8
+      Title: Create migration runner and test migrations
+  - FeatureID: task-tracker-feat-authentication-utilities
+    FeatureTitle: Authentication Utilities and Middleware
+    Tasks:
+    - AcceptanceCriteria:
+      - generateToken creates valid JWT tokens with userId and email payload
+      - verifyToken successfully validates and decodes valid tokens
+      - verifyToken throws AppError with 401 status for invalid/expired tokens
+      - Token expiration defaults to 24 hours and is configurable
+      - All functions have proper TypeScript type definitions
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create JWT token generation and verification utilities with proper
+        error handling. Implement generateToken to create signed JWT tokens with user
+        payload and configurable expiration. Implement verifyToken to validate and
+        decode JWT tokens, throwing AppError for invalid/expired tokens. Add proper
+        TypeScript interfaces for TokenPayload and DecodedToken.
+      EstimatedEffort: S
+      Files:
+      - src/api/utils/jwt.util.ts
+      - src/api/types/index.ts
+      ID: task-task-tracker-feat-authentication-utilities-1
+      Title: Implement JWT utility functions
+    - AcceptanceCriteria:
+      - hashPassword generates bcrypt hashes with configurable salt rounds
+      - comparePassword correctly validates matching passwords
+      - comparePassword returns false for non-matching passwords
+      - Functions handle errors gracefully and return proper types
+      - Salt rounds default to 10 for security
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create bcrypt-based password hashing and comparison utilities.
+        Implement hashPassword function with configurable salt rounds (default 10)
+        for secure password storage. Implement comparePassword function to verify
+        plaintext passwords against hashed versions. Include proper error handling
+        and TypeScript type safety.
+      EstimatedEffort: S
+      Files:
+      - src/api/utils/password.util.ts
+      ID: task-task-tracker-feat-authentication-utilities-2
+      Title: Implement password hashing utilities
+    - AcceptanceCriteria:
+      - Logger configured with multiple log levels (error, warn, info, debug)
+      - Logger outputs structured JSON format for production
+      - Constants file exports all required configuration values
+      - Logger supports contextual logging with request metadata
+      - Environment variables properly loaded and validated
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Implement structured logging utility using winston or similar library
+        with proper log levels and formatting. Create constants file for application-wide
+        configuration values like JWT_SECRET, JWT_EXPIRATION, BCRYPT_ROUNDS, and environment-specific
+        settings. Ensure logger captures request context, error stacks, and user IDs
+        for debugging.
+      EstimatedEffort: S
+      Files:
+      - src/api/utils/logger.ts
+      - src/api/utils/constants.ts
+      ID: task-task-tracker-feat-authentication-utilities-3
+      Title: Setup logger and constants utilities
+    - AcceptanceCriteria:
+      - AuthRequest interface extends Express Request type
+      - User property includes id and email fields with proper types
+      - Type definitions properly merged with Express module
+      - TypeScript compiler recognizes custom types without errors
+      - Autocomplete works for req.user in IDE
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create TypeScript declaration file to extend Express Request type
+        with authenticated user context. Define AuthRequest interface that includes
+        user property with id and email fields. Ensure type definitions are properly
+        recognized throughout the application for type safety in middleware and route
+        handlers.
+      EstimatedEffort: S
+      Files:
+      - src/api/types/express.d.ts
+      - src/api/types/index.ts
+      ID: task-task-tracker-feat-authentication-utilities-4
+      Title: Implement custom Express type definitions
+    - AcceptanceCriteria:
+      - AppError class properly extends Error with statusCode and isOperational properties
+      - Error middleware logs all errors with request context and stack traces
+      - Operational errors return specific status codes and messages to client
+      - Non-operational errors return generic 500 message without leaking internals
+      - Middleware integrates with logger utility for structured error logging
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-authentication-utilities-3
+      Description: Create AppError class for operational errors with statusCode and
+        message properties. Implement global error handler middleware that catches
+        all errors, logs them with proper context, and returns standardized JSON error
+        responses. Distinguish between operational errors (safe to expose) and programming
+        errors (hide details from client).
+      EstimatedEffort: M
+      Files:
+      - src/api/middleware/error.middleware.ts
+      ID: task-task-tracker-feat-authentication-utilities-5
+      Title: Implement error handling middleware
+    - AcceptanceCriteria:
+      - Middleware extracts token from Authorization Bearer header correctly
+      - Valid tokens result in req.user being populated with userId and email
+      - Missing or malformed Authorization header returns 401 error
+      - Invalid or expired tokens return 401 error with appropriate message
+      - Middleware properly chains to next handler on success
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-authentication-utilities-1
+      - task-task-tracker-feat-authentication-utilities-4
+      - task-task-tracker-feat-authentication-utilities-5
+      Description: Create JWT authentication middleware that extracts Bearer tokens
+        from Authorization header, verifies them using jwt.util, and injects decoded
+        user data into request object. Handle missing tokens, malformed headers, and
+        invalid/expired tokens with proper error responses. Ensure middleware works
+        seamlessly with AuthRequest type.
+      EstimatedEffort: M
+      Files:
+      - src/api/middleware/auth.middleware.ts
+      ID: task-task-tracker-feat-authentication-utilities-6
+      Title: Implement authentication middleware
+    - AcceptanceCriteria:
+      - Validation middleware accepts Joi schemas for body, query, and params
+      - Invalid requests return 400 status with detailed error messages
+      - Valid requests pass through to next handler without modification
+      - Middleware supports validating multiple request parts in one call
+      - Error messages clearly indicate which fields failed validation
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-authentication-utilities-5
+      Description: Create generic validation middleware factory that accepts Joi schemas
+        and validates request body, query, or params. Implement middleware that returns
+        400 errors with detailed validation messages on failure. Support validation
+        of multiple request parts simultaneously and provide clear error messages
+        for debugging.
+      EstimatedEffort: M
+      Files:
+      - src/api/middleware/validation.middleware.ts
+      ID: task-task-tracker-feat-authentication-utilities-7
+      Title: Implement validation middleware with Joi
+    - AcceptanceCriteria:
+      - Rate limiting middleware configurable with max requests and time window
+      - Exceeding rate limit returns 429 Too Many Requests status
+      - Rate limits tracked per IP address or authenticated user ID
+      - Different rate limit configurations supported for different endpoint types
+      - Rate limit headers included in responses (X-RateLimit-Limit, X-RateLimit-Remaining)
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-authentication-utilities-5
+      Description: Create rate limiting middleware using express-rate-limit or similar
+        library to prevent abuse. Configure different rate limits for authentication
+        endpoints (stricter) versus regular API endpoints. Implement proper error
+        responses when rate limits are exceeded and ensure rate limit state is tracked
+        per IP address or user.
+      EstimatedEffort: M
+      Files:
+      - src/api/middleware/rate-limit.middleware.ts
+      ID: task-task-tracker-feat-authentication-utilities-8
+      Title: Implement rate limiting middleware
+  - FeatureID: task-tracker-feat-user-registration
+    FeatureTitle: User Registration
+    Tasks:
+    - AcceptanceCriteria:
+      - hashPassword function returns bcrypt hash for given password
+      - comparePasswords function correctly validates password against hash
+      - Password strength validation enforces 8+ characters and complexity rules
+      - Unit tests cover all password utility functions
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create password hashing and comparison utilities using bcrypt.
+        Implement hashPassword function to hash passwords with salt rounds and comparePasswords
+        function to verify passwords against hashes. Add password strength validation
+        helper function checking minimum 8 characters and complexity rules.
+      EstimatedEffort: S
+      Files:
+      - src/api/utils/password.util.ts
+      ID: task-task-tracker-feat-user-registration-1
+      Title: Implement password utility functions
+    - AcceptanceCriteria:
+      - UserRepository class instantiates with database connection
+      - findByEmail returns user object or null if not found
+      - createUser inserts user and returns generated user ID
+      - Database errors are properly caught and handled
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create UserRepository class with database access methods for user
+        management. Implement findByEmail method to query users by email address and
+        createUser method to insert new user records with hashed passwords. Handle
+        database errors and return appropriate data structures.
+      EstimatedEffort: M
+      Files:
+      - src/api/repositories/user.repository.ts
+      ID: task-task-tracker-feat-user-registration-2
+      Title: Implement user repository methods
+    - AcceptanceCriteria:
+      - AuthService register method checks for existing email and throws 409 error
+      - Password strength validation is enforced before hashing
+      - Password is hashed using bcrypt before storage
+      - Successful registration returns userId
+      - All error cases throw AppError with appropriate status codes
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-registration-1
+      - task-task-tracker-feat-user-registration-2
+      Description: Create AuthService class with user registration business logic.
+        Implement register method that checks for duplicate emails using UserRepository,
+        validates password strength, hashes passwords using password utilities, and
+        creates new user records. Throw appropriate AppError exceptions for validation
+        failures and duplicate emails.
+      EstimatedEffort: M
+      Files:
+      - src/api/services/auth.service.ts
+      ID: task-task-tracker-feat-user-registration-3
+      Title: Implement authentication service register method
+    - AcceptanceCriteria:
+      - Email validation ensures proper email format
+      - Password validation ensures field is present and non-empty
+      - Validation errors return 400 status with clear error messages
+      - Input sanitization prevents common injection attacks
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create validation middleware for authentication endpoints using
+        express-validator or similar library. Implement validation rules for registration
+        endpoint checking email format, password presence, and required field completeness.
+        Add sanitization to prevent injection attacks.
+      EstimatedEffort: S
+      Files:
+      - src/api/validators/auth.validator.ts
+      ID: task-task-tracker-feat-user-registration-4
+      Title: Implement request validation middleware
+    - AcceptanceCriteria:
+      - Register endpoint accepts POST requests with email and password
+      - Successful registration returns 201 status with userId
+      - Errors are properly forwarded to error handling middleware
+      - Response format matches specification with message and userId fields
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-registration-3
+      Description: Create AuthController class with register method handling POST
+        requests to /api/auth/register. Extract email and password from request body,
+        call AuthService.register method, and return 201 status with userId on success.
+        Implement error handling using Express next function to pass errors to error
+        middleware.
+      EstimatedEffort: M
+      Files:
+      - src/api/controllers/auth.controller.ts
+      ID: task-task-tracker-feat-user-registration-5
+      Title: Implement authentication controller register endpoint
+    - AcceptanceCriteria:
+      - POST /api/auth/register route is registered
+      - Validation middleware executes before controller method
+      - Route is accessible at /api/auth/register path
+      - Router is properly exported for application integration
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-registration-4
+      - task-task-tracker-feat-user-registration-5
+      Description: Create authentication router configuration file defining POST /api/auth/register
+        endpoint. Wire up validation middleware and controller methods in correct
+        order. Mount router to Express application with /api/auth base path.
+      EstimatedEffort: S
+      Files:
+      - src/api/routes/auth.routes.ts
+      ID: task-task-tracker-feat-user-registration-6
+      Title: Configure authentication routes
+    - AcceptanceCriteria:
+      - Test successfully registers user with valid credentials and returns 201
+      - Test verifies duplicate email returns 409 error
+      - Test validates weak passwords are rejected with appropriate error
+      - Test validates invalid email formats are rejected
+      - Test verifies user record is created in database with hashed password
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-registration-6
+      Description: Create integration tests for user registration endpoint covering
+        success cases, duplicate email detection, invalid email formats, weak passwords,
+        and missing required fields. Use test database and HTTP client to make actual
+        requests. Verify response status codes, error messages, and database state
+        after each test.
+      EstimatedEffort: M
+      Files:
+      - src/api/tests/integration/auth.test.ts
+      ID: task-task-tracker-feat-user-registration-7
+      Title: Write integration tests for registration endpoint
+    - AcceptanceCriteria:
+      - Test verifies duplicate email throws 409 AppError
+      - Test verifies weak password throws validation AppError
+      - Test verifies successful registration returns userId
+      - Test verifies password is hashed before storage
+      - All tests use mocked dependencies for isolation
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-registration-3
+      Description: Create unit tests for AuthService.register method using mocked
+        UserRepository. Test duplicate email detection, password strength validation,
+        password hashing integration, and successful user creation. Verify all error
+        paths throw appropriate AppError instances.
+      EstimatedEffort: M
+      Files:
+      - src/api/tests/unit/auth.service.test.ts
+      ID: task-task-tracker-feat-user-registration-8
+      Title: Write unit tests for authentication service
+  - FeatureID: task-tracker-feat-user-login
+    FeatureTitle: User Login and Session Management
+    Tasks:
+    - AcceptanceCriteria:
+      - hashPassword function correctly hashes passwords using bcrypt
+      - comparePasswords function validates passwords against hashes
+      - generateToken creates JWT tokens with 24-hour expiration
+      - JWT secret is configurable via environment variables
+      - All utility functions have proper error handling
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create utility functions for password hashing using bcrypt and
+        JWT token generation with 24-hour expiration. Implement comparePasswords function
+        for login validation. Configure JWT secret from environment variables and
+        ensure proper error handling for token operations.
+      EstimatedEffort: S
+      Files:
+      - src/api/utils/password.util.ts
+      - src/api/utils/jwt.util.ts
+      ID: task-task-tracker-feat-user-login-1
+      Title: Implement password utilities and JWT token generation
+    - AcceptanceCriteria:
+      - UserRepository class implements all CRUD operations
+      - findByEmail returns user or null correctly
+      - Database queries use parameterized statements
+      - Error handling for database connection failures
+      - Repository methods return properly typed results
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create UserRepository class with database operations for user management.
+        Implement findByEmail, findById, create, and update methods. Handle database
+        connection errors and ensure proper query parameterization to prevent SQL
+        injection. Use appropriate ORM or database client for the chosen database.
+      EstimatedEffort: M
+      Files:
+      - src/api/repositories/user.repository.ts
+      ID: task-task-tracker-feat-user-login-2
+      Title: Implement User Repository database layer
+    - AcceptanceCriteria:
+      - Login method validates email and password correctly
+      - Password comparison uses secure bcrypt comparison
+      - JWT token generated with user ID and 24-hour expiration
+      - Returns user object without password hash
+      - Throws appropriate AppError for invalid credentials
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-login-1
+      - task-task-tracker-feat-user-login-2
+      Description: Create AuthService class with login method that validates credentials,
+        compares passwords, and generates JWT tokens. Implement password strength
+        validation with complexity rules. Handle authentication errors with appropriate
+        error messages and status codes. Return user data and token on successful
+        login.
+      EstimatedEffort: M
+      Files:
+      - src/api/services/auth.service.ts
+      ID: task-task-tracker-feat-user-login-3
+      Title: Implement Authentication Service business logic
+    - AcceptanceCriteria:
+      - Login endpoint accepts POST requests with email and password
+      - Returns 200 status with token and user data on success
+      - Logout endpoint returns 200 status with success message
+      - Errors are passed to error middleware using next()
+      - Response format matches API specification
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-login-3
+      Description: Create AuthController class with login and logout HTTP handlers.
+        Implement request validation, call AuthService methods, and format JSON responses.
+        Handle errors through Express middleware with proper HTTP status codes. Ensure
+        controller methods are properly bound for Express routing.
+      EstimatedEffort: M
+      Files:
+      - src/api/controllers/auth.controller.ts
+      ID: task-task-tracker-feat-user-login-4
+      Title: Implement Authentication Controller endpoints
+    - AcceptanceCriteria:
+      - Login validator checks email format and password presence
+      - Validation errors return 400 status with descriptive messages
+      - Input sanitization prevents XSS attacks
+      - Validators are exported as reusable middleware
+      - Validation error handling integrates with error middleware
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Implement validation middleware for login and logout requests using
+        express-validator or similar library. Validate email format, password presence,
+        and sanitize inputs. Create reusable validation chains for authentication
+        endpoints with clear error messages.
+      EstimatedEffort: S
+      Files:
+      - src/api/validators/auth.validator.ts
+      ID: task-task-tracker-feat-user-login-5
+      Title: Create authentication request validators
+    - AcceptanceCriteria:
+      - POST /api/auth/login route configured with validation
+      - POST /api/auth/logout route configured
+      - Routes properly connected to controller methods
+      - Validation middleware executes before controller methods
+      - Routes exported for integration with main app
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-login-4
+      - task-task-tracker-feat-user-login-5
+      Description: Create auth.routes.ts to wire up authentication endpoints. Register
+        POST /api/auth/login and /api/auth/logout routes with proper validation middleware.
+        Connect routes to AuthController methods. Ensure proper middleware order for
+        validation, authentication, and error handling.
+      EstimatedEffort: S
+      Files:
+      - src/api/routes/auth.routes.ts
+      ID: task-task-tracker-feat-user-login-6
+      Title: Configure authentication routes and middleware
+    - AcceptanceCriteria:
+      - Tests cover successful login with valid credentials
+      - Tests verify incorrect password handling
+      - Tests verify non-existent user handling
+      - Password hash is never included in response
+      - Code coverage meets 80% threshold
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-login-3
+      Description: Create comprehensive unit tests for AuthService login method. Mock
+        UserRepository and utility functions. Test successful login, invalid credentials,
+        non-existent users, and edge cases. Verify JWT token generation and user data
+        sanitization. Achieve minimum 80% code coverage.
+      EstimatedEffort: M
+      Files:
+      - src/api/services/auth.service.test.ts
+      ID: task-task-tracker-feat-user-login-7
+      Title: Write unit tests for authentication service
+    - AcceptanceCriteria:
+      - Integration test successfully logs in valid user
+      - Test verifies JWT token in response is valid
+      - Test confirms 401 status for invalid credentials
+      - Test validates request validation errors return 400
+      - Logout endpoint returns success message
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-user-login-6
+      Description: Create integration tests for POST /api/auth/login and /api/auth/logout
+        endpoints. Test full request-response cycle with test database. Verify token
+        generation, response format, error handling, and validation. Test authentication
+        flow from HTTP request to database query.
+      EstimatedEffort: M
+      Files:
+      - src/api/controllers/auth.controller.test.ts
+      ID: task-task-tracker-feat-user-login-8
+      Title: Write integration tests for login endpoints
+  - FeatureID: task-tracker-feat-task-crud-backend
+    FeatureTitle: Task CRUD Operations Backend
+    Tasks:
+    - AcceptanceCriteria:
+      - TaskRepository class implements all CRUD methods (create, findByUserId, findById,
+        update, delete)
+      - All database queries filter by userId to enforce ownership
+      - Proper Prisma types used for task operations
+      - Error handling for database operations implemented
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Implement TaskRepository class with CRUD database operations using
+        Prisma. Include methods for creating, finding, updating, and deleting tasks
+        with proper user ownership filters. Ensure all queries enforce userId constraints
+        for authorization.
+      EstimatedEffort: M
+      Files:
+      - src/api/repositories/task.repository.ts
+      ID: task-task-tracker-feat-task-crud-backend-1
+      Title: Create task repository with database operations
+    - AcceptanceCriteria:
+      - TasksService implements all five methods (getUserTasks, getTaskById, createTask,
+        updateTask, deleteTask)
+      - Status filtering works correctly in getUserTasks
+      - NotFoundError thrown when task doesn't exist or user lacks access
+      - All operations validate user ownership before proceeding
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-task-crud-backend-1
+      Description: Create TasksService class with business logic layer for task operations.
+        Implement getUserTasks with optional status filtering, getTaskById with ownership
+        validation, createTask, updateTask, and deleteTask methods. Handle NotFoundError
+        for invalid task access and enforce user authorization.
+      EstimatedEffort: M
+      Files:
+      - src/api/services/tasks.service.ts
+      ID: task-task-tracker-feat-task-crud-backend-2
+      Title: Implement task service business logic
+    - AcceptanceCriteria:
+      - createTaskValidator enforces required title and validates status enum
+      - updateTaskValidator allows partial updates with proper validation
+      - queryTaskValidator validates status query parameter
+      - All validators return clear error messages for invalid input
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Implement Joi validation schemas for task operations. Create validators
+        for createTask (title required, description optional, status enum), updateTask
+        (all fields optional but validated), and query parameter validation for status
+        filtering. Ensure TaskStatus enum values are enforced.
+      EstimatedEffort: S
+      Files:
+      - src/api/validators/task.validator.ts
+      ID: task-task-tracker-feat-task-crud-backend-3
+      Title: Create task request validators
+    - AcceptanceCriteria:
+      - All five controller methods implemented (getTasks, getTaskById, createTask,
+        updateTask, deleteTask)
+      - Correct HTTP status codes returned (200 for success, 201 for creation)
+      - userId extracted from req.user for all operations
+      - Errors properly passed to next() for middleware handling
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-task-crud-backend-2
+      - task-task-tracker-feat-task-crud-backend-3
+      Description: Implement TasksController class with five route handlers for task
+        CRUD operations. Each handler extracts userId from AuthRequest, validates
+        input, calls appropriate service method, and returns proper HTTP status codes
+        (200, 201). Implement proper error handling with next() middleware.
+      EstimatedEffort: M
+      Files:
+      - src/api/controllers/tasks.controller.ts
+      ID: task-task-tracker-feat-task-crud-backend-4
+      Title: Build tasks controller with HTTP handlers
+    - AcceptanceCriteria:
+      - Router configured with all five endpoints (GET /tasks, GET /tasks/:id, POST
+        /tasks, PUT /tasks/:id, DELETE /tasks/:id)
+      - authenticate middleware applied to all routes
+      - Validators applied to POST and PUT endpoints
+      - Router exported and ready for integration with main app
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-task-crud-backend-4
+      Description: Set up Express router for /api/tasks endpoints. Apply authenticate
+        middleware to all routes, attach validators to POST and PUT routes, and wire
+        up controller methods. Configure proper HTTP methods (GET, POST, PUT, DELETE)
+        for each endpoint including parameterized routes.
+      EstimatedEffort: S
+      Files:
+      - src/api/routes/tasks.routes.ts
+      ID: task-task-tracker-feat-task-crud-backend-5
+      Title: Configure task API routes with middleware
+    - AcceptanceCriteria:
+      - All repository methods have test coverage (create, find, update, delete)
+      - Tests verify userId filtering in database queries
+      - Error cases tested (database failures, not found scenarios)
+      - Test coverage above 90% for repository file
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-task-crud-backend-1
+      Description: Create comprehensive unit tests for TaskRepository using Jest and
+        Prisma mocks. Test all CRUD operations, verify userId filtering in queries,
+        test error scenarios, and ensure proper data transformations. Mock Prisma
+        client responses for isolated testing.
+      EstimatedEffort: M
+      Files:
+      - src/api/repositories/__tests__/task.repository.test.ts
+      ID: task-task-tracker-feat-task-crud-backend-6
+      Title: Write unit tests for task repository
+    - AcceptanceCriteria:
+      - All service methods have test coverage with mocked repository
+      - Authorization logic tested (user ownership validation)
+      - Status filtering tested with various filter values
+      - NotFoundError scenarios properly tested and verified
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-task-crud-backend-2
+      Description: Create unit tests for TasksService mocking TaskRepository. Test
+        business logic for all operations, verify authorization checks, test status
+        filtering, and validate error handling for NotFoundError scenarios. Ensure
+        service properly coordinates between controller and repository layers.
+      EstimatedEffort: M
+      Files:
+      - src/api/services/__tests__/tasks.service.test.ts
+      ID: task-task-tracker-feat-task-crud-backend-7
+      Title: Write unit tests for task service
+    - AcceptanceCriteria:
+      - All five endpoints tested with authenticated requests
+      - Status codes verified (200, 201, 401, 403, 404)
+      - Query parameter filtering tested on GET /tasks
+      - Authorization failures tested (accessing other user's tasks)
+      - Request/response payloads validated against expected schemas
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-task-crud-backend-5
+      Description: Create end-to-end integration tests for all task endpoints using
+        supertest. Test complete request/response cycles with authentication, validate
+        HTTP status codes, test query parameters, verify response payloads, and test
+        authorization failures. Set up test database with proper fixtures.
+      EstimatedEffort: L
+      Files:
+      - src/api/__tests__/integration/tasks.integration.test.ts
+      ID: task-task-tracker-feat-task-crud-backend-8
+      Title: Write integration tests for task API endpoints
+  - FeatureID: task-tracker-feat-backend-server
+    FeatureTitle: Express Server Configuration
+    Tasks:
+    - AcceptanceCriteria:
+      - app.ts exports configured Express application instance
+      - Security middleware (helmet, CORS) properly configured with environment variables
+      - Request parsing middleware enabled for JSON and URL-encoded payloads
+      - Morgan logging middleware configured for HTTP request logging
+      - Compression middleware enabled for response optimization
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create the app.ts file with Express application instance. Configure
+        security middleware (helmet, CORS), request parsing (express.json, urlencoded),
+        compression, and morgan logging. Set up the basic application structure that
+        other components will build upon.
+      EstimatedEffort: S
+      Files:
+      - src/api/app.ts
+      - src/api/config/app.config.ts
+      ID: task-task-tracker-feat-backend-server-1
+      Title: Setup Express application configuration
+    - AcceptanceCriteria:
+      - Rate limiting middleware created in src/api/middleware/rate-limit.middleware.ts
+      - Configurable rate limits based on environment variables
+      - Rate limiter applied to /api routes in app.ts
+      - Appropriate error responses when rate limit exceeded
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-server-1
+      Description: Create rate limiting middleware to protect API endpoints from abuse.
+        Configure appropriate rate limits for different endpoint types. Implement
+        the middleware in a way that can be applied globally or to specific routes.
+      EstimatedEffort: S
+      Files:
+      - src/api/middleware/rate-limit.middleware.ts
+      - src/api/app.ts
+      ID: task-task-tracker-feat-backend-server-2
+      Title: Implement rate limiting middleware
+    - AcceptanceCriteria:
+      - AppError class created with statusCode, isOperational, and code properties
+      - ErrorCode enum defined with all required error types
+      - Error middleware converts errors to consistent JSON response format
+      - Error handler distinguishes operational vs programming errors
+      - Error middleware registered as last middleware in app.ts
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-server-1
+      Description: Create centralized error handling middleware with custom AppError
+        class and ErrorCode enum. Implement error classification for authentication,
+        authorization, validation, resource, conflict, and server errors. Format error
+        responses consistently across the application.
+      EstimatedEffort: M
+      Files:
+      - src/api/middleware/error.middleware.ts
+      - src/api/utils/constants.ts
+      - src/api/app.ts
+      ID: task-task-tracker-feat-backend-server-3
+      Title: Implement error handling middleware
+    - AcceptanceCriteria:
+      - Winston logger configured in src/api/utils/logger.ts
+      - Environment-based log levels (debug in dev, info in production)
+      - Structured log format with timestamps and metadata
+      - Console and file transports configured appropriately
+      - Logger exported as singleton for application-wide use
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create Winston logger configuration for structured application
+        logging. Configure different log levels for development and production environments.
+        Set up log formatting, transports (console, file), and log rotation. This
+        logger will be used across the application for consistent logging.
+      EstimatedEffort: S
+      Files:
+      - src/api/utils/logger.ts
+      ID: task-task-tracker-feat-backend-server-4
+      Title: Setup Winston logger utility
+    - AcceptanceCriteria:
+      - Routes index file created at src/api/routes/index.ts
+      - Express Router instance created and exported
+      - Route structure prepared for mounting resource-specific routers
+      - Routes properly integrated into app.ts
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-server-1
+      Description: Create the routes/index.ts file that aggregates all API route modules.
+        Set up the router structure that will be mounted at /api. Prepare route stubs
+        for tasks, users, and other resource endpoints that will be implemented in
+        dependent features.
+      EstimatedEffort: S
+      Files:
+      - src/api/routes/index.ts
+      - src/api/app.ts
+      ID: task-task-tracker-feat-backend-server-5
+      Title: Implement API routes aggregation
+    - AcceptanceCriteria:
+      - Health check endpoint responds at GET /api/health
+      - Response includes status field with 'healthy' value
+      - Response includes ISO timestamp
+      - Endpoint returns 200 status code when server is operational
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-server-1
+      Description: Create a health check endpoint at /api/health that returns server
+        status and timestamp. This endpoint should be accessible without authentication
+        and provide basic information about server availability.
+      EstimatedEffort: S
+      Files:
+      - src/api/app.ts
+      ID: task-task-tracker-feat-backend-server-6
+      Title: Implement health check endpoint
+    - AcceptanceCriteria:
+      - server.ts created with startServer async function
+      - Database connection tested using sequelize.authenticate()
+      - Model sync enabled for development environment only
+      - HTTP server starts on configured PORT with logging
+      - Startup failures logged and process exits with code 1
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-server-1
+      - task-task-tracker-feat-backend-server-4
+      Description: Create server.ts to handle server initialization, database connection
+        testing, model synchronization, and HTTP server startup. Implement graceful
+        error handling for startup failures. Use Winston logger for startup events
+        and errors.
+      EstimatedEffort: M
+      Files:
+      - src/api/server.ts
+      ID: task-task-tracker-feat-backend-server-7
+      Title: Implement server initialization and startup
+    - AcceptanceCriteria:
+      - app.config.ts exports configuration object with all required settings
+      - Environment variables properly typed and validated
+      - Default values provided for development environment
+      - Configuration includes PORT, CORS origin, database settings, JWT config
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Define application configuration in app.config.ts for all environment-dependent
+        settings. Include PORT, NODE_ENV, FRONTEND_URL, database connection, JWT secrets,
+        and rate limiting configuration. Document all required environment variables.
+      EstimatedEffort: S
+      Files:
+      - src/api/config/app.config.ts
+      ID: task-task-tracker-feat-backend-server-8
+      Title: Configure application environment variables
+    - AcceptanceCriteria:
+      - Test suite created for server initialization
+      - Tests verify database connection on startup
+      - Tests confirm all middleware is registered correctly
+      - Health check endpoint tested and returns expected response
+      - Tests run in isolated test environment with test database
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-server-7
+      - task-task-tracker-feat-backend-server-6
+      - task-task-tracker-feat-backend-server-3
+      - task-task-tracker-feat-backend-server-2
+      Description: Create integration tests that verify the complete server startup
+        sequence. Test database connection, middleware registration, route mounting,
+        and health check endpoint. Ensure server can start and stop cleanly in test
+        environment.
+      EstimatedEffort: M
+      Files:
+      - src/api/__tests__/server.test.ts
+      - src/api/__tests__/app.test.ts
+      ID: task-task-tracker-feat-backend-server-9
+      Title: Integration testing for server startup
+  - FeatureID: task-tracker-feat-frontend-infrastructure
+    FeatureTitle: Frontend Infrastructure and Routing
+    Tasks:
+    - AcceptanceCriteria:
+      - Vite project successfully initialized with React TypeScript template
+      - All dependencies installed (react-router-dom, axios, zod, react-hook-form)
+      - TypeScript configured with strict mode and path aliases
+      - Dev server runs successfully on localhost
+      - Vite config supports environment variables via import.meta.env
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create a new Vite project with React and TypeScript template. Configure
+        package.json with necessary dependencies including React Router, Axios, React
+        Hook Form, and Zod. Set up TypeScript compiler options for strict type checking.
+        Configure Vite build settings and environment variable handling.
+      EstimatedEffort: S
+      Files:
+      - frontend/package.json
+      - frontend/tsconfig.json
+      - frontend/vite.config.ts
+      - frontend/index.html
+      ID: task-task-tracker-feat-frontend-infrastructure-1
+      Title: Initialize React project with Vite and TypeScript
+    - AcceptanceCriteria:
+      - Tailwind CSS properly installed and configured
+      - Global styles file created with @tailwind directives
+      - Custom theme colors and spacing defined in config
+      - CSS classes working in components
+      - Production build properly purges unused styles
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-1
+      Description: Install and configure Tailwind CSS with PostCSS and Autoprefixer.
+        Set up tailwind.config.js with custom theme configuration. Create global stylesheet
+        with Tailwind directives and custom CSS variables. Configure CSS purging for
+        production builds.
+      EstimatedEffort: S
+      Files:
+      - frontend/package.json
+      - frontend/tailwind.config.js
+      - frontend/postcss.config.js
+      - frontend/src/styles/index.css
+      ID: task-task-tracker-feat-frontend-infrastructure-2
+      Title: Configure Tailwind CSS and global styles
+    - AcceptanceCriteria:
+      - All domain model interfaces defined (User, Task, Project, Epic)
+      - API response wrapper types created (ApiResponse, PaginatedResponse)
+      - Enums defined for status, priority, and roles
+      - Type exports organized and importable throughout app
+      - No TypeScript errors in types file
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-1
+      Description: Define all shared TypeScript interfaces and types for the application
+        including User, Task, Project, Epic, and API response types. Create enums
+        for task status, priority, and user roles. Set up type guards and utility
+        types for type-safe API handling.
+      EstimatedEffort: S
+      Files:
+      - frontend/src/types/index.ts
+      ID: task-task-tracker-feat-frontend-infrastructure-3
+      Title: Create TypeScript type definitions and interfaces
+    - AcceptanceCriteria:
+      - Token storage functions (getToken, setToken, clearToken) implemented
+      - LocalStorage wrapper handles errors gracefully
+      - Token expiration validation included
+      - Storage utility fully typed with TypeScript
+      - Unit tests verify storage operations
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-3
+      Description: Create utility functions for localStorage operations including
+        token storage, retrieval, and clearing. Implement secure token handling with
+        expiration checks. Add methods for storing and retrieving user preferences.
+        Include error handling for storage quota exceeded scenarios.
+      EstimatedEffort: S
+      Files:
+      - frontend/src/utils/storage.ts
+      ID: task-task-tracker-feat-frontend-infrastructure-4
+      Title: Implement storage utility and token management
+    - AcceptanceCriteria:
+      - Axios instance configured with base URL and timeout
+      - Request interceptor adds Authorization header with token
+      - Response interceptor handles 401 by clearing token and redirecting
+      - Generic HTTP methods typed with TypeScript generics
+      - Service exports reusable API client for all requests
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-3
+      - task-task-tracker-feat-frontend-infrastructure-4
+      Description: Create centralized Axios instance with base URL configuration.
+        Implement request interceptor to attach JWT tokens from localStorage. Add
+        response interceptor to handle 401 errors and trigger logout. Create generic
+        HTTP methods (get, post, put, delete) with proper error handling and TypeScript
+        generics.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/services/api.service.ts
+      ID: task-task-tracker-feat-frontend-infrastructure-5
+      Title: Build Axios API service with interceptors
+    - AcceptanceCriteria:
+      - Login method calls API and stores token
+      - Register method creates account and auto-logs in
+      - Logout clears token and user state
+      - getUserFromToken decodes JWT and returns user data
+      - All methods properly typed and handle errors
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-5
+      Description: Build auth service on top of API service with login, register,
+        and logout methods. Implement JWT token decoding to extract user information.
+        Add token validation and refresh logic. Create methods to check authentication
+        status and get current user from token.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/services/auth.service.ts
+      ID: task-task-tracker-feat-frontend-infrastructure-6
+      Title: Create authentication service layer
+    - AcceptanceCriteria:
+      - AuthContext created with proper TypeScript types
+      - AuthProvider manages user and loading state
+      - Login, register, logout methods update context state
+      - useAuth hook provides typed access to auth context
+      - Token persistence works across page refreshes
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-6
+      Description: Create React context for global authentication state management.
+        Build AuthProvider component that wraps the app and provides user state, loading
+        state, and auth methods. Implement useEffect to check for existing tokens
+        on mount. Create custom useAuth hook for easy context consumption.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/context/AuthContext.tsx
+      - frontend/src/hooks/useAuth.ts
+      ID: task-task-tracker-feat-frontend-infrastructure-7
+      Title: Implement AuthContext and provider
+    - AcceptanceCriteria:
+      - BrowserRouter configured in App.tsx
+      - Public and protected routes defined
+      - ProtectedRoute component redirects unauthenticated users
+      - Navigation works between all routes
+      - 404 not found route handles invalid paths
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-7
+      Description: Configure React Router v6 with BrowserRouter. Define route structure
+        including public routes (login, register) and protected routes (dashboard,
+        tasks, projects). Create ProtectedRoute component that checks authentication
+        and redirects to login. Set up nested routes for authenticated layout.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/App.tsx
+      - frontend/src/components/ProtectedRoute.tsx
+      ID: task-task-tracker-feat-frontend-infrastructure-8
+      Title: Setup React Router with route configuration
+    - AcceptanceCriteria:
+      - main.tsx renders app to root element
+      - AuthProvider wraps entire application
+      - StrictMode enabled for development
+      - Global styles imported and applied
+      - Application boots without errors
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-2
+      - task-task-tracker-feat-frontend-infrastructure-8
+      Description: Set up main.tsx as application entry point rendering React app
+        to DOM. Wrap App component with AuthProvider for global auth state. Add React
+        StrictMode for development warnings. Configure error boundary for graceful
+        error handling. Import global styles.
+      EstimatedEffort: S
+      Files:
+      - frontend/src/main.tsx
+      - frontend/src/App.tsx
+      ID: task-task-tracker-feat-frontend-infrastructure-9
+      Title: Create application entry point and root setup
+    - AcceptanceCriteria:
+      - .env.example documents all required variables
+      - Environment variables accessible via import.meta.env
+      - Startup validation checks for missing required env vars
+      - Development and production builds succeed
+      - API base URL correctly configured from environment
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-infrastructure-1
+      Description: Create .env.example file with required environment variables. Add
+        .env to .gitignore. Configure Vite to expose environment variables. Create
+        validation utility to check required env vars on startup. Add build script
+        that validates environment before production build.
+      EstimatedEffort: S
+      Files:
+      - frontend/.env.example
+      - frontend/.gitignore
+      - frontend/vite.config.ts
+      - frontend/src/config/env.ts
+      ID: task-task-tracker-feat-frontend-infrastructure-10
+      Title: Add environment configuration and build validation
+  - FeatureID: task-tracker-feat-frontend-auth-ui
+    FeatureTitle: Frontend Authentication UI
+    Tasks:
+    - AcceptanceCriteria:
+      - auth.service.ts exports login, register, logout, and getToken functions
+      - JWT tokens stored in localStorage with key 'auth_token'
+      - Token automatically cleared on 401 responses
+      - All service functions return proper typed responses
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Implement auth.service.ts with login, register, and logout functions.
+        Add JWT token storage/retrieval in localStorage. Include token validation
+        and automatic cleanup on expiration. Set up axios interceptor to attach tokens
+        to requests.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/services/auth.service.ts
+      - frontend/src/services/api.service.ts
+      ID: task-task-tracker-feat-frontend-auth-ui-1
+      Title: Create authentication service and token management
+    - AcceptanceCriteria:
+      - Email validator checks for valid format using regex
+      - Password validator enforces 8+ chars with uppercase, lowercase, and number
+      - Validation functions return error messages when validation fails
+      - All validators are pure functions with unit test coverage
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create validators.ts with email, password, and form validation
+        functions. Implement regex patterns for email validation and password strength
+        requirements (min 8 chars, uppercase, lowercase, number). Export reusable
+        validation functions for forms.
+      EstimatedEffort: S
+      Files:
+      - frontend/src/utils/validators.ts
+      ID: task-task-tracker-feat-frontend-auth-ui-2
+      Title: Implement form validation utilities
+    - AcceptanceCriteria:
+      - Login form renders with email and password fields
+      - Form validation triggers on submit and displays errors inline
+      - Successful login stores JWT and redirects to /dashboard
+      - Error messages display user-friendly text from API responses
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-auth-ui-1
+      - task-task-tracker-feat-frontend-auth-ui-2
+      Description: Create LoginPage.tsx with email/password form fields and submit
+        handler. Integrate form validation from validators.ts. Display field-level
+        and form-level errors. Call auth.service login function on submit and redirect
+        to dashboard on success.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/pages/LoginPage.tsx
+      ID: task-task-tracker-feat-frontend-auth-ui-3
+      Title: Build Login page component
+    - AcceptanceCriteria:
+      - Register form renders with email, password, and confirm password fields
+      - Password match validation displays error when passwords don't match
+      - Successful registration redirects to /login with success message
+      - Duplicate email error displays user-friendly message
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-auth-ui-1
+      - task-task-tracker-feat-frontend-auth-ui-2
+      Description: Create RegisterPage.tsx with email, password, and confirm password
+        fields. Implement client-side validation for password match and strength requirements.
+        Call auth.service register function and redirect to login on success with
+        success message.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/pages/RegisterPage.tsx
+      ID: task-task-tracker-feat-frontend-auth-ui-4
+      Title: Build Register page component
+    - AcceptanceCriteria:
+      - PrivateRoute checks token existence before rendering children
+      - Unauthenticated users redirected to /login with return URL
+      - Authenticated users can access protected routes
+      - Component works with React Router route definitions
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-auth-ui-1
+      Description: Implement PrivateRoute.tsx that checks for valid JWT token in localStorage.
+        Redirect unauthenticated users to /login. Support optional role-based access
+        control props. Render protected component when authenticated.
+      EstimatedEffort: S
+      Files:
+      - frontend/src/components/PrivateRoute.tsx
+      ID: task-task-tracker-feat-frontend-auth-ui-5
+      Title: Create PrivateRoute wrapper component
+    - AcceptanceCriteria:
+      - ErrorMessage component accepts message and onDismiss props
+      - Component renders with error icon and message text
+      - Close button calls onDismiss callback when clicked
+      - Component includes role='alert' for screen readers
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Build ErrorMessage.tsx component for displaying user-friendly error
+        messages. Support dismissible errors with close button. Include error icon
+        and proper ARIA roles for accessibility. Style with error-specific CSS classes.
+      EstimatedEffort: S
+      Files:
+      - frontend/src/components/ErrorMessage.tsx
+      ID: task-task-tracker-feat-frontend-auth-ui-6
+      Title: Create reusable ErrorMessage component
+    - AcceptanceCriteria:
+      - Response interceptor catches all HTTP error responses
+      - 401 errors clear token and redirect to /login
+      - Error messages mapped from backend to user-friendly text
+      - All error responses include user-facing message property
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-auth-ui-1
+      Description: Add axios response interceptor in api.service.ts to handle 401,
+        403, 404, and 5xx errors. Map backend error messages to user-friendly text.
+        Implement automatic token clearing and redirect on 401. Return standardized
+        error objects.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/services/api.service.ts
+      ID: task-task-tracker-feat-frontend-auth-ui-7
+      Title: Implement API error interceptor and handling
+    - AcceptanceCriteria:
+      - useAuth hook provides isAuthenticated and user state
+      - Login and Register pages redirect to /dashboard if already authenticated
+      - Expired tokens trigger automatic logout and redirect
+      - Authentication state persists across page refreshes
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-auth-ui-3
+      - task-task-tracker-feat-frontend-auth-ui-4
+      - task-task-tracker-feat-frontend-auth-ui-5
+      Description: Implement useAuth hook or context for tracking authentication state
+        across components. Add logic to redirect authenticated users away from login/register
+        pages. Handle token expiration detection and automatic logout.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/hooks/useAuth.ts
+      - frontend/src/pages/LoginPage.tsx
+      - frontend/src/pages/RegisterPage.tsx
+      ID: task-task-tracker-feat-frontend-auth-ui-8
+      Title: Add authentication state management and auto-redirect
+  - FeatureID: task-tracker-feat-frontend-task-ui
+    FeatureTitle: Frontend Task Management UI
+    Tasks:
+    - AcceptanceCriteria:
+      - TaskService class implements all CRUD operations with typed responses
+      - API calls use the apiService wrapper for authentication headers
+      - Error responses are properly caught and formatted
+      - Optional status filter parameter works in getTasks method
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the task service module that handles all HTTP requests to
+        the backend task endpoints. Implement methods for getTasks, getTaskById, createTask,
+        updateTask, and deleteTask with proper error handling and type safety. This
+        service will be used by custom hooks and components throughout the application.
+      EstimatedEffort: S
+      Files:
+      - frontend/src/services/task.service.ts
+      ID: task-task-tracker-feat-frontend-task-ui-1
+      Title: Implement task service API layer
+    - AcceptanceCriteria:
+      - Hook manages tasks state using useState with proper typing
+      - Optimistic updates apply immediately before API calls complete
+      - Loading and error states are tracked and exposed
+      - All CRUD operations (create, update, delete) work correctly
+      - RefreshTasks function allows manual data reloading
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-task-ui-1
+      Description: Implement the useTasks hook that manages task state, loading states,
+        and error handling. Include optimistic updates for create, update, and delete
+        operations to provide immediate UI feedback. The hook should expose tasks
+        array, loading state, error state, and mutation functions.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/hooks/useTasks.ts
+      ID: task-task-tracker-feat-frontend-task-ui-2
+      Title: Create useTasks custom hook with optimistic updates
+    - AcceptanceCriteria:
+      - Header component displays app title and logout button
+      - LoadingSpinner shows centered loading indicator
+      - TaskFilter renders status filter buttons (all, pending, in-progress, completed)
+      - Components are properly typed with TypeScript interfaces
+      - Basic styling applied for consistent appearance
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: 'Create three small reusable components: Header with logout functionality,
+        LoadingSpinner for async operations, and TaskFilter for status filtering.
+        These components will be used across the task management interface and should
+        be self-contained with minimal props.'
+      EstimatedEffort: M
+      Files:
+      - frontend/src/components/Header.tsx
+      - frontend/src/components/LoadingSpinner.tsx
+      - frontend/src/components/TaskFilter.tsx
+      ID: task-task-tracker-feat-frontend-task-ui-3
+      Title: Build reusable UI components (Header, LoadingSpinner, TaskFilter)
+    - AcceptanceCriteria:
+      - Form renders with title and description input fields
+      - Validation prevents submission with empty title
+      - Form accepts onSubmit and onCancel callback props
+      - Edit mode pre-populates fields when editing existing task
+      - Validation errors display clearly to users
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the TaskForm component for creating and editing tasks. Include
+        input fields for title and description with client-side validation (required
+        fields, length limits). Support both create and edit modes with proper form
+        state management and submit/cancel handlers.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/components/TaskForm.tsx
+      ID: task-task-tracker-feat-frontend-task-ui-4
+      Title: Implement TaskForm component with validation
+    - AcceptanceCriteria:
+      - TaskItem displays task title, description, and status
+      - Edit button triggers edit callback with task data
+      - Delete button triggers delete callback with confirmation
+      - Status toggle button cycles through pending/in-progress/completed
+      - Visual styling differentiates task statuses
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the TaskItem component to display individual task details
+        with edit, delete, and status toggle actions. Include visual indicators for
+        task status and interactive buttons for all operations. Component should accept
+        task data and callback functions as props.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/components/TaskItem.tsx
+      ID: task-task-tracker-feat-frontend-task-ui-5
+      Title: Implement TaskItem component with actions
+    - AcceptanceCriteria:
+      - TaskList renders array of TaskItem components with proper keys
+      - Empty state message displays when no tasks match filter
+      - Event handlers (onEdit, onDelete, onStatusChange) properly propagate to TaskItem
+      - Component re-renders correctly when tasks prop changes
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-task-ui-5
+      Description: Create the TaskList component that renders a collection of TaskItem
+        components. Handle empty states, pass through event handlers for edit/delete/status
+        change operations, and support filtering by task status. Include proper list
+        rendering with unique keys.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/components/TaskList.tsx
+      ID: task-task-tracker-feat-frontend-task-ui-6
+      Title: Implement TaskList component with filtering
+    - AcceptanceCriteria:
+      - Dashboard renders Header, TaskFilter, TaskList, and conditionally TaskForm
+      - New Task button toggles TaskForm visibility
+      - Filter changes update displayed tasks correctly
+      - Create, update, and delete operations work end-to-end
+      - Loading and error states display appropriately
+      - Edit mode properly populates TaskForm with existing task data
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-task-tracker-feat-frontend-task-ui-2
+      - task-task-tracker-feat-frontend-task-ui-3
+      - task-task-tracker-feat-frontend-task-ui-4
+      - task-task-tracker-feat-frontend-task-ui-6
+      Description: Create the TasksDashboard page component that integrates all task
+        management components. Implement state management for filter selection, form
+        visibility, and editing mode. Wire up all CRUD operations using the useTasks
+        hook and coordinate interactions between child components.
+      EstimatedEffort: M
+      Files:
+      - frontend/src/pages/TasksDashboard.tsx
+      ID: task-task-tracker-feat-frontend-task-ui-7
+      Title: Implement TasksDashboard main page with integration
+  - FeatureID: task-tracker-feat-backend-tests
+    FeatureTitle: Backend Unit and Integration Tests
+    Tasks:
+    - AcceptanceCriteria:
+      - jest.config.js created with TypeScript preset and coverage configuration
+      - Test script added to package.json
+      - Jest can discover and run TypeScript test files
+      - Coverage reporting configured for all source files
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Configure Jest testing framework for the backend. Create jest.config.js
+        with TypeScript support, coverage settings, and test environment configuration.
+        Setup test script in package.json and ensure proper TypeScript compilation
+        for tests.
+      EstimatedEffort: S
+      Files:
+      - jest.config.js
+      - package.json
+      ID: task-task-tracker-feat-backend-tests-1
+      Title: Setup Jest testing infrastructure
+    - AcceptanceCriteria:
+      - User and task fixtures created with multiple test scenarios
+      - Database setup/teardown helper implemented with cleanup logic
+      - Auth helper created for generating valid test JWT tokens
+      - All helpers properly typed with TypeScript
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-tests-1
+      Description: Implement reusable test fixtures for users and tasks, and helper
+        utilities for database setup/teardown and authentication. Create mock data
+        generators and database connection management for integration tests. Implement
+        authentication helper for generating test tokens.
+      EstimatedEffort: M
+      Files:
+      - tests/fixtures/users.fixture.ts
+      - tests/fixtures/tasks.fixture.ts
+      - tests/helpers/db-setup.ts
+      - tests/helpers/auth-helper.ts
+      ID: task-task-tracker-feat-backend-tests-2
+      Title: Create test fixtures and helpers
+    - AcceptanceCriteria:
+      - All JWT utility functions have test coverage
+      - Token generation tests verify correct payload structure
+      - Token verification tests cover valid and invalid scenarios
+      - Expiration handling tested with time-based assertions
+      - Test coverage exceeds 90% for JWT utilities
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-tests-2
+      Description: Create comprehensive unit tests for JWT token generation, verification,
+        and expiration handling. Test edge cases including invalid tokens, expired
+        tokens, malformed payloads, and signature verification failures.
+      EstimatedEffort: S
+      Files:
+      - tests/unit/utils/jwt.util.test.ts
+      ID: task-task-tracker-feat-backend-tests-3
+      Title: Implement JWT utility unit tests
+    - AcceptanceCriteria:
+      - Password hashing tests verify bcrypt implementation
+      - Password comparison tests cover matching and non-matching cases
+      - Edge cases tested including empty and special character passwords
+      - Test coverage exceeds 90% for password utilities
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-tests-2
+      Description: Create unit tests for password hashing and comparison utilities.
+        Test bcrypt hashing strength, salt rounds, password comparison accuracy, and
+        edge cases like empty passwords and special characters.
+      EstimatedEffort: S
+      Files:
+      - tests/unit/utils/password.util.test.ts
+      ID: task-task-tracker-feat-backend-tests-4
+      Title: Implement password utility unit tests
+    - AcceptanceCriteria:
+      - Registration tests cover valid user creation and error cases
+      - Login tests verify credential validation and token generation
+      - All error scenarios tested with proper error messages
+      - Repository dependencies properly mocked
+      - Test coverage exceeds 85% for AuthService
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-tests-3
+      - task-task-tracker-feat-backend-tests-4
+      Description: Create comprehensive unit tests for authentication service covering
+        registration, login, and token generation. Mock database repository calls
+        and test all success and error scenarios including duplicate email, weak password,
+        invalid credentials, and database errors.
+      EstimatedEffort: M
+      Files:
+      - tests/unit/services/auth.service.test.ts
+      ID: task-task-tracker-feat-backend-tests-5
+      Title: Implement AuthService unit tests
+    - AcceptanceCriteria:
+      - All CRUD operations tested with valid and invalid inputs
+      - User ownership and authorization logic verified
+      - Task filtering and querying tested with multiple criteria
+      - Repository dependencies properly mocked
+      - Test coverage exceeds 85% for TasksService
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-tests-2
+      Description: Create comprehensive unit tests for task service covering CRUD
+        operations, filtering, validation, and authorization. Mock repository calls
+        and test scenarios including task creation, updates, deletion, user ownership
+        validation, and database errors.
+      EstimatedEffort: M
+      Files:
+      - tests/unit/services/tasks.service.test.ts
+      ID: task-task-tracker-feat-backend-tests-6
+      Title: Implement TasksService unit tests
+    - AcceptanceCriteria:
+      - Registration endpoint tested with valid and invalid requests
+      - Login endpoint tested with correct and incorrect credentials
+      - HTTP status codes verified for all scenarios
+      - Database persistence validated after operations
+      - Authentication middleware tested with token validation
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-tests-5
+      Description: Create integration tests for authentication endpoints including
+        register and login. Test complete request/response cycle with real database,
+        verify HTTP status codes, response payloads, token generation, and database
+        persistence. Test authentication middleware with valid and invalid tokens.
+      EstimatedEffort: M
+      Files:
+      - tests/integration/auth.routes.test.ts
+      ID: task-task-tracker-feat-backend-tests-7
+      Title: Implement authentication routes integration tests
+    - AcceptanceCriteria:
+      - All task endpoints tested with authenticated requests
+      - Authorization verified for user-owned vs other user tasks
+      - CRUD operations validated with database state checks
+      - Query filtering and pagination tested with multiple scenarios
+      - Error responses tested for invalid requests and unauthorized access
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-backend-tests-6
+      - task-task-tracker-feat-backend-tests-7
+      Description: Create integration tests for all task endpoints covering GET, POST,
+        PUT, DELETE operations. Test with authenticated requests, verify authorization
+        checks, validate request/response payloads, test filtering and pagination,
+        and verify database state changes.
+      EstimatedEffort: L
+      Files:
+      - tests/integration/tasks.routes.test.ts
+      ID: task-task-tracker-feat-backend-tests-8
+      Title: Implement tasks routes integration tests
+  - FeatureID: task-tracker-feat-e2e-tests
+    FeatureTitle: End-to-End Tests
+    Tasks:
+    - AcceptanceCriteria:
+      - Playwright installed and configured in package.json
+      - Browser launch and cleanup hooks working correctly
+      - Test file structure created with beforeAll/afterAll/beforeEach/afterEach
+      - Tests can navigate to localhost:5173 successfully
+      - Test isolation verified with database cleanup
+      AgentType: qa-engineer
+      Dependencies: []
+      Description: Install Playwright and configure test environment. Create base
+        test file structure with browser setup/teardown hooks. Configure Playwright
+        to run against local development server. Set up test database cleanup utilities
+        to ensure test isolation between runs.
+      EstimatedEffort: M
+      Files:
+      - tests/e2e/user-flow.test.ts
+      - package.json
+      - playwright.config.ts
+      ID: task-task-tracker-feat-e2e-tests-1
+      Title: Setup Playwright test infrastructure
+    - AcceptanceCriteria:
+      - Registration test successfully creates new user
+      - Login test authenticates existing user
+      - Dashboard redirect occurs after successful auth
+      - JWT token stored in localStorage/sessionStorage
+      - Authentication errors handled gracefully
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-e2e-tests-1
+      Description: Create E2E test for user registration flow including form filling,
+        submission, and redirect validation. Add test for login flow with existing
+        credentials. Verify JWT token storage and authentication state persistence.
+        Test navigation between login and register pages.
+      EstimatedEffort: M
+      Files:
+      - tests/e2e/user-flow.test.ts
+      ID: task-task-tracker-feat-e2e-tests-2
+      Title: Implement registration and login E2E flow
+    - AcceptanceCriteria:
+      - Create task test fills form and submits successfully
+      - Task appears in list immediately after creation
+      - Update task test modifies title and description
+      - Delete task test removes item from list
+      - All CRUD operations verified via UI state changes
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-e2e-tests-2
+      Description: Create comprehensive E2E tests for creating, reading, updating,
+        and deleting tasks. Test form validation, UI updates, and API integration.
+        Verify task list renders correctly after each operation. Include tests for
+        edge cases like empty fields and long text inputs.
+      EstimatedEffort: M
+      Files:
+      - tests/e2e/user-flow.test.ts
+      ID: task-task-tracker-feat-e2e-tests-3
+      Title: Implement task CRUD operations E2E tests
+    - AcceptanceCriteria:
+      - Clicking status toggle marks task as completed
+      - Completed task shows visual indicator (strikethrough/checkbox)
+      - Status persists after page reload
+      - Toggle can switch between completed/pending states
+      - Status changes reflected in backend API
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-e2e-tests-3
+      Description: Create E2E test for marking tasks as completed and uncompleted.
+        Verify visual state changes (strikethrough, checkbox state). Test status persistence
+        across page reloads. Ensure API calls update backend state correctly and UI
+        reflects changes immediately.
+      EstimatedEffort: S
+      Files:
+      - tests/e2e/user-flow.test.ts
+      ID: task-task-tracker-feat-e2e-tests-4
+      Title: Implement task status toggle E2E test
+    - AcceptanceCriteria:
+      - Tasks created in one session visible after logout/login
+      - User can only see their own tasks
+      - Session persistence works across browser restarts
+      - Expired sessions redirect to login page
+      - Re-authentication restores full task list
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-e2e-tests-3
+      Description: Create E2E test that validates task data persists across logout/login
+        cycles. Test creating tasks, logging out, logging back in, and verifying tasks
+        still exist. Validate that tasks are user-specific and not visible to other
+        users. Test session expiration and re-authentication.
+      EstimatedEffort: M
+      Files:
+      - tests/e2e/user-flow.test.ts
+      ID: task-task-tracker-feat-e2e-tests-5
+      Title: Implement session persistence E2E test
+    - AcceptanceCriteria:
+      - Empty field validation errors display correctly
+      - Invalid email format shows error message
+      - Weak password validation prevents registration
+      - Duplicate email registration handled gracefully
+      - Error messages clear after fixing input
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-e2e-tests-2
+      Description: Create E2E tests for form validation errors including empty fields,
+        invalid email formats, weak passwords, and duplicate accounts. Test that error
+        messages display correctly in UI. Verify that invalid submissions don't create
+        data or change state. Test both client-side and server-side validation.
+      EstimatedEffort: M
+      Files:
+      - tests/e2e/user-flow.test.ts
+      ID: task-task-tracker-feat-e2e-tests-6
+      Title: Implement validation error handling E2E tests
+    - AcceptanceCriteria:
+      - Wrong password shows error without hanging
+      - Non-existent user returns appropriate error
+      - Logout clears authentication state completely
+      - Direct navigation to /dashboard redirects to login when not authenticated
+      - API calls fail with 401 when token invalid/missing
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-e2e-tests-2
+      Description: Create E2E tests for authentication edge cases including wrong
+        password, non-existent user, logout functionality, and unauthorized access
+        attempts. Test protected route redirection. Verify that unauthenticated users
+        cannot access dashboard or API endpoints directly.
+      EstimatedEffort: M
+      Files:
+      - tests/e2e/user-flow.test.ts
+      ID: task-task-tracker-feat-e2e-tests-7
+      Title: Implement authentication flow edge cases E2E tests
+    - AcceptanceCriteria:
+      - Full journey test completes without failures
+      - Test covers registration through deletion of tasks
+      - All UI interactions work in realistic sequence
+      - Test includes logout/login cycle mid-journey
+      - Test cleanup leaves no residual data
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-e2e-tests-3
+      - task-task-tracker-feat-e2e-tests-4
+      - task-task-tracker-feat-e2e-tests-5
+      Description: Create comprehensive end-to-end test that combines all flows into
+        a single realistic user journey. Test covers registration, multiple task operations,
+        status changes, logout/login cycle, and cleanup. This integration test validates
+        the entire application works cohesively from user perspective.
+      EstimatedEffort: S
+      Files:
+      - tests/e2e/user-flow.test.ts
+      ID: task-task-tracker-feat-e2e-tests-8
+      Title: Implement complete user journey E2E test
+  - FeatureID: task-tracker-feat-deployment
+    FeatureTitle: Docker Containerization and Deployment
+    Tasks:
+    - AcceptanceCriteria:
+      - Dockerfile.backend created with multi-stage build pattern
+      - Backend image builds successfully with docker build command
+      - Image size is optimized (under 200MB for Alpine-based build)
+      - Port 3000 exposed and health check endpoint configured
+      - Production dependencies only in final stage
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Implement a multi-stage Dockerfile for the backend service that
+        optimizes build time and image size. Include stages for dependency installation,
+        building, and production runtime. Configure proper working directories, expose
+        necessary ports, and set up health checks. Use Alpine-based Node.js images
+        for minimal footprint.
+      EstimatedEffort: S
+      Files:
+      - Dockerfile.backend
+      ID: task-task-tracker-feat-deployment-1
+      Title: Create backend Dockerfile with multi-stage build
+    - AcceptanceCriteria:
+      - Dockerfile.frontend created with build and serve stages
+      - Frontend image builds successfully and serves static files
+      - Nginx configured for SPA routing (fallback to index.html)
+      - Image size optimized (under 50MB)
+      - Port 80 exposed for web traffic
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Implement a multi-stage Dockerfile for the frontend that builds
+        the React application and serves it using Nginx. First stage builds the production
+        bundle, second stage copies build artifacts to Nginx Alpine image. Configure
+        Nginx to serve static files and handle client-side routing properly.
+      EstimatedEffort: S
+      Files:
+      - Dockerfile.frontend
+      ID: task-task-tracker-feat-deployment-2
+      Title: Create frontend Dockerfile with Nginx serving
+    - AcceptanceCriteria:
+      - nginx.conf created with reverse proxy configuration
+      - API requests routed to backend service correctly
+      - Static file requests routed to frontend service
+      - Security headers configured (X-Frame-Options, X-Content-Type-Options)
+      - Gzip compression enabled for text-based content
+      AgentType: devops-engineer
+      Dependencies:
+      - task-task-tracker-feat-deployment-1
+      - task-task-tracker-feat-deployment-2
+      Description: Create nginx.conf file to act as reverse proxy routing requests
+        to backend and frontend services. Configure proxy headers, timeouts, and buffering.
+        Set up location blocks for API routes (/api/*) to backend and static files
+        to frontend. Include gzip compression and security headers.
+      EstimatedEffort: M
+      Files:
+      - nginx.conf
+      ID: task-task-tracker-feat-deployment-3
+      Title: Configure Nginx reverse proxy
+    - AcceptanceCriteria:
+      - docker-compose.yml defines all required services (backend, frontend, nginx,
+        db)
+      - Services can start successfully with docker-compose up
+      - Database volume persists data across container restarts
+      - Environment variables loaded from .env files
+      - Health checks configured for all services
+      AgentType: devops-engineer
+      Dependencies:
+      - task-task-tracker-feat-deployment-1
+      - task-task-tracker-feat-deployment-2
+      - task-task-tracker-feat-deployment-3
+      Description: Implement docker-compose.yml for local development environment
+        orchestration. Define services for backend, frontend, nginx proxy, and PostgreSQL
+        database. Configure networks, volumes for data persistence, environment variables,
+        health checks, and service dependencies. Include restart policies and resource
+        limits.
+      EstimatedEffort: M
+      Files:
+      - docker-compose.yml
+      ID: task-task-tracker-feat-deployment-4
+      Title: Create docker-compose orchestration file
+    - AcceptanceCriteria:
+      - All three environment files created with complete variable sets
+      - Variables documented with inline comments
+      - .env.example contains no sensitive values
+      - Development config uses localhost URLs
+      - Production config uses production-ready placeholders
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Create .env.example, .env.development, and .env.production files
+        with all required environment variables. Include database connection strings,
+        API keys placeholders, CORS settings, JWT secrets, and service URLs. Document
+        each variable with comments explaining purpose and example values.
+      EstimatedEffort: S
+      Files:
+      - .env.example
+      - .env.development
+      - .env.production
+      ID: task-task-tracker-feat-deployment-5
+      Title: Create environment configuration templates
+    - AcceptanceCriteria:
+      - .github/workflows/ci.yml created with test job
+      - Test job runs unit and integration tests successfully
+      - Node modules cached between runs
+      - Workflow triggers on correct branch events
+      - Test results reported in GitHub UI
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Create GitHub Actions workflow file implementing the test job.
+        Configure checkout, Node.js setup, dependency installation, unit tests, and
+        integration tests. Add caching for node_modules to speed up builds. Configure
+        job to run on push to main/staging and on pull requests.
+      EstimatedEffort: M
+      Files:
+      - .github/workflows/ci.yml
+      ID: task-task-tracker-feat-deployment-6
+      Title: Implement CI/CD pipeline for testing
+    - AcceptanceCriteria:
+      - Build job successfully builds both Docker images
+      - Images tagged with commit SHA and branch name
+      - Deploy job runs only after successful build on main branch
+      - Deployment uses image tags from build job
+      - Secrets configured for registry and deployment credentials
+      AgentType: devops-engineer
+      Dependencies:
+      - task-task-tracker-feat-deployment-6
+      Description: Extend GitHub Actions workflow with build and deploy jobs. Build
+        job creates Docker images for backend and frontend, tags them appropriately,
+        and pushes to registry. Deploy job runs only on main branch, pulls images,
+        and executes deployment commands. Configure job dependencies and conditional
+        execution.
+      EstimatedEffort: M
+      Files:
+      - .github/workflows/ci.yml
+      ID: task-task-tracker-feat-deployment-7
+      Title: Implement CI/CD build and deploy jobs
+    - AcceptanceCriteria:
+      - docs/deployment/setup-guide.md created with complete deployment instructions
+      - Prerequisites section lists all required tools and versions
+      - Step-by-step instructions for first-time deployment
+      - Troubleshooting section covers common issues
+      - Security best practices documented
+      AgentType: devops-engineer
+      Dependencies:
+      - task-task-tracker-feat-deployment-4
+      - task-task-tracker-feat-deployment-5
+      Description: Write comprehensive deployment setup guide covering prerequisites,
+        environment setup, Docker installation, configuration steps, and troubleshooting.
+        Include sections for initial deployment, updates, rollbacks, and monitoring.
+        Provide commands for common operations and explain security considerations.
+      EstimatedEffort: M
+      Files:
+      - docs/deployment/setup-guide.md
+      ID: task-task-tracker-feat-deployment-8
+      Title: Create deployment setup documentation
+    - AcceptanceCriteria:
+      - docs/deployment/docker-guide.md created with comprehensive Docker instructions
+      - Commands documented for building, running, and debugging containers
+      - Architecture diagram or explanation of service connections
+      - Volume management and data persistence explained
+      - Development workflow with hot-reloading documented
+      AgentType: devops-engineer
+      Dependencies:
+      - task-task-tracker-feat-deployment-4
+      Description: Write detailed Docker guide explaining container architecture,
+        how to build images locally, run containers, access logs, execute commands
+        inside containers, and manage volumes. Include docker-compose commands, networking
+        details, and best practices for development workflow.
+      EstimatedEffort: M
+      Files:
+      - docs/deployment/docker-guide.md
+      ID: task-task-tracker-feat-deployment-9
+      Title: Create Docker usage documentation
+    - AcceptanceCriteria:
+      - All Docker images build without errors
+      - Services start and communicate successfully via docker-compose
+      - CI/CD pipeline completes all jobs successfully
+      - Application accessible via Nginx proxy
+      - Database persistence verified after container restart
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-deployment-7
+      - task-task-tracker-feat-deployment-8
+      - task-task-tracker-feat-deployment-9
+      Description: 'Validate entire deployment setup by running through complete workflow:
+        build all images, start services with docker-compose, verify connectivity
+        between services, test CI/CD pipeline on a feature branch, and confirm deployment
+        to staging environment. Document any issues found and verify all acceptance
+        criteria from previous tasks.'
+      EstimatedEffort: M
+      Files:
+      - docker-compose.yml
+      - .github/workflows/ci.yml
+      ID: task-task-tracker-feat-deployment-10
+      Title: Test complete deployment pipeline end-to-end
+  - FeatureID: task-tracker-feat-documentation
+    FeatureTitle: API Documentation and README
+    Tasks:
+    - AcceptanceCriteria:
+      - OpenAPI 3.0 file created at docs/api/openapi.yaml with valid structure
+      - Info section includes API title, version, and description
+      - Server configurations defined for development and production
+      - Common components defined (error schemas, security schemes)
+      - File validates against OpenAPI 3.0 schema
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Initialize the OpenAPI 3.0 specification file with basic structure
+        including info, servers, and security schemes. Set up the document metadata
+        and define common components like error responses and authentication schemes.
+        Establish the foundation for all API endpoint documentation.
+      EstimatedEffort: S
+      Files:
+      - docs/api/openapi.yaml
+      ID: task-task-tracker-feat-documentation-1
+      Title: Create OpenAPI specification structure
+    - AcceptanceCriteria:
+      - All task CRUD endpoints documented with full schemas
+      - Request and response examples provided for each endpoint
+      - Path and query parameters fully specified
+      - HTTP status codes and error responses documented
+      - Schema references use OpenAPI components correctly
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-documentation-1
+      Description: Add complete OpenAPI documentation for all task-related endpoints
+        including GET, POST, PATCH, DELETE operations. Define request/response schemas,
+        path parameters, query parameters, and example payloads. Include error response
+        documentation for each endpoint.
+      EstimatedEffort: M
+      Files:
+      - docs/api/openapi.yaml
+      ID: task-task-tracker-feat-documentation-2
+      Title: Document tasks API endpoints
+    - AcceptanceCriteria:
+      - All project CRUD endpoints documented with schemas
+      - Project-task relationship endpoints documented
+      - Filtering and pagination parameters specified
+      - Request/response examples provided
+      - Validation rules documented in schemas
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-documentation-1
+      Description: Add complete OpenAPI documentation for all project-related endpoints
+        including project creation, retrieval, updates, and task associations. Define
+        schemas for project resources and their relationships with tasks. Include
+        filtering and pagination parameters.
+      EstimatedEffort: M
+      Files:
+      - docs/api/openapi.yaml
+      ID: task-task-tracker-feat-documentation-3
+      Title: Document projects API endpoints
+    - AcceptanceCriteria:
+      - docs/deployment/setup-guide.md created with installation steps
+      - docs/deployment/docker-guide.md created with container setup
+      - Environment variables and configuration documented
+      - Database setup and migration steps included
+      - Troubleshooting section added for common issues
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Write comprehensive deployment guides including setup instructions,
+        Docker configuration, environment variables, and database migration steps.
+        Create separate guides for local development setup and production deployment.
+        Document prerequisites, installation steps, and troubleshooting.
+      EstimatedEffort: M
+      Files:
+      - docs/deployment/setup-guide.md
+      - docs/deployment/docker-guide.md
+      ID: task-task-tracker-feat-documentation-4
+      Title: Create deployment documentation
+    - AcceptanceCriteria:
+      - README.md includes task tracker project description
+      - Quick start section with installation commands added
+      - Architecture overview section included
+      - Links to API docs and deployment guides added
+      - API usage examples provided with curl commands
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-documentation-2
+      - task-task-tracker-feat-documentation-3
+      - task-task-tracker-feat-documentation-4
+      Description: Enhance the main README.md with comprehensive project overview
+        including task tracker features, architecture summary, quick start guide,
+        and links to detailed documentation. Add badges for build status, coverage,
+        and version. Include API usage examples and contribution guidelines.
+      EstimatedEffort: S
+      Files:
+      - README.md
+      ID: task-task-tracker-feat-documentation-5
+      Title: Update README with project overview
+    - AcceptanceCriteria:
+      - docs/plans/task-tracker/LLD.md created with complete structure
+      - Database schema and relationships documented
+      - API endpoint designs and patterns explained
+      - Component architecture and interactions described
+      - Design decisions and trade-offs documented
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create the Low-Level Design document at docs/plans/task-tracker/LLD.md
+        documenting the technical architecture, database schema, API design patterns,
+        and implementation details. Include diagrams, code structure, and design decisions
+        rationale.
+      EstimatedEffort: M
+      Files:
+      - docs/plans/task-tracker/LLD.md
+      ID: task-task-tracker-feat-documentation-6
+      Title: Create LLD documentation file
+    - AcceptanceCriteria:
+      - Authentication flows documented in OpenAPI spec
+      - JWT token format and claims documented
+      - Security schemes properly defined in OpenAPI
+      - RBAC model and permissions documented
+      - Authentication examples added to deployment guide
+      AgentType: backend-engineer
+      Dependencies:
+      - task-task-tracker-feat-documentation-1
+      - task-task-tracker-feat-documentation-4
+      Description: Document authentication and authorization mechanisms in the OpenAPI
+        specification and deployment guides. Include JWT token structure, authentication
+        flows, role-based access control, and security best practices. Add examples
+        for obtaining and using authentication tokens.
+      EstimatedEffort: M
+      Files:
+      - docs/api/openapi.yaml
+      - docs/deployment/setup-guide.md
+      ID: task-task-tracker-feat-documentation-7
+      Title: Add API authentication documentation
+    - AcceptanceCriteria:
+      - OpenAPI spec validates with no errors using validator tools
+      - All internal documentation links verified and working
+      - Code examples tested and confirmed working
+      - Deployment guide tested on clean environment
+      - Documentation review checklist completed
+      AgentType: qa-engineer
+      Dependencies:
+      - task-task-tracker-feat-documentation-2
+      - task-task-tracker-feat-documentation-3
+      - task-task-tracker-feat-documentation-4
+      - task-task-tracker-feat-documentation-5
+      - task-task-tracker-feat-documentation-6
+      - task-task-tracker-feat-documentation-7
+      Description: Validate the OpenAPI specification using standard tools, verify
+        all links in documentation are working, ensure code examples are accurate,
+        and test deployment guides by following them step-by-step. Create a documentation
+        testing checklist and verify all acceptance criteria are met.
+      EstimatedEffort: M
+      Files:
+      - docs/api/openapi.yaml
+      - README.md
+      - docs/deployment/setup-guide.md
+      - docs/deployment/docker-guide.md
+      - docs/plans/task-tracker/LLD.md
+      ID: task-task-tracker-feat-documentation-8
+      Title: Validate and test documentation
+  Sprint: 0
