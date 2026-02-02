@@ -3,6 +3,10 @@
 sprints:
   - number: 1
     features:
+      - id: feat-database-schema
+        name: Database Schema and Models
+        type: enabler
+        files: [src/models/user.model.ts src/models/task.model.ts src/models/index.ts src/models/migrations/001-create-users-table.ts src/models/migrations/002-create-tasks-table.ts src/models/migrations/003-add-indexes.ts src/api/config/database.config.ts]
       - id: feat-backend-infrastructure
         name: Backend Server Infrastructure
         type: enabler
@@ -11,18 +15,14 @@ sprints:
         name: Frontend Application Setup
         type: enabler
         files: [frontend/package.json frontend/vite.config.ts frontend/tsconfig.json frontend/index.html frontend/src/main.tsx frontend/src/App.tsx frontend/src/services/api.service.ts frontend/src/utils/storage.ts frontend/src/utils/validators.ts frontend/src/types/index.ts frontend/src/styles/index.css]
-      - id: feat-database-schema
-        name: Database Schema and Models
-        type: enabler
-        files: [src/models/user.model.ts src/models/task.model.ts src/models/index.ts src/models/migrations/001-create-users-table.ts src/models/migrations/002-create-tasks-table.ts src/models/migrations/003-add-indexes.ts src/api/config/database.config.ts]
-      - id: feat-containerization
-        name: Docker Containerization
-        type: enabler
-        files: [Dockerfile.backend Dockerfile.frontend docker-compose.yml nginx.conf .env.example .env.development .env.production]
       - id: feat-authentication-backend
         name: User Authentication System
         type: feature
         files: [src/api/controllers/auth.controller.ts src/api/services/auth.service.ts src/api/services/user.service.ts src/api/repositories/user.repository.ts src/api/routes/auth.routes.ts src/api/middleware/auth.middleware.ts src/api/validators/auth.validator.ts src/api/utils/jwt.util.ts src/api/utils/password.util.ts]
+      - id: feat-containerization
+        name: Docker Containerization
+        type: enabler
+        files: [Dockerfile.backend Dockerfile.frontend docker-compose.yml nginx.conf .env.example .env.development .env.production]
       - id: feat-task-management-backend
         name: Task CRUD Operations
         type: feature
