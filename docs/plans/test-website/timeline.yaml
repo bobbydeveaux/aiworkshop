@@ -1,0 +1,63 @@
+# Project Timeline
+
+metadata:
+  generated: 2026-02-02T23:51:45Z
+  totalSprints: 1
+  totalDuration: 14 days
+
+sprints:
+  - number: 1
+    startDate: 2026-02-02
+    endDate: 2026-02-16
+    duration: 14 days
+    features:
+      - id: test-website-feat-cms-setup
+        name: Strapi CMS Setup and Configuration
+        type: enabler
+      - id: test-website-feat-frontend-setup
+        name: Next.js Frontend Setup
+        type: enabler
+      - id: test-website-feat-search-integration
+        name: Algolia Search Integration
+        type: enabler
+      - id: test-website-feat-content-browsing
+        name: Category-based Content Browsing
+        type: feature
+      - id: test-website-feat-article-pages
+        name: Article Detail Pages
+        type: feature
+      - id: test-website-feat-search-functionality
+        name: Full-text Search with Filters
+        type: feature
+      - id: test-website-feat-brand-profiles
+        name: Brand Profile Pages
+        type: feature
+      - id: test-website-feat-pen-comparison
+        name: Pen Comparison Tool
+        type: feature
+      - id: test-website-feat-glossary
+        name: Pen Terminology Glossary
+        type: feature
+      - id: test-website-feat-homepage
+        name: Homepage with Featured Content
+        type: feature
+      - id: test-website-feat-cms-webhooks
+        name: CMS Webhook Integration for Builds
+        type: enabler
+      - id: test-website-feat-image-optimization
+        name: Image Optimization Pipeline
+        type: enabler
+      - id: test-website-feat-analytics
+        name: Analytics and Monitoring
+        type: enabler
+      - id: test-website-feat-seo-optimization
+        name: SEO and Metadata Optimization
+        type: feature
+      - id: test-website-feat-deployment-pipeline
+        name: CI/CD Deployment Pipeline
+        type: enabler
+
+criticalPath:
+  - test-website-feat-cms-setup
+  - test-website-feat-search-integration
+  - test-website-feat-search-functionality
