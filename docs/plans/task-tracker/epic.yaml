@@ -2,121 +2,127 @@ Epic: task-tracker
 Features:
 - dependencies: []
   description: Create PostgreSQL database schema with users and tasks tables, including
-    Sequelize models with associations, indexes, and migrations
-  estimatedComplexity: medium
+    indexes for performance. Includes Sequelize models and migration scripts.
+  estimatedComplexity: low
   files:
-  - src/models/user.model.ts
-  - src/models/task.model.ts
-  - src/models/index.ts
   - src/models/migrations/001-create-users-table.ts
   - src/models/migrations/002-create-tasks-table.ts
   - src/models/migrations/003-add-indexes.ts
+  - src/models/user.model.ts
+  - src/models/task.model.ts
+  - src/models/index.ts
   - src/api/config/database.config.ts
-  id: feat-database-schema
-  name: Database Schema and Models
-  project: aiworkshop
+  id: task-tracker-feat-database-schema
+  name: Database Schema and Migrations
+  project: task-tracker
   type: enabler
-- dependencies: []
-  description: Set up Express server with TypeScript, middleware (CORS, helmet, compression),
-    routing, error handling, and logging infrastructure
+- dependencies:
+  - task-tracker-feat-database-schema
+  description: Express server setup with middleware (CORS, Helmet, compression, logging),
+    error handling, and configuration management. Includes utilities for JWT, password
+    hashing, and logging.
   estimatedComplexity: medium
   files:
   - src/api/server.ts
   - src/api/app.ts
-  - src/api/routes/index.ts
+  - src/api/config/app.config.ts
   - src/api/middleware/error.middleware.ts
-  - src/api/middleware/validation.middleware.ts
   - src/api/middleware/rate-limit.middleware.ts
+  - src/api/utils/jwt.util.ts
+  - src/api/utils/password.util.ts
   - src/api/utils/logger.ts
   - src/api/utils/constants.ts
   - src/api/types/index.ts
   - src/api/types/express.d.ts
-  id: feat-backend-infrastructure
+  id: task-tracker-feat-backend-infrastructure
   name: Backend Server Infrastructure
-  project: aiworkshop
+  project: task-tracker
   type: enabler
 - dependencies:
-  - feat-database-schema
-  - feat-backend-infrastructure
-  description: Implement JWT-based authentication with user registration, login, logout,
-    password hashing (bcrypt), and authentication middleware
+  - task-tracker-feat-backend-infrastructure
+  description: Complete authentication system with user registration, login, and JWT-based
+    session management. Includes password hashing with bcrypt, token generation/verification,
+    and authentication middleware.
   estimatedComplexity: high
   files:
-  - src/api/controllers/auth.controller.ts
+  - src/api/repositories/user.repository.ts
   - src/api/services/auth.service.ts
   - src/api/services/user.service.ts
-  - src/api/repositories/user.repository.ts
+  - src/api/controllers/auth.controller.ts
   - src/api/routes/auth.routes.ts
   - src/api/middleware/auth.middleware.ts
   - src/api/validators/auth.validator.ts
-  - src/api/utils/jwt.util.ts
-  - src/api/utils/password.util.ts
-  id: feat-authentication-backend
+  - src/api/middleware/validation.middleware.ts
+  id: task-tracker-feat-user-authentication
   name: User Authentication System
-  project: aiworkshop
+  project: task-tracker
   type: feature
 - dependencies:
-  - feat-database-schema
-  - feat-backend-infrastructure
-  - feat-authentication-backend
-  description: Implement complete task management with create, read, update, delete
-    operations, status tracking, and user-level authorization
+  - task-tracker-feat-user-authentication
+  description: Complete task management with Create, Read, Update, Delete operations.
+    Includes authorization to ensure users can only access their own tasks, status
+    filtering, and validation.
   estimatedComplexity: high
   files:
-  - src/api/controllers/tasks.controller.ts
-  - src/api/services/tasks.service.ts
   - src/api/repositories/task.repository.ts
+  - src/api/services/tasks.service.ts
+  - src/api/controllers/tasks.controller.ts
   - src/api/routes/tasks.routes.ts
+  - src/api/routes/index.ts
   - src/api/validators/task.validator.ts
-  id: feat-task-management-backend
+  id: task-tracker-feat-task-crud
   name: Task CRUD Operations
-  project: aiworkshop
+  project: task-tracker
   type: feature
 - dependencies: []
-  description: Set up React application with TypeScript, Vite, React Router, Tailwind
-    CSS, and API service layer with Axios interceptors
+  description: React application setup with Vite, TypeScript, React Router, Tailwind
+    CSS, and Axios for API communication. Includes API service layer with authentication
+    interceptors.
   estimatedComplexity: medium
   files:
   - frontend/package.json
-  - frontend/vite.config.ts
   - frontend/tsconfig.json
+  - frontend/vite.config.ts
   - frontend/index.html
   - frontend/src/main.tsx
   - frontend/src/App.tsx
+  - frontend/src/vite-env.d.ts
   - frontend/src/services/api.service.ts
   - frontend/src/utils/storage.ts
-  - frontend/src/utils/validators.ts
   - frontend/src/types/index.ts
   - frontend/src/styles/index.css
-  id: feat-frontend-infrastructure
+  id: task-tracker-feat-frontend-infrastructure
   name: Frontend Application Setup
-  project: aiworkshop
+  project: task-tracker
   type: enabler
 - dependencies:
-  - feat-frontend-infrastructure
-  - feat-authentication-backend
-  description: Implement login and registration pages with form validation, authentication
-    context provider, protected routes, and token management
+  - task-tracker-feat-frontend-infrastructure
+  - task-tracker-feat-user-authentication
+  description: User interface for registration and login with form validation, authentication
+    context management, and protected routes. Includes token persistence in localStorage.
   estimatedComplexity: medium
   files:
-  - frontend/src/pages/LoginPage.tsx
-  - frontend/src/pages/RegisterPage.tsx
   - frontend/src/context/AuthContext.tsx
   - frontend/src/hooks/useAuth.ts
   - frontend/src/services/auth.service.ts
+  - frontend/src/pages/LoginPage.tsx
+  - frontend/src/pages/RegisterPage.tsx
   - frontend/src/components/PrivateRoute.tsx
-  id: feat-authentication-frontend
-  name: Authentication UI
-  project: aiworkshop
+  - frontend/src/utils/validators.ts
+  id: task-tracker-feat-frontend-auth
+  name: Frontend Authentication UI
+  project: task-tracker
   type: feature
 - dependencies:
-  - feat-frontend-infrastructure
-  - feat-authentication-frontend
-  - feat-task-management-backend
-  description: Build task dashboard with list view, create/edit forms, status filtering,
-    delete confirmation, and real-time state management
+  - task-tracker-feat-frontend-auth
+  - task-tracker-feat-task-crud
+  description: User interface for viewing, creating, editing, and deleting tasks.
+    Includes task list display, task form, status filtering, and custom hooks for
+    task operations with optimistic updates.
   estimatedComplexity: high
   files:
+  - frontend/src/services/task.service.ts
+  - frontend/src/hooks/useTasks.ts
   - frontend/src/pages/TasksDashboard.tsx
   - frontend/src/components/TaskList.tsx
   - frontend/src/components/TaskItem.tsx
@@ -124,17 +130,16 @@ Features:
   - frontend/src/components/TaskFilter.tsx
   - frontend/src/components/Header.tsx
   - frontend/src/components/LoadingSpinner.tsx
-  - frontend/src/services/task.service.ts
-  - frontend/src/hooks/useTasks.ts
-  id: feat-task-management-frontend
-  name: Task Management UI
-  project: aiworkshop
+  - frontend/src/pages/NotFoundPage.tsx
+  id: task-tracker-feat-frontend-task-ui
+  name: Frontend Task Management UI
+  project: task-tracker
   type: feature
 - dependencies:
-  - feat-authentication-backend
-  - feat-task-management-backend
-  description: Implement comprehensive unit and integration tests for authentication,
-    task management, utilities, and API endpoints using Jest and Supertest
+  - task-tracker-feat-task-crud
+  description: Comprehensive test suite for backend services, controllers, and API
+    endpoints. Includes unit tests for authentication and task services, integration
+    tests for all API routes, and test fixtures.
   estimatedComplexity: high
   files:
   - tests/unit/services/auth.service.test.ts
@@ -148,27 +153,27 @@ Features:
   - tests/helpers/db-setup.ts
   - tests/helpers/auth-helper.ts
   - jest.config.js
-  id: feat-backend-testing
-  name: Backend Test Suite
-  project: aiworkshop
+  id: task-tracker-feat-backend-tests
+  name: Backend Unit and Integration Tests
+  project: task-tracker
   type: enabler
 - dependencies:
-  - feat-authentication-frontend
-  - feat-task-management-frontend
-  description: Implement E2E tests covering complete user flows including registration,
-    login, task CRUD operations, and session persistence using Playwright
+  - task-tracker-feat-frontend-task-ui
+  - task-tracker-feat-backend-tests
+  description: Full user journey end-to-end tests using Playwright covering registration,
+    login, task CRUD operations, and session persistence across page reloads.
   estimatedComplexity: medium
   files:
   - tests/e2e/user-flow.test.ts
-  id: feat-e2e-testing
-  name: End-to-End Test Suite
-  project: aiworkshop
+  id: task-tracker-feat-e2e-tests
+  name: End-to-End Tests
+  project: task-tracker
   type: enabler
 - dependencies:
-  - feat-backend-infrastructure
-  - feat-frontend-infrastructure
-  description: Create Docker containers for backend, frontend, and PostgreSQL with
-    docker-compose orchestration for development and production environments
+  - task-tracker-feat-backend-infrastructure
+  - task-tracker-feat-frontend-infrastructure
+  description: Docker configuration for backend, frontend, and PostgreSQL. Includes
+    Dockerfiles, docker-compose for local development, and Nginx reverse proxy configuration.
   estimatedComplexity: medium
   files:
   - Dockerfile.backend
@@ -178,20 +183,37 @@ Features:
   - .env.example
   - .env.development
   - .env.production
-  id: feat-containerization
+  id: task-tracker-feat-docker-deployment
   name: Docker Containerization
-  project: aiworkshop
+  project: task-tracker
   type: enabler
 - dependencies:
-  - feat-authentication-backend
-  - feat-task-management-backend
-  description: Generate OpenAPI/Swagger documentation for all REST API endpoints with
-    request/response schemas and authentication requirements
+  - task-tracker-feat-e2e-tests
+  - task-tracker-feat-docker-deployment
+  description: Automated testing, building, and deployment pipeline using GitHub Actions.
+    Includes linting, unit tests, integration tests, Docker image building, and deployment
+    to staging/production.
+  estimatedComplexity: medium
+  files:
+  - .github/workflows/ci.yml
+  - .eslintrc.js
+  - .prettierrc
+  id: task-tracker-feat-ci-cd-pipeline
+  name: CI/CD Pipeline
+  project: task-tracker
+  type: enabler
+- dependencies:
+  - task-tracker-feat-task-crud
+  description: OpenAPI specification for REST API, deployment setup guides for Docker
+    and cloud platforms, and updated README with project overview.
   estimatedComplexity: low
   files:
   - docs/api/openapi.yaml
-  id: feat-api-documentation
-  name: API Documentation
-  project: aiworkshop
+  - docs/deployment/setup-guide.md
+  - docs/deployment/docker-guide.md
+  - README.md
+  id: task-tracker-feat-documentation
+  name: API Documentation and Deployment Guides
+  project: task-tracker
   type: enabler
 Version: v1alpha1
