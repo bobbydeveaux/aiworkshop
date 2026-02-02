@@ -3,47 +3,61 @@
 sprints:
   - number: 1
     features:
-      - id: feat-database-schema
-        name: Database Schema and Models
+      - id: task-tracker-feat-infrastructure-setup
+        name: Infrastructure and Environment Setup
         type: enabler
-        files: [src/models/user.model.ts src/models/task.model.ts src/models/index.ts src/models/migrations/001-create-users-table.ts src/models/migrations/002-create-tasks-table.ts src/models/migrations/003-add-indexes.ts src/api/config/database.config.ts]
-      - id: feat-backend-infrastructure
-        name: Backend Server Infrastructure
+        files: [package.json tsconfig.json .eslintrc.js .prettierrc docker-compose.yml .env.example .env.development .env.production]
+      - id: task-tracker-feat-database-schema
+        name: Database Schema and Migrations
         type: enabler
-        files: [src/api/server.ts src/api/app.ts src/api/routes/index.ts src/api/middleware/error.middleware.ts src/api/middleware/validation.middleware.ts src/api/middleware/rate-limit.middleware.ts src/api/utils/logger.ts src/api/utils/constants.ts src/api/types/index.ts src/api/types/express.d.ts]
-      - id: feat-frontend-infrastructure
-        name: Frontend Application Setup
+        files: [src/models/migrations/001-create-users-table.ts src/models/migrations/002-create-tasks-table.ts src/models/migrations/003-add-indexes.ts src/models/user.model.ts src/models/task.model.ts src/models/index.ts src/api/config/database.config.ts]
+      - id: task-tracker-feat-frontend-infrastructure
+        name: Frontend Infrastructure and Routing
         type: enabler
-        files: [frontend/package.json frontend/vite.config.ts frontend/tsconfig.json frontend/index.html frontend/src/main.tsx frontend/src/App.tsx frontend/src/services/api.service.ts frontend/src/utils/storage.ts frontend/src/utils/validators.ts frontend/src/types/index.ts frontend/src/styles/index.css]
-      - id: feat-authentication-backend
-        name: User Authentication System
+        files: [frontend/package.json frontend/tsconfig.json frontend/vite.config.ts frontend/index.html frontend/src/main.tsx frontend/src/App.tsx frontend/src/services/api.service.ts frontend/src/context/AuthContext.tsx frontend/src/hooks/useAuth.ts frontend/src/utils/storage.ts frontend/src/types/index.ts frontend/src/styles/index.css]
+      - id: task-tracker-feat-authentication-utilities
+        name: Authentication Utilities and Middleware
+        type: enabler
+        files: [src/api/utils/jwt.util.ts src/api/utils/password.util.ts src/api/utils/logger.ts src/api/utils/constants.ts src/api/middleware/auth.middleware.ts src/api/middleware/error.middleware.ts src/api/middleware/validation.middleware.ts src/api/middleware/rate-limit.middleware.ts src/api/types/index.ts src/api/types/express.d.ts]
+      - id: task-tracker-feat-user-registration
+        name: User Registration
         type: feature
-        files: [src/api/controllers/auth.controller.ts src/api/services/auth.service.ts src/api/services/user.service.ts src/api/repositories/user.repository.ts src/api/routes/auth.routes.ts src/api/middleware/auth.middleware.ts src/api/validators/auth.validator.ts src/api/utils/jwt.util.ts src/api/utils/password.util.ts]
-      - id: feat-containerization
-        name: Docker Containerization
-        type: enabler
-        files: [Dockerfile.backend Dockerfile.frontend docker-compose.yml nginx.conf .env.example .env.development .env.production]
-      - id: feat-task-management-backend
-        name: Task CRUD Operations
+        files: [src/api/controllers/auth.controller.ts src/api/services/auth.service.ts src/api/repositories/user.repository.ts src/api/routes/auth.routes.ts src/api/validators/auth.validator.ts]
+  - number: 2
+    features:
+      - id: task-tracker-feat-user-login
+        name: User Login and Session Management
+        type: feature
+        files: [src/api/controllers/auth.controller.ts src/api/services/auth.service.ts src/api/repositories/user.repository.ts src/api/routes/auth.routes.ts src/api/validators/auth.validator.ts]
+      - id: task-tracker-feat-task-crud-backend
+        name: Task CRUD Operations Backend
         type: feature
         files: [src/api/controllers/tasks.controller.ts src/api/services/tasks.service.ts src/api/repositories/task.repository.ts src/api/routes/tasks.routes.ts src/api/validators/task.validator.ts]
-      - id: feat-authentication-frontend
-        name: Authentication UI
+      - id: task-tracker-feat-frontend-auth-ui
+        name: Frontend Authentication UI
         type: feature
-        files: [frontend/src/pages/LoginPage.tsx frontend/src/pages/RegisterPage.tsx frontend/src/context/AuthContext.tsx frontend/src/hooks/useAuth.ts frontend/src/services/auth.service.ts frontend/src/components/PrivateRoute.tsx]
-      - id: feat-backend-testing
-        name: Backend Test Suite
+        files: [frontend/src/pages/LoginPage.tsx frontend/src/pages/RegisterPage.tsx frontend/src/services/auth.service.ts frontend/src/components/PrivateRoute.tsx frontend/src/utils/validators.ts]
+      - id: task-tracker-feat-backend-server
+        name: Express Server Configuration
         type: enabler
-        files: [tests/unit/services/auth.service.test.ts tests/unit/services/tasks.service.test.ts tests/unit/utils/jwt.util.test.ts tests/unit/utils/password.util.test.ts tests/integration/auth.routes.test.ts tests/integration/tasks.routes.test.ts tests/fixtures/users.fixture.ts tests/fixtures/tasks.fixture.ts tests/helpers/db-setup.ts tests/helpers/auth-helper.ts jest.config.js]
-      - id: feat-api-documentation
-        name: API Documentation
-        type: enabler
-        files: [docs/api/openapi.yaml]
-      - id: feat-task-management-frontend
-        name: Task Management UI
+        files: [src/api/app.ts src/api/server.ts src/api/routes/index.ts src/api/config/app.config.ts]
+      - id: task-tracker-feat-frontend-task-ui
+        name: Frontend Task Management UI
         type: feature
         files: [frontend/src/pages/TasksDashboard.tsx frontend/src/components/TaskList.tsx frontend/src/components/TaskItem.tsx frontend/src/components/TaskForm.tsx frontend/src/components/TaskFilter.tsx frontend/src/components/Header.tsx frontend/src/components/LoadingSpinner.tsx frontend/src/services/task.service.ts frontend/src/hooks/useTasks.ts]
-      - id: feat-e2e-testing
-        name: End-to-End Test Suite
+      - id: task-tracker-feat-backend-tests
+        name: Backend Unit and Integration Tests
+        type: enabler
+        files: [jest.config.js tests/unit/services/auth.service.test.ts tests/unit/services/tasks.service.test.ts tests/unit/utils/jwt.util.test.ts tests/unit/utils/password.util.test.ts tests/integration/auth.routes.test.ts tests/integration/tasks.routes.test.ts tests/fixtures/users.fixture.ts tests/fixtures/tasks.fixture.ts tests/helpers/db-setup.ts tests/helpers/auth-helper.ts]
+      - id: task-tracker-feat-e2e-tests
+        name: End-to-End Tests
         type: enabler
         files: [tests/e2e/user-flow.test.ts]
+      - id: task-tracker-feat-deployment
+        name: Docker Containerization and Deployment
+        type: enabler
+        files: [Dockerfile.backend Dockerfile.frontend nginx.conf docker-compose.yml .github/workflows/ci.yml docs/deployment/setup-guide.md docs/deployment/docker-guide.md]
+      - id: task-tracker-feat-documentation
+        name: API Documentation and README
+        type: enabler
+        files: [docs/api/openapi.yaml README.md docs/plans/task-tracker/LLD.md]
