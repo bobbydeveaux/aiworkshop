@@ -4,58 +4,64 @@ sprints:
   - number: 1
     features:
       - id: jokes-website-feat-project-setup
-        name: React Project Setup with Vite
+        name: Project Setup and Configuration
         type: enabler
-        files: [jokes-website/package.json jokes-website/vite.config.js jokes-website/index.html jokes-website/.gitignore]
-      - id: jokes-website-feat-joke-data-structure
-        name: Joke Data Structure and JSON Files
+        files: [jokes-website/package.json jokes-website/vite.config.js jokes-website/vitest.config.js jokes-website/playwright.config.js jokes-website/.eslintrc.json jokes-website/.prettierrc]
+      - id: jokes-website-feat-static-data
+        name: Static Joke Data and Categories
         type: enabler
-        files: [jokes-website/public/data/jokes.json jokes-website/public/data/categories.json]
+        files: [jokes-website/src/data/jokes.json jokes-website/src/data/categories.json]
       - id: jokes-website-feat-layout-components
-        name: Layout Components (Header, Footer, Layout)
+        name: Layout and Navigation Components
         type: feature
-        files: [jokes-website/src/components/Layout/Header.jsx jokes-website/src/components/Layout/Header.module.css jokes-website/src/components/Layout/Footer.jsx jokes-website/src/components/Layout/Footer.module.css jokes-website/src/components/Layout/Layout.jsx jokes-website/src/components/Layout/Layout.module.css]
-      - id: jokes-website-feat-data-loading-utils
-        name: Data Loading Utilities
+        files: [jokes-website/src/components/layout/Header.jsx jokes-website/src/components/layout/Header.module.css jokes-website/src/components/layout/Footer.jsx jokes-website/src/components/layout/Footer.module.css jokes-website/src/components/layout/Layout.jsx jokes-website/src/components/layout/Layout.module.css jokes-website/src/components/common/ErrorBoundary.jsx jokes-website/src/components/common/NotFound.jsx jokes-website/src/components/common/NotFound.module.css]
+      - id: jokes-website-feat-responsive-styles
+        name: Responsive Styling and Design System
         type: enabler
-        files: [jokes-website/src/utils/jokeDataLoader.js jokes-website/src/utils/filterHelpers.js jokes-website/src/utils/urlHelpers.js]
-      - id: jokes-website-feat-joke-card
-        name: Joke Card Component
-        type: feature
-        files: [jokes-website/src/components/JokeCard/JokeCard.jsx jokes-website/src/components/JokeCard/JokeCard.module.css]
+        files: [jokes-website/src/styles/global.css jokes-website/src/styles/variables.css jokes-website/src/App.css]
+      - id: jokes-website-feat-data-hooks
+        name: Custom Data Access Hooks
+        type: enabler
+        files: [jokes-website/src/hooks/useJokes.js jokes-website/src/hooks/useCategories.js jokes-website/src/utils/jokeHelpers.js jokes-website/src/utils/validation.js]
       - id: jokes-website-feat-routing
-        name: Client-Side Routing Setup
+        name: Client-Side Routing Configuration
         type: enabler
-        files: [jokes-website/src/App.jsx jokes-website/src/App.module.css jokes-website/src/main.jsx jokes-website/src/components/ErrorBoundary/ErrorBoundary.jsx jokes-website/src/components/ErrorBoundary/ErrorBoundary.module.css]
-      - id: jokes-website-feat-custom-hooks
-        name: Custom React Hooks for Data Management
-        type: enabler
-        files: [jokes-website/src/hooks/useJokes.js jokes-website/src/hooks/useCategories.js jokes-website/src/hooks/usePersistedState.js]
-      - id: jokes-website-feat-404-page
-        name: 404 Not Found Page
+        files: [jokes-website/src/router.jsx jokes-website/src/App.jsx jokes-website/src/main.jsx jokes-website/src/utils/navigation.js]
+      - id: jokes-website-feat-joke-display
+        name: Joke Display Components
         type: feature
-        files: [jokes-website/src/pages/NotFound/NotFound.jsx jokes-website/src/pages/NotFound/NotFound.module.css]
+        files: [jokes-website/src/components/jokes/JokeCard.jsx jokes-website/src/components/jokes/JokeCard.module.css jokes-website/src/components/jokes/JokeList.jsx jokes-website/src/components/jokes/JokeList.module.css jokes-website/src/components/jokes/JokeNavigation.jsx jokes-website/src/components/jokes/JokeNavigation.module.css]
+      - id: jokes-website-feat-category-components
+        name: Category Display Components
+        type: feature
+        files: [jokes-website/src/components/categories/CategoryCard.jsx jokes-website/src/components/categories/CategoryCard.module.css jokes-website/src/components/categories/CategoryList.jsx jokes-website/src/components/categories/CategoryList.module.css]
+      - id: jokes-website-feat-browse-page
+        name: Browse Page with Filtering
+        type: feature
+        files: [jokes-website/src/pages/BrowsePage.jsx jokes-website/src/pages/BrowsePage.module.css]
+      - id: jokes-website-feat-joke-page
+        name: Individual Joke Page with Navigation
+        type: feature
+        files: [jokes-website/src/pages/JokePage.jsx jokes-website/src/pages/JokePage.module.css]
+      - id: jokes-website-feat-category-page
+        name: Category-Filtered Joke Page
+        type: feature
+        files: [jokes-website/src/pages/CategoryPage.jsx jokes-website/src/pages/CategoryPage.module.css]
       - id: jokes-website-feat-home-page
-        name: Home/Landing Page
+        name: Home Page with Featured Joke
         type: feature
-        files: [jokes-website/src/pages/Home/Home.jsx jokes-website/src/pages/Home/Home.module.css]
-      - id: jokes-website-feat-joke-detail-page
-        name: Individual Joke Detail Page
-        type: feature
-        files: [jokes-website/src/pages/JokeDetail/JokeDetail.jsx jokes-website/src/pages/JokeDetail/JokeDetail.module.css jokes-website/src/components/JokeNavigation/JokeNavigation.jsx jokes-website/src/components/JokeNavigation/JokeNavigation.module.css]
-      - id: jokes-website-feat-jokes-list-page
-        name: Browse Jokes List Page
-        type: feature
-        files: [jokes-website/src/pages/JokesList/JokesList.jsx jokes-website/src/pages/JokesList/JokesList.module.css jokes-website/src/components/CategoryFilter/CategoryFilter.jsx jokes-website/src/components/CategoryFilter/CategoryFilter.module.css]
-      - id: jokes-website-feat-categories-page
-        name: Categories Browser Page
-        type: feature
-        files: [jokes-website/src/pages/Categories/Categories.jsx jokes-website/src/pages/Categories/Categories.module.css]
+        files: [jokes-website/src/pages/HomePage.jsx jokes-website/src/pages/HomePage.module.css]
       - id: jokes-website-feat-testing-suite
-        name: Testing Suite (Unit & Integration Tests)
+        name: Comprehensive Testing Suite
         type: enabler
-        files: [jokes-website/jest.config.js jokes-website/src/__tests__/components/JokeCard.test.jsx jokes-website/src/__tests__/components/CategoryFilter.test.jsx jokes-website/src/__tests__/hooks/useJokes.test.js jokes-website/src/__tests__/utils/jokeDataLoader.test.js jokes-website/src/__tests__/utils/filterHelpers.test.js jokes-website/src/__tests__/integration/JokeViewing.test.jsx jokes-website/src/__tests__/integration/CategoryBrowsing.test.jsx]
-      - id: jokes-website-feat-deployment-pipeline
-        name: AWS S3 Deployment with CI/CD
+        files: [jokes-website/tests/unit/components/JokeCard.test.jsx jokes-website/tests/unit/components/JokeList.test.jsx jokes-website/tests/unit/components/CategoryCard.test.jsx jokes-website/tests/unit/hooks/useJokes.test.js jokes-website/tests/unit/utils/jokeHelpers.test.js jokes-website/tests/integration/navigation.test.jsx jokes-website/tests/integration/filtering.test.jsx jokes-website/tests/e2e/homepage.spec.js jokes-website/tests/e2e/browsing.spec.js jokes-website/tests/e2e/categories.spec.js jokes-website/tests/e2e/mobile.spec.js]
+  - number: 2
+    features:
+      - id: jokes-website-feat-build-optimization
+        name: Production Build Optimization
         type: enabler
-        files: [.github/workflows/deploy.yml .github/workflows/lighthouse.yml jokes-website/deploy/s3-sync.sh jokes-website/deploy/cloudfront-invalidate.sh jokes-website/deploy/bucket-policy.json]
+        files: [jokes-website/vite.config.js jokes-website/scripts/build-prod.sh]
+      - id: jokes-website-feat-s3-deployment
+        name: S3 Static Hosting and CI/CD
+        type: enabler
+        files: [jokes-website/scripts/deploy-s3.sh jokes-website/.github/workflows/deploy.yml jokes-website/scripts/validate-deployment.sh]

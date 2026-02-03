@@ -1,6 +1,7 @@
 Epic: jokes-website
 Features:
-- dependencies: []
+- Sprint: 1
+  dependencies: []
   description: Initialize Vite React project with dependencies, ESLint, Prettier,
     and test framework configuration
   estimatedComplexity: low
@@ -15,7 +16,8 @@ Features:
   name: Project Setup and Configuration
   project: jokes-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-project-setup
   description: Create JSON data files containing 20-50 jokes with categories, metadata,
     and validation schema
@@ -27,7 +29,8 @@ Features:
   name: Static Joke Data and Categories
   project: jokes-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-static-data
   description: Implement useJokes and useCategories hooks for accessing joke data
     with filtering, searching, and category operations
@@ -41,7 +44,8 @@ Features:
   name: Custom Data Access Hooks
   project: jokes-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-project-setup
   description: Build responsive header with mobile hamburger menu, footer, main layout
     wrapper, and error boundary
@@ -60,7 +64,8 @@ Features:
   name: Layout and Navigation Components
   project: jokes-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-data-hooks
   description: Create JokeCard, JokeList, and JokeNavigation components with multiple
     variants and responsive grid/list layouts
@@ -76,7 +81,8 @@ Features:
   name: Joke Display Components
   project: jokes-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-data-hooks
   description: Build CategoryCard and CategoryList components with joke counts and
     responsive grid layout
@@ -90,7 +96,8 @@ Features:
   name: Category Display Components
   project: jokes-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-layout-components
   description: Set up React Router v6 with routes for home, browse, individual jokes,
     categories, and 404 handling
@@ -104,7 +111,8 @@ Features:
   name: Client-Side Routing Configuration
   project: jokes-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-routing
   - jokes-website-feat-joke-display
   - jokes-website-feat-category-components
@@ -118,7 +126,8 @@ Features:
   name: Home Page with Featured Joke
   project: jokes-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-routing
   - jokes-website-feat-joke-display
   description: Browse all jokes page with category filter dropdown and responsive
@@ -131,7 +140,8 @@ Features:
   name: Browse Page with Filtering
   project: jokes-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-routing
   - jokes-website-feat-joke-display
   description: Single joke detail page with next/previous/random navigation controls
@@ -144,7 +154,8 @@ Features:
   name: Individual Joke Page with Navigation
   project: jokes-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-routing
   - jokes-website-feat-joke-display
   description: Display jokes filtered by specific category with category description
@@ -157,7 +168,8 @@ Features:
   name: Category-Filtered Joke Page
   project: jokes-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-project-setup
   description: Global CSS, variables, mobile-first responsive design with breakpoints
     for all components
@@ -170,7 +182,8 @@ Features:
   name: Responsive Styling and Design System
   project: jokes-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - jokes-website-feat-home-page
   - jokes-website-feat-browse-page
   - jokes-website-feat-joke-page
@@ -194,7 +207,8 @@ Features:
   name: Comprehensive Testing Suite
   project: jokes-website
   type: enabler
-- dependencies:
+- Sprint: 2
+  dependencies:
   - jokes-website-feat-testing-suite
   description: Configure Vite for code splitting, tree shaking, compression, and bundle
     size optimization under 500KB
@@ -206,7 +220,8 @@ Features:
   name: Production Build Optimization
   project: jokes-website
   type: enabler
-- dependencies:
+- Sprint: 2
+  dependencies:
   - jokes-website-feat-build-optimization
   description: S3 bucket configuration, deployment scripts, GitHub Actions workflow
     for automated deployment with CloudFront integration
