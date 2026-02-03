@@ -1,0 +1,224 @@
+Epic: adult-book-website
+Features:
+- Sprint: 1
+  dependencies: []
+  description: Initialize React 18 + TypeScript 5 project with Vite 5, configure AWS
+    S3 bucket for static hosting, set up CloudFront CDN, configure GitHub Actions
+    CI/CD pipeline, and establish build tooling with ESLint, Prettier, and testing
+    frameworks
+  estimatedComplexity: medium
+  files:
+  - package.json
+  - vite.config.ts
+  - tsconfig.json
+  - .github/workflows/deploy.yml
+  - lighthouse-ci.config.js
+  id: adult-book-website-feat-project-setup
+  name: Project Setup and Infrastructure
+  project: adult-book-website
+  type: enabler
+- Sprint: 1
+  dependencies:
+  - adult-book-website-feat-project-setup
+  description: Build-time data fetching from Google Books API and Open Library API,
+    transform and normalize book metadata, generate Lunr.js search index, create static
+    JSON data files for book catalog and authors, implement data chunking strategy
+    for large catalogs
+  estimatedComplexity: high
+  files:
+  - scripts/fetch-books.js
+  - src/services/DataLoader.ts
+  - public/data/books.json
+  - public/data/authors.json
+  - public/data/search-index.json
+  id: adult-book-website-feat-data-pipeline
+  name: Book Data Pipeline and Search Index
+  project: adult-book-website
+  type: enabler
+- Sprint: 1
+  dependencies:
+  - adult-book-website-feat-project-setup
+  description: Implement Redux Toolkit store with slices for books, reviews, reading
+    lists, and user preferences. Configure local storage persistence middleware with
+    LZString compression, implement StorageService with quota management and IndexedDB
+    fallback
+  estimatedComplexity: medium
+  files:
+  - src/store/index.ts
+  - src/store/slices/bookSlice.ts
+  - src/store/slices/reviewSlice.ts
+  - src/store/slices/readingListSlice.ts
+  - src/store/slices/userSlice.ts
+  - src/services/StorageService.ts
+  id: adult-book-website-feat-state-management
+  name: Redux State Management and Storage
+  project: adult-book-website
+  type: enabler
+- Sprint: 1
+  dependencies:
+  - adult-book-website-feat-project-setup
+  - adult-book-website-feat-state-management
+  description: 'Implement reusable React components with Material-UI: BookCard, BookCover
+    with lazy loading, SearchBar, FilterPanel, RatingStars, ReviewCard, LoadingSkeletons,
+    ErrorBoundaries, responsive layouts with mobile-first design'
+  estimatedComplexity: medium
+  files:
+  - src/components/book/BookCard.tsx
+  - src/components/book/BookCover.tsx
+  - src/components/common/SearchBar.tsx
+  - src/components/common/FilterPanel.tsx
+  - src/components/common/RatingStars.tsx
+  - src/components/review/ReviewCard.tsx
+  id: adult-book-website-feat-ui-components
+  name: Core UI Component Library
+  project: adult-book-website
+  type: enabler
+- Sprint: 1
+  dependencies:
+  - adult-book-website-feat-data-pipeline
+  - adult-book-website-feat-state-management
+  - adult-book-website-feat-ui-components
+  description: Implement book catalog browsing with pagination and list virtualization
+    using React Window. Integrate Lunr.js for client-side full-text search with <500ms
+    response time. Support multi-criteria filtering by genre, rating, publication
+    year, and author with debounced updates
+  estimatedComplexity: high
+  files:
+  - src/services/BookService.ts
+  - src/services/SearchService.ts
+  - src/pages/CatalogPage.tsx
+  - src/hooks/useSearch.ts
+  - src/hooks/useIntersectionObserver.ts
+  id: adult-book-website-feat-book-catalog
+  name: Book Catalog and Search
+  project: adult-book-website
+  type: feature
+- Sprint: 1
+  dependencies:
+  - adult-book-website-feat-book-catalog
+  description: Create book detail pages displaying cover, metadata, synopsis, average
+    rating, and user reviews. Implement author profile pages with biography, photo,
+    and complete bibliography. Support navigation between books and authors with React
+    Router
+  estimatedComplexity: medium
+  files:
+  - src/pages/BookDetailPage.tsx
+  - src/pages/AuthorProfilePage.tsx
+  - src/services/AuthorService.ts
+  - src/components/book/BookDetail.tsx
+  - src/components/author/AuthorProfile.tsx
+  id: adult-book-website-feat-book-details
+  name: Book Detail Pages and Author Profiles
+  project: adult-book-website
+  type: feature
+- Sprint: 2
+  dependencies:
+  - adult-book-website-feat-book-details
+  - adult-book-website-feat-state-management
+  description: Implement review submission with star rating (1-5) and text validation
+    (10-2000 characters). Sanitize user input with DOMPurify to prevent XSS. Calculate
+    and display average ratings per book. Store reviews in local storage with anonymous
+    UUID user identification. Display user's reviews with 'My Review' indicator
+  estimatedComplexity: medium
+  files:
+  - src/services/ReviewService.ts
+  - src/components/review/ReviewForm.tsx
+  - src/components/review/ReviewList.tsx
+  - src/utils/sanitization.ts
+  id: adult-book-website-feat-reviews-ratings
+  name: User Reviews and Ratings System
+  project: adult-book-website
+  type: feature
+- Sprint: 1
+  dependencies:
+  - adult-book-website-feat-book-catalog
+  - adult-book-website-feat-state-management
+  description: Enable users to create, name, and manage multiple reading lists (To
+    Read, Currently Reading, Favorites, custom). Implement CRUD operations for adding/removing
+    books from lists. Persist lists in local storage. Support list export in JSON
+    and CSV formats. Display reading lists on user profile page
+  estimatedComplexity: medium
+  files:
+  - src/services/ReadingListService.ts
+  - src/pages/ReadingListsPage.tsx
+  - src/components/list/ReadingListManager.tsx
+  - src/components/list/ReadingListCard.tsx
+  - src/utils/exportData.ts
+  id: adult-book-website-feat-reading-lists
+  name: Personal Reading Lists Management
+  project: adult-book-website
+  type: feature
+- Sprint: 2
+  dependencies:
+  - adult-book-website-feat-reviews-ratings
+  - adult-book-website-feat-reading-lists
+  description: Implement hybrid recommendation engine with content-based filtering
+    (genre, author similarity using TF-IDF) and collaborative filtering (user-based
+    similarity). Run algorithm in Web Worker to avoid blocking main thread. Require
+    minimum 5 rated books. Cache recommendations for 24 hours. Dynamically adapt to
+    new user interactions
+  estimatedComplexity: high
+  files:
+  - src/services/RecommendationService.ts
+  - public/recommendation-worker.js
+  - src/pages/RecommendationsPage.tsx
+  - src/algorithms/contentBasedFiltering.ts
+  - src/algorithms/collaborativeFiltering.ts
+  id: adult-book-website-feat-recommendations
+  name: Personalized Book Recommendations
+  project: adult-book-website
+  type: feature
+- Sprint: 2
+  dependencies:
+  - adult-book-website-feat-book-catalog
+  - adult-book-website-feat-reviews-ratings
+  description: Design and implement homepage displaying trending books, top-rated
+    books, and featured content. Show recent reviews and curated book lists. Optimize
+    for fast initial load with code splitting and lazy loading. Display call-to-action
+    for key features
+  estimatedComplexity: low
+  files:
+  - src/pages/HomePage.tsx
+  - src/components/home/FeaturedBooks.tsx
+  - src/components/home/TrendingBooks.tsx
+  - src/services/FeaturedContentService.ts
+  id: adult-book-website-feat-homepage
+  name: Homepage with Featured Content
+  project: adult-book-website
+  type: feature
+- Sprint: 1
+  dependencies:
+  - adult-book-website-feat-project-setup
+  description: Configure Content Security Policy headers to prevent XSS. Implement
+    HTTPS-only resource loading. Set up CORS policies on S3 bucket. Configure CloudFront
+    with TLS 1.2+ minimum and HSTS headers. Implement input validation and sanitization
+    across all user-generated content
+  estimatedComplexity: low
+  files:
+  - public/_headers
+  - src/utils/sanitization.ts
+  - cloudfront-config.json
+  - s3-bucket-policy.json
+  id: adult-book-website-feat-security
+  name: Security Implementation
+  project: adult-book-website
+  type: enabler
+- Sprint: 2
+  dependencies:
+  - adult-book-website-feat-project-setup
+  description: Integrate Google Analytics 4 for user behavior tracking and custom
+    events (search, reviews, reading lists). Implement Sentry for client-side error
+    tracking and performance monitoring. Track Core Web Vitals (LCP, FID, CLS) and
+    send to GA4. Configure CloudWatch for infrastructure monitoring. Set up Lighthouse
+    CI in deployment pipeline
+  estimatedComplexity: medium
+  files:
+  - src/utils/analytics.ts
+  - src/utils/performance.ts
+  - src/utils/errorTracking.ts
+  - lighthouse-ci.config.js
+  id: adult-book-website-feat-monitoring
+  name: Performance Monitoring and Analytics
+  project: adult-book-website
+  type: enabler
+Version: v1alpha1
