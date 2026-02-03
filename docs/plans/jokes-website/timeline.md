@@ -2,13 +2,13 @@
 
 **Generated:** 2026-02-03
 
-**Total Sprints:** 1
+**Total Sprints:** 2
 
-**Total Duration:** 14 days
+**Total Duration:** 22 days
 
 **Start Date:** 2026-02-03
 
-**Estimated Completion:** 2026-02-17
+**Estimated Completion:** 2026-02-25
 
 ---
 
@@ -20,20 +20,28 @@
 
 **Features:**
 
-- **jokes-website-feat-project-setup** (enabler): React Project Setup with Vite
-- **jokes-website-feat-joke-data-structure** (enabler): Joke Data Structure and JSON Files
-- **jokes-website-feat-data-loading-utils** (enabler): Data Loading Utilities
-- **jokes-website-feat-custom-hooks** (enabler): Custom React Hooks for Data Management
-- **jokes-website-feat-layout-components** (feature): Layout Components (Header, Footer, Layout)
-- **jokes-website-feat-joke-card** (feature): Joke Card Component
-- **jokes-website-feat-routing** (enabler): Client-Side Routing Setup
-- **jokes-website-feat-home-page** (feature): Home/Landing Page
-- **jokes-website-feat-joke-detail-page** (feature): Individual Joke Detail Page
-- **jokes-website-feat-jokes-list-page** (feature): Browse Jokes List Page
-- **jokes-website-feat-categories-page** (feature): Categories Browser Page
-- **jokes-website-feat-404-page** (feature): 404 Not Found Page
-- **jokes-website-feat-testing-suite** (enabler): Testing Suite (Unit & Integration Tests)
-- **jokes-website-feat-deployment-pipeline** (enabler): AWS S3 Deployment with CI/CD
+- **jokes-website-feat-project-setup** (enabler): Project Setup and Configuration
+- **jokes-website-feat-static-data** (enabler): Static Joke Data and Categories
+- **jokes-website-feat-data-hooks** (enabler): Custom Data Access Hooks
+- **jokes-website-feat-layout-components** (feature): Layout and Navigation Components
+- **jokes-website-feat-joke-display** (feature): Joke Display Components
+- **jokes-website-feat-category-components** (feature): Category Display Components
+- **jokes-website-feat-routing** (enabler): Client-Side Routing Configuration
+- **jokes-website-feat-home-page** (feature): Home Page with Featured Joke
+- **jokes-website-feat-browse-page** (feature): Browse Page with Filtering
+- **jokes-website-feat-joke-page** (feature): Individual Joke Page with Navigation
+- **jokes-website-feat-category-page** (feature): Category-Filtered Joke Page
+- **jokes-website-feat-responsive-styles** (enabler): Responsive Styling and Design System
+- **jokes-website-feat-testing-suite** (enabler): Comprehensive Testing Suite
+
+### Sprint 2
+
+**Duration:** 2026-02-18 to 2026-02-25 (7 days)
+
+**Features:**
+
+- **jokes-website-feat-build-optimization** (enabler): Production Build Optimization
+- **jokes-website-feat-s3-deployment** (enabler): S3 Static Hosting and CI/CD
 
 ---
 
@@ -42,9 +50,10 @@
 The longest dependency chain:
 
 1. jokes-website-feat-project-setup
-2. jokes-website-feat-joke-data-structure
-3. jokes-website-feat-data-loading-utils
-4. jokes-website-feat-custom-hooks
+2. jokes-website-feat-static-data
+3. jokes-website-feat-data-hooks
+4. jokes-website-feat-joke-display
 5. jokes-website-feat-home-page
 6. jokes-website-feat-testing-suite
-7. jokes-website-feat-deployment-pipeline
+7. jokes-website-feat-build-optimization
+8. jokes-website-feat-s3-deployment
