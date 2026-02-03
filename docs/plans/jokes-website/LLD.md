@@ -1,34 +1,24 @@
 # Low-Level Design: aiworkshop
 
-**Created:** 2026-02-03T08:29:29Z
+**Created:** 2026-02-03T11:01:15Z
 **Status:** Draft
 
 ## 1. Implementation Overview
 
 <!-- AI: Brief summary of implementation approach -->
 
-This implementation creates a standalone React-based static website for displaying jokes, completely separate from the existing Python-based repository. The jokes website will be built in a new directory structure under `jokes-website/` to isolate it from the existing Python API and analysis tools.
+This implementation will create a new React-based static website within the existing repository structure. The jokes website will be built as a standalone frontend application under a new `jokes-website/` directory in the project root. The implementation follows these key steps:
 
-**Implementation Strategy:**
-1. Create a new React application using Vite in `jokes-website/` directory
-2. Implement component-based architecture with React 18+ and React Router v6
-3. Store jokes data in static JSON files within the `public/data/` directory
-4. Build responsive UI components with CSS Modules for scoped styling
-5. Configure build output for S3 static hosting with SPA routing support
-6. Set up deployment pipeline for automated S3 deployment
+1. **Project Setup**: Initialize a new Vite-based React application with modern tooling (ESLint, Prettier) in `jokes-website/`
+2. **Component Development**: Build reusable React components following atomic design principles with functional components and hooks
+3. **Static Data Integration**: Create a structured JSON data file containing 20-50 jokes with categories and metadata
+4. **Client-Side Routing**: Implement React Router v6 for navigation between home, joke listing, individual jokes, and category views
+5. **Responsive Styling**: Use CSS Modules for component-scoped styling with mobile-first responsive design
+6. **Build Optimization**: Configure Vite for optimal production builds with code splitting, tree shaking, and asset optimization
+7. **S3 Deployment**: Create deployment scripts and GitHub Actions workflow for automated deployment to S3
+8. **Testing**: Implement unit tests with Vitest and React Testing Library, plus E2E tests with Playwright
 
-**Key Technologies:**
-- React 18.2+ with functional components and hooks
-- Vite 5.0+ for build tooling and development server
-- React Router v6 for client-side routing
-- CSS Modules for component styling
-- Jest and React Testing Library for testing
-
-**Development Approach:**
-- Mobile-first responsive design
-- Component-driven development with reusable UI elements
-- Performance optimization through code splitting and lazy loading
-- Lighthouse CI integration for performance monitoring
+The application will be completely self-contained with no external dependencies beyond the React ecosystem. All jokes data will be embedded in the build, eliminating runtime dependencies. The architecture leverages React's component model for maintainability while keeping the implementation simple and focused on the core requirements.
 
 ---
 
@@ -38,128 +28,123 @@ This implementation creates a standalone React-based static website for displayi
 
 ```
 jokes-website/                          # New React application root
-  package.json                          # NPM dependencies and scripts
-  vite.config.js                        # Vite build configuration
-  index.html                            # HTML entry point
-  .env.example                          # Environment variables template
-  .gitignore                            # Git ignore for node_modules, build
-  
-  public/                               # Static assets served as-is
-    data/
-      jokes.json                        # Joke dataset (JSON array)
-      categories.json                   # Category metadata
-    favicon.ico                         # Site favicon
-    robots.txt                          # Search engine directives
-    
-  src/                                  # React application source
-    main.jsx                            # Application entry point
-    App.jsx                             # Root component with routing
-    App.module.css                      # App-level styles
-    
-    components/                         # Reusable UI components
-      Layout/
-        Header.jsx                      # Site header with navigation
-        Header.module.css
-        Footer.jsx                      # Site footer
-        Footer.module.css
-        Layout.jsx                      # Layout wrapper component
-        Layout.module.css
-      
-      JokeCard/
-        JokeCard.jsx                    # Individual joke display card
-        JokeCard.module.css
-      
-      JokeNavigation/
-        JokeNavigation.jsx              # Next/previous controls
-        JokeNavigation.module.css
-      
-      CategoryFilter/
-        CategoryFilter.jsx              # Category selection component
-        CategoryFilter.module.css
-      
-      ErrorBoundary/
-        ErrorBoundary.jsx               # React error boundary
-        ErrorBoundary.module.css
-    
-    pages/                              # Route-level page components
-      Home/
-        Home.jsx                        # Landing page
-        Home.module.css
-      
-      JokesList/
-        JokesList.jsx                   # Browse all jokes page
-        JokesList.module.css
-      
-      JokeDetail/
-        JokeDetail.jsx                  # Single joke view page
-        JokeDetail.module.css
-      
-      Categories/
-        Categories.jsx                  # Category browser page
-        Categories.module.css
-      
-      NotFound/
-        NotFound.jsx                    # 404 error page
-        NotFound.module.css
-    
-    hooks/                              # Custom React hooks
-      useJokes.js                       # Hook for loading/filtering jokes
-      useCategories.js                  # Hook for category data
-      usePersistedState.js              # Hook for localStorage state
-    
-    utils/                              # Utility functions
-      jokeDataLoader.js                 # Load and parse JSON data
-      filterHelpers.js                  # Joke filtering logic
-      urlHelpers.js                     # URL parsing/generation
-      constants.js                      # App-wide constants
-    
-    styles/                             # Global styles
-      global.css                        # CSS reset and base styles
-      variables.css                     # CSS custom properties
-    
-    __tests__/                          # Test files
-      components/
-        JokeCard.test.jsx
-        CategoryFilter.test.jsx
-      pages/
-        Home.test.jsx
-        JokeDetail.test.jsx
-      hooks/
-        useJokes.test.js
-      utils/
-        jokeDataLoader.test.js
-        filterHelpers.test.js
-  
-  .github/                              # CI/CD workflows
-    workflows/
-      deploy.yml                        # GitHub Actions deployment
-      lighthouse.yml                    # Lighthouse CI checks
-  
-  deploy/                               # Deployment scripts
-    s3-sync.sh                          # S3 upload script
-    cloudfront-invalidate.sh            # Cache invalidation script
-  
-  docs/                                 # Documentation
-    SETUP.md                            # Setup instructions
-    DEPLOYMENT.md                       # Deployment guide
-    ARCHITECTURE.md                     # Architecture overview
+├── public/                             # Static assets served as-is
+│   ├── favicon.ico                     # Website favicon
+│   ├── robots.txt                      # SEO crawler instructions
+│   └── site.webmanifest               # PWA manifest (optional)
+├── src/                                # Source code directory
+│   ├── components/                     # React components
+│   │   ├── layout/                     # Layout components
+│   │   │   ├── Header.jsx              # Site header with navigation
+│   │   │   ├── Header.module.css       # Header styles
+│   │   │   ├── Footer.jsx              # Site footer
+│   │   │   ├── Footer.module.css       # Footer styles
+│   │   │   ├── Layout.jsx              # Main layout wrapper
+│   │   │   └── Layout.module.css       # Layout styles
+│   │   ├── jokes/                      # Joke-related components
+│   │   │   ├── JokeCard.jsx            # Individual joke display card
+│   │   │   ├── JokeCard.module.css     # Joke card styles
+│   │   │   ├── JokeList.jsx            # List of jokes in grid/list view
+│   │   │   ├── JokeList.module.css     # Joke list styles
+│   │   │   ├── JokeNavigation.jsx      # Next/Previous/Random navigation
+│   │   │   └── JokeNavigation.module.css # Navigation styles
+│   │   ├── categories/                 # Category-related components
+│   │   │   ├── CategoryCard.jsx        # Category display card
+│   │   │   ├── CategoryCard.module.css # Category card styles
+│   │   │   ├── CategoryList.jsx        # Grid of category cards
+│   │   │   └── CategoryList.module.css # Category list styles
+│   │   └── common/                     # Shared/common components
+│   │       ├── ErrorBoundary.jsx       # React error boundary
+│   │       ├── NotFound.jsx            # 404 page component
+│   │       └── NotFound.module.css     # 404 page styles
+│   ├── pages/                          # Page-level components
+│   │   ├── HomePage.jsx                # Home/landing page
+│   │   ├── HomePage.module.css         # Home page styles
+│   │   ├── JokePage.jsx                # Individual joke view page
+│   │   ├── JokePage.module.css         # Joke page styles
+│   │   ├── BrowsePage.jsx              # Browse all jokes page
+│   │   ├── BrowsePage.module.css       # Browse page styles
+│   │   ├── CategoryPage.jsx            # Jokes by category page
+│   │   └── CategoryPage.module.css     # Category page styles
+│   ├── data/                           # Static data files
+│   │   ├── jokes.json                  # Main jokes data (20-50 jokes)
+│   │   └── categories.json             # Category metadata
+│   ├── hooks/                          # Custom React hooks
+│   │   ├── useJokes.js                 # Hook for accessing joke data
+│   │   └── useCategories.js            # Hook for category operations
+│   ├── utils/                          # Utility functions
+│   │   ├── jokeHelpers.js              # Joke filtering and sorting
+│   │   └── navigation.js               # Navigation helper functions
+│   ├── styles/                         # Global styles
+│   │   ├── global.css                  # Global CSS reset and variables
+│   │   └── variables.css               # CSS custom properties
+│   ├── App.jsx                         # Root application component
+│   ├── App.css                         # Root application styles
+│   ├── main.jsx                        # Application entry point
+│   └── router.jsx                      # React Router configuration
+├── tests/                              # Test files
+│   ├── unit/                           # Unit tests
+│   │   ├── components/                 # Component unit tests
+│   │   │   ├── JokeCard.test.jsx       # JokeCard component tests
+│   │   │   ├── JokeList.test.jsx       # JokeList component tests
+│   │   │   └── CategoryCard.test.jsx   # CategoryCard component tests
+│   │   ├── hooks/                      # Hook unit tests
+│   │   │   └── useJokes.test.js        # useJokes hook tests
+│   │   └── utils/                      # Utility function tests
+│   │       └── jokeHelpers.test.js     # Joke helper tests
+│   ├── integration/                    # Integration tests
+│   │   └── navigation.test.jsx         # Route navigation tests
+│   └── e2e/                            # End-to-end tests
+│       ├── homepage.spec.js            # Home page E2E tests
+│       ├── browsing.spec.js            # Joke browsing E2E tests
+│       └── categories.spec.js          # Category filtering E2E tests
+├── .github/                            # GitHub configuration
+│   └── workflows/                      # GitHub Actions workflows
+│       └── deploy.yml                  # S3 deployment workflow
+├── scripts/                            # Build and deployment scripts
+│   ├── deploy-s3.sh                    # S3 deployment script
+│   └── build-prod.sh                   # Production build script
+├── .gitignore                          # Git ignore file
+├── package.json                        # NPM dependencies and scripts
+├── package-lock.json                   # NPM dependency lock file
+├── vite.config.js                      # Vite build configuration
+├── vitest.config.js                    # Vitest test configuration
+├── playwright.config.js                # Playwright E2E test config
+├── .eslintrc.json                      # ESLint configuration
+├── .prettierrc                         # Prettier configuration
+└── README.md                           # Project documentation
 
-docs/                                   # Modified: existing docs folder
-  plans/
-    jokes-website/
-      LLD.md                            # This document (new)
-      HLD.md                            # Existing HLD
-      PRD.md                            # Existing PRD
+docs/plans/jokes-website/               # Existing documentation (modified)
+├── HLD.md                              # High-level design (existing)
+├── LLD.md                              # This file
+├── PRD.md                              # Product requirements (existing)
+├── ROAM.md                             # ROAM document (existing)
+├── IMPLEMENTATION.md                   # New: Implementation guide
+└── DEPLOYMENT.md                       # New: Deployment instructions
 
-README.md                               # Modified: add jokes-website section
+README.md                               # Root README (modified)
+└── Add link to jokes-website project
 ```
 
-**Modified Files:**
-- `README.md` - Add jokes-website project documentation link
-- `docs/plans/jokes-website/LLD.md` - New file (this document)
+**Key Files Summary:**
 
 **New Directories:**
-- `jokes-website/` - Entire React application (550+ lines across 40+ files)
+- `jokes-website/`: Complete React application for the jokes website
+- `jokes-website/src/components/`: Reusable UI components
+- `jokes-website/src/pages/`: Page-level route components
+- `jokes-website/src/data/`: Static JSON data files
+- `jokes-website/tests/`: Comprehensive test suite
+
+**Modified Files:**
+- `README.md`: Add section about jokes-website subproject
+- `docs/plans/jokes-website/LLD.md`: This document
+
+**Configuration Files:**
+- `vite.config.js`: Vite bundler configuration with optimizations
+- `vitest.config.js`: Unit test runner configuration
+- `playwright.config.js`: E2E test framework configuration
+- `.eslintrc.json`: Code quality rules
+- `.prettierrc`: Code formatting rules
 
 ---
 
@@ -167,400 +152,564 @@ README.md                               # Modified: add jokes-website section
 
 <!-- AI: For each major component from HLD, provide detailed design -->
 
-### 3.1 App Root Component (`src/App.jsx`)
+### 3.1 Layout Components
 
-**Purpose:** Application root with routing configuration and global providers
+#### **Header Component** (`src/components/layout/Header.jsx`)
 
-**Implementation:**
 ```jsx
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout/Layout';
-import Home from './pages/Home/Home';
-import JokesList from './pages/JokesList/JokesList';
-import JokeDetail from './pages/JokeDetail/JokeDetail';
-import Categories from './pages/Categories/Categories';
-import NotFound from './pages/NotFound/NotFound';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
-import styles from './App.module.css';
+/**
+ * Header component with site branding and navigation
+ * Responsive with hamburger menu on mobile
+ */
+import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import styles from './Header.module.css';
 
-function App() {
+export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/jokes" element={<JokesList />} />
-            <Route path="/jokes/:id" element={<JokeDetail />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/categories/:category" element={<JokesList />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </ErrorBoundary>
+    <header className={styles.header}>
+      <div className={styles.container}>
+        <Link to="/" className={styles.logo}>
+          😂 JokesHub
+        </Link>
+        
+        <button 
+          className={styles.hamburger}
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={`${styles.nav} ${mobileMenuOpen ? styles.open : ''}`}>
+          <NavLink to="/" onClick={closeMobileMenu}>Home</NavLink>
+          <NavLink to="/browse" onClick={closeMobileMenu}>Browse</NavLink>
+          <NavLink to="/categories" onClick={closeMobileMenu}>Categories</NavLink>
+        </nav>
+      </div>
+    </header>
   );
 }
-
-export default App;
 ```
 
-**State:** None (stateless routing component)
-
-**Props:** None
-
-**Key Features:**
-- BrowserRouter for clean URLs
-- Nested routes under Layout component
-- Catch-all 404 route
-- Global error boundary
+**Styling** (`Header.module.css`):
+- Mobile-first responsive design
+- Hamburger menu for screens < 768px
+- Smooth transitions for menu open/close
+- Active link highlighting with NavLink
 
 ---
 
-### 3.2 JokeCard Component (`src/components/JokeCard/JokeCard.jsx`)
+#### **Layout Component** (`src/components/layout/Layout.jsx`)
 
-**Purpose:** Display individual joke with setup and punchline
+```jsx
+/**
+ * Main layout wrapper for all pages
+ * Includes header, footer, and content area with error boundary
+ */
+import Header from './Header';
+import Footer from './Footer';
+import ErrorBoundary from '../common/ErrorBoundary';
+import styles from './Layout.module.css';
 
-**Props Interface:**
-```javascript
-{
-  joke: {
-    id: string,
-    type: 'one-liner' | 'qa' | 'knock-knock' | 'story',
-    category: string,
-    setup?: string,
-    punchline: string,
-    tags?: string[]
-  },
-  showCategory: boolean = true,
-  onShare?: (jokeId) => void
+export default function Layout({ children }) {
+  return (
+    <div className={styles.layout}>
+      <Header />
+      <ErrorBoundary>
+        <main className={styles.main}>
+          {children}
+        </main>
+      </ErrorBoundary>
+      <Footer />
+    </div>
+  );
 }
 ```
 
-**Implementation:**
+**Features:**
+- Flexbox sticky footer layout
+- Error boundary wraps main content
+- Consistent spacing and max-width container
+- Semantic HTML5 structure
+
+---
+
+### 3.2 Joke Display Components
+
+#### **JokeCard Component** (`src/components/jokes/JokeCard.jsx`)
+
 ```jsx
-import React, { useState } from 'react';
+/**
+ * Displays a single joke with setup/punchline formatting
+ * Props: joke object, variant (compact, full, featured)
+ */
 import { Link } from 'react-router-dom';
 import styles from './JokeCard.module.css';
 
-function JokeCard({ joke, showCategory = true, onShare }) {
-  const [revealed, setRevealed] = useState(false);
-  
-  const handleReveal = () => {
-    setRevealed(true);
-  };
-  
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: joke.setup || 'Funny Joke',
-        text: `${joke.setup ? joke.setup + '\n' : ''}${joke.punchline}`,
-        url: window.location.origin + `/jokes/${joke.id}`
-      });
-    } else {
-      onShare?.(joke.id);
-    }
-  };
-  
+export default function JokeCard({ joke, variant = 'full', showLink = true }) {
+  const { id, setup, punchline, category } = joke;
+
   return (
-    <div className={styles.card}>
-      {showCategory && (
-        <Link to={`/categories/${joke.category}`} className={styles.category}>
-          {joke.category}
-        </Link>
-      )}
-      
-      {joke.setup && (
-        <div className={styles.setup}>{joke.setup}</div>
-      )}
-      
-      {!revealed && joke.setup ? (
-        <button onClick={handleReveal} className={styles.revealButton}>
-          Show Punchline
-        </button>
-      ) : (
-        <div className={styles.punchline}>{joke.punchline}</div>
-      )}
-      
-      <div className={styles.actions}>
-        <button onClick={handleShare} className={styles.shareButton}>
-          Share
-        </button>
-        <Link to={`/jokes/${joke.id}`} className={styles.linkButton}>
-          Permalink
-        </Link>
+    <article className={`${styles.card} ${styles[variant]}`}>
+      <div className={styles.content}>
+        <p className={styles.setup}>{setup}</p>
+        <p className={styles.punchline}>{punchline}</p>
       </div>
-    </div>
-  );
-}
-
-export default JokeCard;
-```
-
-**State:**
-- `revealed`: boolean - Whether punchline is shown (for setup/punchline jokes)
-
-**Styling:** CSS Modules with responsive card layout
-
----
-
-### 3.3 useJokes Hook (`src/hooks/useJokes.js`)
-
-**Purpose:** Load and filter jokes data with caching
-
-**API:**
-```javascript
-function useJokes(filters = {}) {
-  return {
-    jokes: Joke[],        // Filtered jokes array
-    loading: boolean,     // Loading state
-    error: Error | null,  // Error state
-    categories: string[], // Available categories
-    totalCount: number    // Total jokes before filtering
-  };
-}
-```
-
-**Implementation:**
-```javascript
-import { useState, useEffect, useMemo } from 'react';
-import { loadJokes } from '../utils/jokeDataLoader';
-import { filterJokes } from '../utils/filterHelpers';
-
-function useJokes(filters = {}) {
-  const [allJokes, setAllJokes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
-  // Load jokes on mount
-  useEffect(() => {
-    let isMounted = true;
-    
-    loadJokes()
-      .then(data => {
-        if (isMounted) {
-          setAllJokes(data.jokes);
-          setLoading(false);
-        }
-      })
-      .catch(err => {
-        if (isMounted) {
-          setError(err);
-          setLoading(false);
-        }
-      });
-    
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-  
-  // Filter jokes based on filters prop
-  const jokes = useMemo(() => {
-    return filterJokes(allJokes, filters);
-  }, [allJokes, filters]);
-  
-  // Extract unique categories
-  const categories = useMemo(() => {
-    const cats = new Set(allJokes.map(j => j.category));
-    return Array.from(cats).sort();
-  }, [allJokes]);
-  
-  return {
-    jokes,
-    loading,
-    error,
-    categories,
-    totalCount: allJokes.length
-  };
-}
-
-export default useJokes;
-```
-
-**Caching Strategy:**
-- Load jokes once on mount
-- Cache in component state
-- Filter using memoized computation
-- No re-fetch on filter changes
-
----
-
-### 3.4 JokeDetail Page (`src/pages/JokeDetail/JokeDetail.jsx`)
-
-**Purpose:** Display single joke with navigation controls
-
-**Implementation:**
-```jsx
-import React from 'react';
-import { useParams, Navigate } from 'react-router-dom';
-import useJokes from '../../hooks/useJokes';
-import JokeCard from '../../components/JokeCard/JokeCard';
-import JokeNavigation from '../../components/JokeNavigation/JokeNavigation';
-import styles from './JokeDetail.module.css';
-
-function JokeDetail() {
-  const { id } = useParams();
-  const { jokes, loading, error } = useJokes();
-  
-  if (loading) {
-    return <div className={styles.loading}>Loading joke...</div>;
-  }
-  
-  if (error) {
-    return <div className={styles.error}>Error loading jokes</div>;
-  }
-  
-  const currentIndex = jokes.findIndex(j => j.id === id);
-  
-  if (currentIndex === -1) {
-    return <Navigate to="/404" replace />;
-  }
-  
-  const joke = jokes[currentIndex];
-  const prevJoke = currentIndex > 0 ? jokes[currentIndex - 1] : null;
-  const nextJoke = currentIndex < jokes.length - 1 ? jokes[currentIndex + 1] : null;
-  
-  return (
-    <div className={styles.container}>
-      <JokeCard joke={joke} showCategory={true} />
-      <JokeNavigation 
-        prevJoke={prevJoke} 
-        nextJoke={nextJoke}
-        currentIndex={currentIndex + 1}
-        totalJokes={jokes.length}
-      />
-    </div>
-  );
-}
-
-export default JokeDetail;
-```
-
-**URL Parameters:**
-- `:id` - Joke identifier from route
-
-**Navigation Logic:**
-- Find current joke index in array
-- Determine previous/next jokes for navigation
-- Handle edge cases (first/last joke)
-
----
-
-### 3.5 Categories Page (`src/pages/Categories/Categories.jsx`)
-
-**Purpose:** Browse jokes by category with counts
-
-**Implementation:**
-```jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import useJokes from '../../hooks/useJokes';
-import styles from './Categories.module.css';
-
-function Categories() {
-  const { jokes, categories, loading, error } = useJokes();
-  
-  if (loading) return <div>Loading categories...</div>;
-  if (error) return <div>Error loading categories</div>;
-  
-  // Calculate joke count per category
-  const categoryCounts = categories.map(cat => ({
-    name: cat,
-    count: jokes.filter(j => j.category === cat).length,
-    displayName: cat.split('-').map(w => 
-      w.charAt(0).toUpperCase() + w.slice(1)
-    ).join(' ')
-  }));
-  
-  return (
-    <div className={styles.container}>
-      <h1>Browse by Category</h1>
-      <div className={styles.grid}>
-        {categoryCounts.map(cat => (
-          <Link 
-            key={cat.name}
-            to={`/categories/${cat.name}`}
-            className={styles.categoryCard}
-          >
-            <h2>{cat.displayName}</h2>
-            <p>{cat.count} jokes</p>
+      
+      <div className={styles.meta}>
+        <span className={styles.category}>{category}</span>
+        {showLink && (
+          <Link to={`/jokes/${id}`} className={styles.link}>
+            View →
           </Link>
-        ))}
+        )}
       </div>
+    </article>
+  );
+}
+```
+
+**Props Interface:**
+- `joke`: Object { id, setup, punchline, category, tags?, dateAdded? }
+- `variant`: String enum ['compact', 'full', 'featured']
+- `showLink`: Boolean (default true)
+
+**Variants:**
+- `compact`: Smaller card for grid layouts
+- `full`: Standard card with all details
+- `featured`: Hero-style card for homepage
+
+---
+
+#### **JokeList Component** (`src/components/jokes/JokeList.jsx`)
+
+```jsx
+/**
+ * Displays a grid or list of joke cards
+ * Supports filtering and sorting
+ */
+import JokeCard from './JokeCard';
+import styles from './JokeList.module.css';
+
+export default function JokeList({ 
+  jokes, 
+  variant = 'compact', 
+  layout = 'grid',
+  emptyMessage = 'No jokes found.'
+}) {
+  if (!jokes || jokes.length === 0) {
+    return <p className={styles.empty}>{emptyMessage}</p>;
+  }
+
+  return (
+    <div className={`${styles.list} ${styles[layout]}`}>
+      {jokes.map(joke => (
+        <JokeCard 
+          key={joke.id} 
+          joke={joke} 
+          variant={variant}
+        />
+      ))}
     </div>
   );
 }
+```
 
-export default Categories;
+**Props Interface:**
+- `jokes`: Array of joke objects
+- `variant`: String enum ['compact', 'full']
+- `layout`: String enum ['grid', 'list']
+- `emptyMessage`: String (default shown)
+
+**CSS Grid Layout:**
+- Grid: 1 column (mobile), 2 columns (tablet), 3 columns (desktop)
+- List: Single column with wider cards
+- Gap spacing: 1.5rem
+
+---
+
+#### **JokeNavigation Component** (`src/components/jokes/JokeNavigation.jsx`)
+
+```jsx
+/**
+ * Navigation controls for browsing jokes
+ * Next, Previous, and Random buttons
+ */
+import { useNavigate } from 'react-router-dom';
+import { getNextJoke, getPreviousJoke, getRandomJoke } from '../../utils/jokeHelpers';
+import styles from './JokeNavigation.module.css';
+
+export default function JokeNavigation({ currentJokeId, jokes }) {
+  const navigate = useNavigate();
+
+  const handleNext = () => {
+    const nextJoke = getNextJoke(currentJokeId, jokes);
+    if (nextJoke) navigate(`/jokes/${nextJoke.id}`);
+  };
+
+  const handlePrevious = () => {
+    const prevJoke = getPreviousJoke(currentJokeId, jokes);
+    if (prevJoke) navigate(`/jokes/${prevJoke.id}`);
+  };
+
+  const handleRandom = () => {
+    const randomJoke = getRandomJoke(jokes, currentJokeId);
+    if (randomJoke) navigate(`/jokes/${randomJoke.id}`);
+  };
+
+  return (
+    <nav className={styles.navigation}>
+      <button onClick={handlePrevious} className={styles.button}>
+        ← Previous
+      </button>
+      <button onClick={handleRandom} className={styles.buttonRandom}>
+        🎲 Random
+      </button>
+      <button onClick={handleNext} className={styles.button}>
+        Next →
+      </button>
+    </nav>
+  );
+}
 ```
 
 **Features:**
-- Display all categories as clickable cards
-- Show joke count per category
-- Responsive grid layout
-- Transform category IDs to display names
+- Circular navigation (wraps around)
+- Random joke excludes current joke
+- Keyboard navigation support (arrow keys)
+- Disabled state for single joke scenario
 
 ---
 
-### 3.6 Home Page (`src/pages/Home/Home.jsx`)
+### 3.3 Category Components
 
-**Purpose:** Landing page with featured joke and navigation
+#### **CategoryCard Component** (`src/components/categories/CategoryCard.jsx`)
 
-**Implementation:**
 ```jsx
-import React, { useMemo } from 'react';
+/**
+ * Displays a category with joke count and description
+ */
 import { Link } from 'react-router-dom';
-import useJokes from '../../hooks/useJokes';
-import JokeCard from '../../components/JokeCard/JokeCard';
-import styles from './Home.module.css';
+import styles from './CategoryCard.module.css';
 
-function Home() {
-  const { jokes, loading } = useJokes();
-  
-  // Select random featured joke
-  const featuredJoke = useMemo(() => {
-    if (jokes.length === 0) return null;
-    const randomIndex = Math.floor(Math.random() * jokes.length);
-    return jokes[randomIndex];
-  }, [jokes]);
-  
-  if (loading) return <div>Loading...</div>;
-  
+export default function CategoryCard({ category }) {
+  const { id, name, description, jokeCount } = category;
+
   return (
-    <div className={styles.container}>
-      <header className={styles.hero}>
-        <h1>Welcome to Jokes Galore</h1>
-        <p>Your daily dose of laughter</p>
-      </header>
-      
+    <Link to={`/categories/${id}`} className={styles.card}>
+      <h3 className={styles.name}>{name}</h3>
+      <p className={styles.description}>{description}</p>
+      <span className={styles.count}>{jokeCount} jokes</span>
+    </Link>
+  );
+}
+```
+
+**Features:**
+- Entire card is clickable link
+- Hover state with transform effect
+- Badge showing joke count
+- Accessible with keyboard focus styles
+
+---
+
+#### **CategoryList Component** (`src/components/categories/CategoryList.jsx`)
+
+```jsx
+/**
+ * Grid of category cards
+ */
+import CategoryCard from './CategoryCard';
+import styles from './CategoryList.module.css';
+
+export default function CategoryList({ categories }) {
+  return (
+    <div className={styles.grid}>
+      {categories.map(category => (
+        <CategoryCard key={category.id} category={category} />
+      ))}
+    </div>
+  );
+}
+```
+
+**CSS Grid:**
+- 1 column (mobile)
+- 2 columns (tablet, ≥ 640px)
+- 3 columns (desktop, ≥ 1024px)
+- Equal height cards with flexbox
+
+---
+
+### 3.4 Page Components
+
+#### **HomePage Component** (`src/pages/HomePage.jsx`)
+
+```jsx
+/**
+ * Landing page with featured joke and category overview
+ */
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import JokeCard from '../components/jokes/JokeCard';
+import CategoryList from '../components/categories/CategoryList';
+import { useJokes } from '../hooks/useJokes';
+import { useCategories } from '../hooks/useCategories';
+import { getRandomJoke } from '../utils/jokeHelpers';
+import styles from './HomePage.module.css';
+
+export default function HomePage() {
+  const { jokes } = useJokes();
+  const { categories } = useCategories();
+  const [featuredJoke, setFeaturedJoke] = useState(null);
+
+  useEffect(() => {
+    if (jokes.length > 0) {
+      setFeaturedJoke(getRandomJoke(jokes));
+    }
+  }, [jokes]);
+
+  const handleNewJoke = () => {
+    setFeaturedJoke(getRandomJoke(jokes, featuredJoke?.id));
+  };
+
+  return (
+    <div className={styles.home}>
+      <section className={styles.hero}>
+        <h1>Welcome to JokesHub</h1>
+        <p className={styles.tagline}>
+          Your daily dose of laughter, one joke at a time
+        </p>
+      </section>
+
       {featuredJoke && (
         <section className={styles.featured}>
-          <h2>Featured Joke</h2>
-          <JokeCard joke={featuredJoke} />
+          <h2>Joke of the Moment</h2>
+          <JokeCard joke={featuredJoke} variant="featured" showLink={false} />
+          <button onClick={handleNewJoke} className={styles.refreshButton}>
+            Show Another
+          </button>
         </section>
       )}
-      
-      <nav className={styles.navigation}>
-        <Link to="/jokes" className={styles.button}>
-          Browse All Jokes
+
+      <section className={styles.categories}>
+        <h2>Browse by Category</h2>
+        <CategoryList categories={categories} />
+      </section>
+
+      <section className={styles.cta}>
+        <Link to="/browse" className={styles.ctaButton}>
+          Browse All Jokes →
         </Link>
-        <Link to="/categories" className={styles.button}>
-          Browse by Category
-        </Link>
-      </nav>
+      </section>
     </div>
   );
 }
-
-export default Home;
 ```
 
-**Features:**
-- Hero section with site title
-- Random featured joke on each visit
-- Call-to-action buttons for browsing
+---
+
+#### **JokePage Component** (`src/pages/JokePage.jsx`)
+
+```jsx
+/**
+ * Individual joke view page with navigation
+ */
+import { useParams } from 'react-router-dom';
+import JokeCard from '../components/jokes/JokeCard';
+import JokeNavigation from '../components/jokes/JokeNavigation';
+import NotFound from '../components/common/NotFound';
+import { useJokes } from '../hooks/useJokes';
+import styles from './JokePage.module.css';
+
+export default function JokePage() {
+  const { id } = useParams();
+  const { jokes, getJokeById } = useJokes();
+  const joke = getJokeById(id);
+
+  if (!joke) {
+    return <NotFound message="Joke not found" />;
+  }
+
+  return (
+    <div className={styles.page}>
+      <JokeCard joke={joke} variant="full" showLink={false} />
+      <JokeNavigation currentJokeId={id} jokes={jokes} />
+    </div>
+  );
+}
+```
+
+---
+
+#### **BrowsePage Component** (`src/pages/BrowsePage.jsx`)
+
+```jsx
+/**
+ * Browse all jokes with filtering and sorting
+ */
+import { useState } from 'react';
+import JokeList from '../components/jokes/JokeList';
+import { useJokes } from '../hooks/useJokes';
+import { useCategories } from '../hooks/useCategories';
+import styles from './BrowsePage.module.css';
+
+export default function BrowsePage() {
+  const { jokes } = useJokes();
+  const { categories } = useCategories();
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const filteredJokes = selectedCategory === 'all' 
+    ? jokes 
+    : jokes.filter(j => j.category === selectedCategory);
+
+  return (
+    <div className={styles.page}>
+      <h1>Browse All Jokes</h1>
+      
+      <div className={styles.filters}>
+        <label htmlFor="category-filter">Filter by category:</label>
+        <select 
+          id="category-filter"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className={styles.select}
+        >
+          <option value="all">All Categories</option>
+          {categories.map(cat => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name} ({cat.jokeCount})
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <p className={styles.count}>
+        Showing {filteredJokes.length} joke{filteredJokes.length !== 1 ? 's' : ''}
+      </p>
+
+      <JokeList jokes={filteredJokes} layout="grid" />
+    </div>
+  );
+}
+```
+
+---
+
+#### **CategoryPage Component** (`src/pages/CategoryPage.jsx`)
+
+```jsx
+/**
+ * Jokes filtered by specific category
+ */
+import { useParams } from 'react-router-dom';
+import JokeList from '../components/jokes/JokeList';
+import NotFound from '../components/common/NotFound';
+import { useJokes } from '../hooks/useJokes';
+import { useCategories } from '../hooks/useCategories';
+import styles from './CategoryPage.module.css';
+
+export default function CategoryPage() {
+  const { categoryId } = useParams();
+  const { jokes } = useJokes();
+  const { getCategoryById } = useCategories();
+  
+  const category = getCategoryById(categoryId);
+  const categoryJokes = jokes.filter(j => j.category === categoryId);
+
+  if (!category) {
+    return <NotFound message="Category not found" />;
+  }
+
+  return (
+    <div className={styles.page}>
+      <header className={styles.header}>
+        <h1>{category.name}</h1>
+        <p>{category.description}</p>
+        <span className={styles.count}>{categoryJokes.length} jokes</span>
+      </header>
+
+      <JokeList jokes={categoryJokes} layout="grid" />
+    </div>
+  );
+}
+```
+
+---
+
+### 3.5 Common Components
+
+#### **ErrorBoundary Component** (`src/components/common/ErrorBoundary.jsx`)
+
+```jsx
+/**
+ * React error boundary to catch and display errors gracefully
+ */
+import { Component } from 'react';
+
+export default class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('ErrorBoundary caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '2rem', textAlign: 'center' }}>
+          <h2>Oops! Something went wrong.</h2>
+          <p>We're sorry for the inconvenience. Please refresh the page.</p>
+          <button onClick={() => window.location.reload()}>
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+```
+
+---
+
+#### **NotFound Component** (`src/components/common/NotFound.jsx`)
+
+```jsx
+/**
+ * 404 Not Found page
+ */
+import { Link } from 'react-router-dom';
+import styles from './NotFound.module.css';
+
+export default function NotFound({ message = 'Page not found' }) {
+  return (
+    <div className={styles.notFound}>
+      <h1>404</h1>
+      <p>{message}</p>
+      <Link to="/" className={styles.homeLink}>
+        Go Back Home
+      </Link>
+    </div>
+  );
+}
+```
 
 ---
 
@@ -568,78 +717,103 @@ export default Home;
 
 <!-- AI: SQL/migration scripts for schema changes -->
 
-**Not Applicable** - This application uses static JSON data with no database.
+**N/A - No Database Required**
 
-### Data Schema (JSON Structure)
+This application is a static frontend with no database. All data is stored as JSON files and embedded in the JavaScript bundle at build time.
 
-**jokes.json Format:**
+### Data Storage Approach
+
+Instead of database tables, we use structured JSON files:
+
+**File: `src/data/jokes.json`**
 ```json
-{
-  "version": "1.0",
-  "lastUpdated": "2026-02-03T08:00:00Z",
-  "jokes": [
-    {
-      "id": "joke-001",
-      "type": "qa",
-      "category": "puns",
-      "setup": "Why don't scientists trust atoms?",
-      "punchline": "Because they make up everything!",
-      "tags": ["science", "wordplay"],
-      "dateAdded": "2026-01-15T10:00:00Z"
-    },
-    {
-      "id": "joke-002",
-      "type": "one-liner",
-      "category": "dad-jokes",
-      "setup": null,
-      "punchline": "I'm reading a book about anti-gravity. It's impossible to put down!",
-      "tags": ["books", "wordplay"],
-      "dateAdded": "2026-01-16T10:00:00Z"
-    },
-    {
-      "id": "joke-003",
-      "type": "knock-knock",
-      "category": "knock-knock",
-      "setup": "Knock knock. Who's there? Interrupting cow. Interrupting cow w—",
-      "punchline": "MOOOOO!",
-      "tags": ["classic", "kids"],
-      "dateAdded": "2026-01-17T10:00:00Z"
-    }
-  ]
-}
+[
+  {
+    "id": "joke-001",
+    "setup": "Why don't scientists trust atoms?",
+    "punchline": "Because they make up everything!",
+    "category": "science",
+    "tags": ["science", "chemistry", "puns"],
+    "dateAdded": "2026-01-15"
+  },
+  {
+    "id": "joke-002",
+    "setup": "What do you call a bear with no teeth?",
+    "punchline": "A gummy bear!",
+    "category": "animals",
+    "tags": ["animals", "wordplay"],
+    "dateAdded": "2026-01-16"
+  }
+  // ... 18-48 more jokes
+]
 ```
 
-**categories.json Format (Optional):**
+**File: `src/data/categories.json`**
 ```json
-{
-  "categories": [
-    {
-      "id": "puns",
-      "name": "Puns",
-      "description": "Clever wordplay and puns",
-      "icon": "🎭"
-    },
-    {
-      "id": "dad-jokes",
-      "name": "Dad Jokes",
-      "description": "Classic dad humor",
-      "icon": "👨"
-    },
-    {
-      "id": "knock-knock",
-      "name": "Knock-Knock Jokes",
-      "description": "Traditional knock-knock format",
-      "icon": "🚪"
-    }
-  ]
-}
+[
+  {
+    "id": "dad-jokes",
+    "name": "Dad Jokes",
+    "description": "Classic groan-worthy jokes your dad would tell"
+  },
+  {
+    "id": "puns",
+    "name": "Puns",
+    "description": "Clever wordplay that will make you smile (or groan)"
+  },
+  {
+    "id": "one-liners",
+    "name": "One-Liners",
+    "description": "Quick jokes that pack a punch"
+  },
+  {
+    "id": "science",
+    "name": "Science Jokes",
+    "description": "Jokes for the scientifically inclined"
+  },
+  {
+    "id": "animals",
+    "name": "Animal Jokes",
+    "description": "Jokes about our furry, feathered, and scaly friends"
+  }
+]
 ```
 
-**Schema Validation:**
-- Validate JSON structure at build time using JSON Schema
-- Ensure all jokes have required fields (id, type, category, punchline)
-- Verify unique joke IDs
-- Check category consistency
+### Data Validation Schema
+
+While not a database, we can define TypeScript interfaces (if using TypeScript) or JSDoc types for validation:
+
+```javascript
+/**
+ * @typedef {Object} Joke
+ * @property {string} id - Unique identifier (format: "joke-XXX")
+ * @property {string} setup - Joke setup or question
+ * @property {string} punchline - Joke punchline or answer
+ * @property {string} category - Category ID (must match categories.json)
+ * @property {string[]} [tags] - Optional array of tags
+ * @property {string} dateAdded - ISO date string (YYYY-MM-DD)
+ */
+
+/**
+ * @typedef {Object} Category
+ * @property {string} id - Category identifier (kebab-case)
+ * @property {string} name - Display name
+ * @property {string} description - Brief description
+ */
+```
+
+### Data Management
+
+**Adding New Jokes:**
+1. Edit `src/data/jokes.json`
+2. Add new joke object with sequential ID
+3. Ensure category exists in `categories.json`
+4. Rebuild and redeploy application
+
+**No Migration Scripts Needed:**
+- Data is statically imported at build time
+- No versioning or migration logic required
+- Changes require full rebuild and deployment
 
 ---
 
@@ -647,89 +821,180 @@ export default Home;
 
 <!-- AI: For each API endpoint, specify handler logic, validation, error handling -->
 
-**Not Applicable** - This application has no backend APIs.
+**N/A - No Backend API**
 
-### Static Data Loading API
+This is a purely static frontend application with no backend API endpoints. However, the application defines internal data access patterns through custom React hooks that serve as the "API" layer for components.
 
-**Module:** `src/utils/jokeDataLoader.js`
+### Internal Data Access Layer
 
-**Function: loadJokes()**
+#### **useJokes Hook** (`src/hooks/useJokes.js`)
+
+This hook serves as the primary interface for accessing joke data throughout the application.
+
 ```javascript
 /**
- * Load jokes from static JSON file
- * @returns {Promise<{version: string, lastUpdated: string, jokes: Joke[]}>}
- * @throws {Error} If fetch fails or JSON is invalid
+ * Custom hook for accessing and manipulating joke data
+ * Returns jokes array and utility functions
  */
-export async function loadJokes() {
-  try {
-    const response = await fetch('/data/jokes.json');
-    
-    if (!response.ok) {
-      throw new Error(`Failed to load jokes: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    // Validate data structure
-    if (!data.jokes || !Array.isArray(data.jokes)) {
-      throw new Error('Invalid jokes data format');
-    }
-    
-    // Validate each joke has required fields
-    data.jokes.forEach((joke, index) => {
-      if (!joke.id || !joke.type || !joke.category || !joke.punchline) {
-        throw new Error(`Invalid joke at index ${index}: missing required fields`);
-      }
-    });
-    
-    return data;
-  } catch (error) {
-    console.error('Error loading jokes:', error);
-    throw error;
-  }
+import { useMemo } from 'react';
+import jokesData from '../data/jokes.json';
+
+export function useJokes() {
+  const jokes = useMemo(() => jokesData, []);
+
+  const getJokeById = (id) => {
+    return jokes.find(joke => joke.id === id) || null;
+  };
+
+  const getJokesByCategory = (categoryId) => {
+    return jokes.filter(joke => joke.category === categoryId);
+  };
+
+  const getJokesByTag = (tag) => {
+    return jokes.filter(joke => joke.tags?.includes(tag));
+  };
+
+  const searchJokes = (query) => {
+    const lowerQuery = query.toLowerCase();
+    return jokes.filter(joke => 
+      joke.setup.toLowerCase().includes(lowerQuery) ||
+      joke.punchline.toLowerCase().includes(lowerQuery)
+    );
+  };
+
+  return {
+    jokes,
+    getJokeById,
+    getJokesByCategory,
+    getJokesByTag,
+    searchJokes,
+    totalCount: jokes.length
+  };
 }
 ```
 
-**Error Handling:**
-- Network errors: Display user-friendly message
-- JSON parse errors: Log to console, show error state
-- Validation errors: Fail fast with descriptive message
+**Return Interface:**
+- `jokes`: Array<Joke> - All jokes
+- `getJokeById(id)`: Joke | null
+- `getJokesByCategory(categoryId)`: Array<Joke>
+- `getJokesByTag(tag)`: Array<Joke>
+- `searchJokes(query)`: Array<Joke>
+- `totalCount`: number
 
-**Caching:**
-- Browser caches JSON based on cache-control headers
-- Component-level caching via useJokes hook
-- No manual cache invalidation needed (static data)
+**Error Handling:**
+- Returns `null` for missing jokes
+- Returns empty array for no matches
+- Handles malformed JSON gracefully (try-catch in import)
 
 ---
 
-**Function: loadCategories()**
+#### **useCategories Hook** (`src/hooks/useCategories.js`)
+
 ```javascript
 /**
- * Load category metadata (optional)
- * Falls back to deriving categories from jokes if file doesn't exist
- * @returns {Promise<Category[]>}
+ * Custom hook for accessing category data and computing counts
  */
-export async function loadCategories() {
-  try {
-    const response = await fetch('/data/categories.json');
-    if (response.ok) {
-      const data = await response.json();
-      return data.categories;
-    }
-  } catch (error) {
-    console.warn('Categories file not found, will derive from jokes');
-  }
-  
-  // Fallback: derive from jokes
-  const jokesData = await loadJokes();
-  const uniqueCategories = [...new Set(jokesData.jokes.map(j => j.category))];
-  return uniqueCategories.map(cat => ({
-    id: cat,
-    name: cat.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    description: ''
-  }));
+import { useMemo } from 'react';
+import categoriesData from '../data/categories.json';
+import jokesData from '../data/jokes.json';
+
+export function useCategories() {
+  const categories = useMemo(() => {
+    // Compute joke counts for each category
+    return categoriesData.map(category => ({
+      ...category,
+      jokeCount: jokesData.filter(j => j.category === category.id).length
+    }));
+  }, []);
+
+  const getCategoryById = (id) => {
+    return categories.find(cat => cat.id === id) || null;
+  };
+
+  const getCategoryByName = (name) => {
+    return categories.find(cat => 
+      cat.name.toLowerCase() === name.toLowerCase()
+    ) || null;
+  };
+
+  return {
+    categories,
+    getCategoryById,
+    getCategoryByName,
+    totalCount: categories.length
+  };
 }
 ```
+
+**Return Interface:**
+- `categories`: Array<CategoryWithCount>
+- `getCategoryById(id)`: Category | null
+- `getCategoryByName(name)`: Category | null
+- `totalCount`: number
+
+---
+
+### Client-Side Routing (Internal "Endpoints")
+
+#### **Router Configuration** (`src/router.jsx`)
+
+```javascript
+import { createBrowserRouter } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import HomePage from './pages/HomePage';
+import BrowsePage from './pages/BrowsePage';
+import JokePage from './pages/JokePage';
+import CategoryPage from './pages/CategoryPage';
+import NotFound from './components/common/NotFound';
+
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: <Layout><NotFound /></Layout>,
+    children: [
+      {
+        index: true,
+        element: <HomePage />
+      },
+      {
+        path: 'browse',
+        element: <BrowsePage />
+      },
+      {
+        path: 'jokes/:id',
+        element: <JokePage />
+      },
+      {
+        path: 'categories',
+        element: <CategoryList />
+      },
+      {
+        path: 'categories/:categoryId',
+        element: <CategoryPage />
+      },
+      {
+        path: '*',
+        element: <NotFound />
+      }
+    ]
+  }
+]);
+```
+
+**Route Definitions:**
+- `GET /` → HomePage (featured joke, category overview)
+- `GET /browse` → BrowsePage (all jokes with filters)
+- `GET /jokes/:id` → JokePage (individual joke detail)
+- `GET /categories` → Categories listing
+- `GET /categories/:categoryId` → CategoryPage (jokes by category)
+- `GET /*` → NotFound (404 page)
+
+**Error Handling:**
+- Invalid joke IDs render NotFound component
+- Invalid category IDs render NotFound component
+- React Router catches all routing errors
+- ErrorBoundary catches component render errors
 
 ---
 
@@ -737,226 +1002,210 @@ export async function loadCategories() {
 
 <!-- AI: Key function/method signatures with parameters and return types -->
 
-### Core Utility Functions
+### Utility Functions
 
-**src/utils/jokeDataLoader.js**
+#### **jokeHelpers.js** (`src/utils/jokeHelpers.js`)
+
 ```javascript
 /**
- * Load jokes from static JSON file
+ * Get the next joke in the array (circular)
+ * @param {string} currentId - Current joke ID
+ * @param {Array<Joke>} jokes - Array of all jokes
+ * @returns {Joke|null} Next joke or null if jokes array empty
  */
-export async function loadJokes(): Promise<{
-  version: string,
-  lastUpdated: string,
-  jokes: Joke[]
-}>
+export function getNextJoke(currentId, jokes) {
+  if (!jokes || jokes.length === 0) return null;
+  const currentIndex = jokes.findIndex(j => j.id === currentId);
+  const nextIndex = (currentIndex + 1) % jokes.length;
+  return jokes[nextIndex];
+}
 
 /**
- * Load category metadata
+ * Get the previous joke in the array (circular)
+ * @param {string} currentId - Current joke ID
+ * @param {Array<Joke>} jokes - Array of all jokes
+ * @returns {Joke|null} Previous joke or null if jokes array empty
  */
-export async function loadCategories(): Promise<Category[]>
-```
-
----
-
-**src/utils/filterHelpers.js**
-```javascript
-/**
- * Filter jokes by category, search term, and tags
- * @param jokes - Array of all jokes
- * @param filters - Filter criteria
- * @returns Filtered jokes array
- */
-export function filterJokes(
-  jokes: Joke[],
-  filters: {
-    category?: string,
-    searchTerm?: string,
-    tags?: string[]
-  }
-): Joke[]
+export function getPreviousJoke(currentId, jokes) {
+  if (!jokes || jokes.length === 0) return null;
+  const currentIndex = jokes.findIndex(j => j.id === currentId);
+  const prevIndex = currentIndex === 0 ? jokes.length - 1 : currentIndex - 1;
+  return jokes[prevIndex];
+}
 
 /**
- * Search jokes by text query (searches setup and punchline)
- * @param jokes - Array of jokes to search
- * @param query - Search query string
- * @returns Matching jokes
+ * Get a random joke, optionally excluding current joke
+ * @param {Array<Joke>} jokes - Array of all jokes
+ * @param {string} [excludeId] - Optional joke ID to exclude
+ * @returns {Joke|null} Random joke or null if no valid jokes
  */
-export function searchJokes(jokes: Joke[], query: string): Joke[]
+export function getRandomJoke(jokes, excludeId = null) {
+  if (!jokes || jokes.length === 0) return null;
+  
+  const availableJokes = excludeId 
+    ? jokes.filter(j => j.id !== excludeId)
+    : jokes;
+  
+  if (availableJokes.length === 0) return jokes[0]; // Fallback
+  
+  const randomIndex = Math.floor(Math.random() * availableJokes.length);
+  return availableJokes[randomIndex];
+}
 
 /**
- * Get jokes by category
- * @param jokes - Array of all jokes
- * @param category - Category ID
- * @returns Jokes in specified category
+ * Sort jokes by date added (newest first)
+ * @param {Array<Joke>} jokes - Array of jokes to sort
+ * @returns {Array<Joke>} Sorted array
  */
-export function getJokesByCategory(jokes: Joke[], category: string): Joke[]
+export function sortJokesByDate(jokes) {
+  return [...jokes].sort((a, b) => 
+    new Date(b.dateAdded) - new Date(a.dateAdded)
+  );
+}
 
 /**
- * Get random joke from array
- * @param jokes - Array of jokes
- * @returns Random joke
+ * Filter jokes by search query
+ * @param {Array<Joke>} jokes - Array of jokes
+ * @param {string} query - Search query string
+ * @returns {Array<Joke>} Filtered jokes
  */
-export function getRandomJoke(jokes: Joke[]): Joke | null
-```
-
----
-
-**src/utils/urlHelpers.js**
-```javascript
-/**
- * Generate shareable URL for a joke
- * @param jokeId - Joke identifier
- * @returns Absolute URL
- */
-export function getJokeUrl(jokeId: string): string
+export function filterJokesByQuery(jokes, query) {
+  if (!query) return jokes;
+  const lowerQuery = query.toLowerCase().trim();
+  return jokes.filter(joke =>
+    joke.setup.toLowerCase().includes(lowerQuery) ||
+    joke.punchline.toLowerCase().includes(lowerQuery) ||
+    joke.category.toLowerCase().includes(lowerQuery) ||
+    joke.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
+  );
+}
 
 /**
- * Parse category from URL query params
- * @param searchParams - URLSearchParams object
- * @returns Category ID or null
+ * Group jokes by category
+ * @param {Array<Joke>} jokes - Array of jokes
+ * @returns {Object<string, Array<Joke>>} Object with category keys
  */
-export function getCategoryFromUrl(searchParams: URLSearchParams): string | null
-
-/**
- * Generate URL with category filter
- * @param category - Category ID
- * @returns Relative URL with query param
- */
-export function getCategoryUrl(category: string): string
-```
-
----
-
-### React Hooks
-
-**src/hooks/useJokes.js**
-```javascript
-/**
- * Load and filter jokes data
- * @param filters - Optional filter criteria
- * @returns Jokes data with loading/error states
- */
-export function useJokes(filters?: {
-  category?: string,
-  searchTerm?: string
-}): {
-  jokes: Joke[],
-  loading: boolean,
-  error: Error | null,
-  categories: string[],
-  totalCount: number
+export function groupJokesByCategory(jokes) {
+  return jokes.reduce((acc, joke) => {
+    if (!acc[joke.category]) {
+      acc[joke.category] = [];
+    }
+    acc[joke.category].push(joke);
+    return acc;
+  }, {});
 }
 ```
 
 ---
 
-**src/hooks/useCategories.js**
+#### **navigation.js** (`src/utils/navigation.js`)
+
 ```javascript
 /**
- * Load category metadata
- * @returns Categories with loading/error states
+ * Build URL for joke page
+ * @param {string} jokeId - Joke ID
+ * @returns {string} URL path
  */
-export function useCategories(): {
-  categories: Category[],
-  loading: boolean,
-  error: Error | null
+export function getJokeUrl(jokeId) {
+  return `/jokes/${jokeId}`;
 }
-```
 
----
-
-**src/hooks/usePersistedState.js**
-```javascript
 /**
- * useState with localStorage persistence
- * @param key - localStorage key
- * @param initialValue - Default value
- * @returns [state, setState] tuple
+ * Build URL for category page
+ * @param {string} categoryId - Category ID
+ * @returns {string} URL path
  */
-export function usePersistedState<T>(
-  key: string,
-  initialValue: T
-): [T, (value: T) => void]
+export function getCategoryUrl(categoryId) {
+  return `/categories/${categoryId}`;
+}
+
+/**
+ * Extract joke ID from pathname
+ * @param {string} pathname - Current URL pathname
+ * @returns {string|null} Joke ID or null
+ */
+export function extractJokeIdFromPath(pathname) {
+  const match = pathname.match(/^\/jokes\/(.+)$/);
+  return match ? match[1] : null;
+}
+
+/**
+ * Extract category ID from pathname
+ * @param {string} pathname - Current URL pathname
+ * @returns {string|null} Category ID or null
+ */
+export function extractCategoryIdFromPath(pathname) {
+  const match = pathname.match(/^\/categories\/(.+)$/);
+  return match ? match[1] : null;
+}
 ```
 
 ---
 
 ### Component Props Interfaces
 
-**JokeCard.jsx**
-```typescript
-interface JokeCardProps {
-  joke: Joke;
-  showCategory?: boolean;
-  onShare?: (jokeId: string) => void;
-}
-```
+```javascript
+/**
+ * JokeCard Props
+ * @typedef {Object} JokeCardProps
+ * @property {Joke} joke - Joke object to display
+ * @property {'compact'|'full'|'featured'} [variant='full'] - Display variant
+ * @property {boolean} [showLink=true] - Show link to joke page
+ */
 
-**JokeNavigation.jsx**
-```typescript
-interface JokeNavigationProps {
-  prevJoke: Joke | null;
-  nextJoke: Joke | null;
-  currentIndex: number;
-  totalJokes: number;
-}
-```
+/**
+ * JokeList Props
+ * @typedef {Object} JokeListProps
+ * @property {Array<Joke>} jokes - Array of jokes to display
+ * @property {'compact'|'full'} [variant='compact'] - Card variant
+ * @property {'grid'|'list'} [layout='grid'] - Layout mode
+ * @property {string} [emptyMessage='No jokes found.'] - Message when empty
+ */
 
-**CategoryFilter.jsx**
-```typescript
-interface CategoryFilterProps {
-  categories: string[];
-  selectedCategory: string | null;
-  onCategoryChange: (category: string | null) => void;
-}
-```
+/**
+ * JokeNavigation Props
+ * @typedef {Object} JokeNavigationProps
+ * @property {string} currentJokeId - Current joke ID
+ * @property {Array<Joke>} jokes - All jokes for navigation
+ */
 
-**Layout.jsx**
-```typescript
-interface LayoutProps {
-  children: React.ReactNode;
-}
+/**
+ * CategoryCard Props
+ * @typedef {Object} CategoryCardProps
+ * @property {Category} category - Category object with jokeCount
+ */
+
+/**
+ * CategoryList Props
+ * @typedef {Object} CategoryListProps
+ * @property {Array<Category>} categories - Array of categories
+ */
 ```
 
 ---
 
-### Type Definitions
+### Custom Hook Return Types
 
-**src/types/index.js** (or .ts if using TypeScript)
 ```javascript
 /**
- * Joke data structure
+ * useJokes Hook Return
+ * @typedef {Object} UseJokesReturn
+ * @property {Array<Joke>} jokes - All jokes
+ * @property {function(string): Joke|null} getJokeById - Get joke by ID
+ * @property {function(string): Array<Joke>} getJokesByCategory - Get jokes by category
+ * @property {function(string): Array<Joke>} getJokesByTag - Get jokes by tag
+ * @property {function(string): Array<Joke>} searchJokes - Search jokes
+ * @property {number} totalCount - Total number of jokes
  */
-export type JokeType = 'one-liner' | 'qa' | 'knock-knock' | 'story';
-
-export interface Joke {
-  id: string;
-  type: JokeType;
-  category: string;
-  setup: string | null;
-  punchline: string;
-  tags?: string[];
-  dateAdded: string; // ISO8601 timestamp
-}
 
 /**
- * Category metadata
+ * useCategories Hook Return
+ * @typedef {Object} UseCategoriesReturn
+ * @property {Array<Category>} categories - All categories with counts
+ * @property {function(string): Category|null} getCategoryById - Get category by ID
+ * @property {function(string): Category|null} getCategoryByName - Get by name
+ * @property {number} totalCount - Total number of categories
  */
-export interface Category {
-  id: string;
-  name: string;
-  description: string;
-  icon?: string;
-}
-
-/**
- * Filter criteria
- */
-export interface JokeFilters {
-  category?: string;
-  searchTerm?: string;
-  tags?: string[];
-}
 ```
 
 ---
@@ -967,153 +1216,237 @@ export interface JokeFilters {
 
 ### State Management Strategy
 
-**Approach:** **Local component state + custom hooks** (no Redux or global state library needed)
+This application uses **React's built-in state management** without external libraries like Redux or Zustand. The state architecture is simple and leverages:
 
-**Rationale:**
-- Application state is simple (just joke data and UI state)
-- No complex state interactions or global mutations
-- React hooks provide sufficient state management
-- Avoids unnecessary complexity and bundle size
-
----
-
-### State Architecture
-
-**1. Server State (Joke Data)**
-- **Location:** `useJokes` custom hook
-- **Storage:** Component state via `useState`
-- **Lifecycle:** Load on mount, cache for session
-- **Sharing:** Hook called in multiple components (each loads independently)
-
-```javascript
-// useJokes hook manages joke data state
-const { jokes, loading, error } = useJokes({ category: 'puns' });
-```
-
-**2. URL State (Routing & Filters)**
-- **Location:** React Router (URL params and query strings)
-- **Storage:** Browser URL
-- **Lifecycle:** Synced with navigation
-- **Sharing:** Accessible via `useParams` and `useSearchParams`
-
-```javascript
-// Category filter in URL
-const { category } = useParams(); // /categories/puns
-const [searchParams] = useSearchParams(); // ?category=puns
-```
-
-**3. Local UI State**
-- **Location:** Individual components
-- **Storage:** Component `useState`
-- **Lifecycle:** Mount to unmount
-- **Sharing:** None (component-local)
-
-```javascript
-// JokeCard revealed state
-const [revealed, setRevealed] = useState(false);
-```
-
-**4. Persistent State (User Preferences)**
-- **Location:** `usePersistedState` hook
-- **Storage:** Browser localStorage
-- **Lifecycle:** Persists across sessions
-- **Sharing:** Hook provides read/write access
-
-```javascript
-// User theme preference
-const [theme, setTheme] = usePersistedState('theme', 'light');
-```
+1. **Custom Hooks** for data access (useJokes, useCategories)
+2. **Component-level state** with `useState` for UI state
+3. **URL state** via React Router for navigation state
+4. **No global state** needed (all data is static and immutable)
 
 ---
 
-### State Flow Diagram
+### State Categories
 
-```
-[Static JSON File] 
-    ↓ fetch
-[jokeDataLoader.js]
-    ↓ loadJokes()
-[useJokes hook]
-    ↓ jokes array
-[Component State]
-    ↓ props
-[Child Components]
+#### **1. Static Data State (Immutable)**
 
-[URL Bar]
-    ↓ React Router
-[useParams/useSearchParams]
-    ↓ category filter
-[Component Logic]
-    ↓ filtered jokes
-[Display]
-```
+Managed by custom hooks that import JSON data:
 
----
-
-### State Management Patterns
-
-**Pattern 1: Data Fetching Hook**
 ```javascript
-// Centralized data loading with hook
-function JokesList() {
-  const { jokes, loading, error } = useJokes();
-  // Component renders based on hook state
+// src/hooks/useJokes.js
+import jokesData from '../data/jokes.json';
+
+export function useJokes() {
+  // Data is imported once at module level
+  // useMemo ensures referential stability
+  const jokes = useMemo(() => jokesData, []);
+  
+  // All operations are pure functions, no mutations
+  return { jokes, /* ...utility functions */ };
 }
 ```
 
-**Pattern 2: URL as Single Source of Truth**
+**Characteristics:**
+- Data loaded once at build time
+- Immutable throughout application lifecycle
+- Shared across all components without prop drilling
+- No re-renders caused by data changes (data never changes)
+
+---
+
+#### **2. UI State (Component-level)**
+
+Managed with `useState` within individual components:
+
+**Example: HomePage**
 ```javascript
-// Category comes from URL, not component state
-function JokesList() {
-  const { category } = useParams();
-  const { jokes } = useJokes({ category });
-  // Category state is in URL, not useState
+export default function HomePage() {
+  const { jokes } = useJokes();
+  
+  // Local UI state for featured joke
+  const [featuredJoke, setFeaturedJoke] = useState(null);
+  
+  // Initialize on mount
+  useEffect(() => {
+    setFeaturedJoke(getRandomJoke(jokes));
+  }, [jokes]);
+  
+  // Update local state on user action
+  const handleNewJoke = () => {
+    setFeaturedJoke(getRandomJoke(jokes, featuredJoke?.id));
+  };
+  
+  return (/* JSX using featuredJoke state */);
 }
 ```
 
-**Pattern 3: Prop Drilling (Limited)**
+**Example: Header Navigation**
 ```javascript
-// Layout passes minimal shared state
-function Layout({ children }) {
-  return (
-    <div>
-      <Header /> {/* No props needed, reads URL */}
-      <main>{children}</main>
-      <Footer /> {/* No props needed */}
-    </div>
-  );
+export default function Header() {
+  // Local state for mobile menu open/close
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  
+  return (/* JSX using mobileMenuOpen state */);
 }
 ```
 
-**Pattern 4: Derived State**
+**Example: BrowsePage Filters**
 ```javascript
-// Compute values from existing state
-const categories = useMemo(() => {
-  return [...new Set(jokes.map(j => j.category))];
-}, [jokes]);
+export default function BrowsePage() {
+  const { jokes } = useJokes();
+  
+  // Local state for filter selection
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  
+  // Derived state (computed from local state)
+  const filteredJokes = selectedCategory === 'all'
+    ? jokes
+    : jokes.filter(j => j.category === selectedCategory);
+  
+  return (/* JSX using filteredJokes */);
+}
 ```
 
 ---
 
-### When to Add Context/Redux (Future)
+#### **3. Navigation State (URL-based)**
 
-**Current assessment:** Not needed for v1
+Managed by React Router through URL parameters:
 
-**Add Context if:**
-- Need to share joke data across deeply nested components without prop drilling
-- Add user authentication state (login, favorites, etc.)
-- Implement complex filter state shared across multiple components
+```javascript
+// Current joke ID stored in URL
+// /jokes/joke-001
+export default function JokePage() {
+  const { id } = useParams(); // From React Router
+  const { getJokeById } = useJokes();
+  const joke = getJokeById(id);
+  
+  // State is derived from URL, not local useState
+  return <JokeCard joke={joke} />;
+}
 
-**Add Redux if:**
-- State logic becomes complex with many interdependent updates
-- Need time-travel debugging
-- Add user-generated content with optimistic updates
+// Current category ID stored in URL
+// /categories/dad-jokes
+export default function CategoryPage() {
+  const { categoryId } = useParams();
+  const { getJokesByCategory } = useJokes();
+  const jokes = getJokesByCategory(categoryId);
+  
+  return <JokeList jokes={jokes} />;
+}
+```
 
-**Current approach is sufficient because:**
-- Only 3-4 levels of component nesting maximum
-- State is mostly read-only (jokes data)
-- URL handles filter/navigation state
-- No complex state transitions
+**Benefits of URL State:**
+- Deep linking support (users can bookmark specific jokes)
+- Browser history works automatically (back/forward buttons)
+- Sharable URLs
+- No need for client-side state management for navigation
+
+---
+
+### State Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Static JSON Data                      │
+│           (jokes.json, categories.json)                  │
+│                  Loaded at build time                    │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      │ import
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│              Custom Hooks (Data Layer)                   │
+│         useJokes(), useCategories()                      │
+│         - Pure functions for data access                 │
+│         - No mutations, immutable operations             │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      │ hook calls
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│                Page Components                           │
+│        HomePage, BrowsePage, JokePage, etc.              │
+│        - useState for local UI state                     │
+│        - useParams for URL state                         │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      │ props
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│              Presentational Components                   │
+│        JokeCard, JokeList, CategoryCard, etc.            │
+│        - Stateless (props only)                          │
+│        - Pure rendering logic                            │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Why No Redux/Zustand?
+
+**Decision Rationale:**
+- **Simple data model**: All data is static, no complex async operations
+- **No shared mutable state**: Data never changes at runtime
+- **Component tree is shallow**: No deep prop drilling issues
+- **URL handles navigation state**: React Router eliminates need for route state
+- **Minimal UI state**: Each component manages its own simple UI state
+
+**When Redux/Zustand Would Be Needed:**
+- User authentication state
+- Shopping cart or persistent user data
+- Complex async data fetching
+- Deeply nested components with shared state
+- Undo/redo functionality
+- Real-time updates from WebSocket
+
+**None of these apply to this jokes website.**
+
+---
+
+### State Management Best Practices Applied
+
+1. **Single Source of Truth**: JSON files are the source, never duplicated
+2. **Immutability**: All data operations return new arrays/objects
+3. **Derived State**: Filtered/sorted data computed on-demand, not stored
+4. **Local State Preference**: Keep state as local as possible to reduce complexity
+5. **URL as State**: Navigation and view state stored in URL for shareability
+
+---
+
+### State Flow Example: Browsing Jokes
+
+```
+User visits /categories/dad-jokes
+            ↓
+React Router parses URL → categoryId = "dad-jokes"
+            ↓
+CategoryPage calls useJokes() and useCategories()
+            ↓
+Hooks return static data (jokes array, categories array)
+            ↓
+CategoryPage filters jokes by categoryId
+            ↓
+Filtered jokes passed to JokeList component
+            ↓
+JokeList maps over jokes, renders JokeCard for each
+            ↓
+User clicks joke card
+            ↓
+Navigate to /jokes/joke-005 (URL state changes)
+            ↓
+JokePage reads joke ID from URL params
+            ↓
+Calls getJokeById(id) to retrieve joke
+            ↓
+Renders JokeCard with joke data
+```
+
+**No global state store involved. All state is either:**
+- Static (imported JSON)
+- Ephemeral UI state (useState)
+- Navigation state (URL parameters)
 
 ---
 
@@ -1123,312 +1456,420 @@ const categories = useMemo(() => {
 
 ### Error Handling Architecture
 
-**Layers:**
-1. **Network/Data Loading Errors** - Fetch failures, JSON parsing
-2. **React Component Errors** - Rendering exceptions, lifecycle errors
-3. **User Input Errors** - Invalid URLs, missing resources
-4. **Build/Deployment Errors** - Configuration issues, missing files
+The application uses a multi-layered error handling approach:
+
+1. **React Error Boundaries** - Catch component rendering errors
+2. **Conditional Rendering** - Handle missing data gracefully
+3. **User-Friendly Messages** - Clear, actionable error messages
+4. **Console Logging** - Development debugging information
+5. **Fallback UI** - Always show something useful to the user
 
 ---
 
-### 1. Network & Data Loading Errors
+### 1. React Error Boundary
 
-**Location:** `src/utils/jokeDataLoader.js`
+**Location:** `src/components/common/ErrorBoundary.jsx`
 
-**Error Types:**
 ```javascript
-// Custom error classes
-export class JokeDataError extends Error {
-  constructor(message, type) {
-    super(message);
-    this.name = 'JokeDataError';
-    this.type = type; // 'NETWORK' | 'PARSE' | 'VALIDATION'
-  }
-}
-```
-
-**Implementation:**
-```javascript
-export async function loadJokes() {
-  try {
-    const response = await fetch('/data/jokes.json');
-    
-    if (!response.ok) {
-      throw new JokeDataError(
-        `HTTP ${response.status}: ${response.statusText}`,
-        'NETWORK'
-      );
-    }
-    
-    let data;
-    try {
-      data = await response.json();
-    } catch (parseError) {
-      throw new JokeDataError(
-        'Invalid JSON format in jokes data',
-        'PARSE'
-      );
-    }
-    
-    if (!data.jokes || !Array.isArray(data.jokes)) {
-      throw new JokeDataError(
-        'Missing or invalid jokes array',
-        'VALIDATION'
-      );
-    }
-    
-    return data;
-  } catch (error) {
-    // Log to console and error tracking service
-    console.error('Failed to load jokes:', error);
-    
-    // Re-throw for component to handle
-    throw error;
-  }
-}
-```
-
-**Component-Level Handling:**
-```javascript
-function JokesList() {
-  const { jokes, loading, error } = useJokes();
-  
-  if (error) {
-    return (
-      <div className={styles.error}>
-        <h2>Oops! Something went wrong</h2>
-        <p>We couldn't load the jokes right now. Please try again later.</p>
-        <button onClick={() => window.location.reload()}>
-          Reload Page
-        </button>
-      </div>
-    );
-  }
-  // ...
-}
-```
-
----
-
-### 2. React Component Errors
-
-**Location:** `src/components/ErrorBoundary/ErrorBoundary.jsx`
-
-**Implementation:**
-```jsx
-import React from 'react';
-import styles from './ErrorBoundary.module.css';
-
-class ErrorBoundary extends React.Component {
+export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
   }
-  
+
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true, error };
   }
-  
+
   componentDidCatch(error, errorInfo) {
-    // Log error to console
-    console.error('React Error Boundary caught error:', error, errorInfo);
+    // Log to console in development
+    console.error('ErrorBoundary caught error:', {
+      error,
+      errorInfo,
+      componentStack: errorInfo.componentStack
+    });
     
-    // Send to error tracking service (Sentry, etc.)
-    if (window.Sentry) {
-      window.Sentry.captureException(error, {
-        contexts: { react: { componentStack: errorInfo.componentStack } }
-      });
-    }
+    this.setState({ errorInfo });
     
-    this.setState({ error, errorInfo });
+    // Optional: Send to error tracking service in production
+    // if (process.env.NODE_ENV === 'production') {
+    //   logErrorToService(error, errorInfo);
+    // }
   }
-  
+
   handleReset = () => {
     this.setState({ hasError: false, error: null, errorInfo: null });
-    window.location.href = '/'; // Navigate to home
   };
-  
+
   render() {
     if (this.state.hasError) {
       return (
-        <div className={styles.errorBoundary}>
-          <h1>Something went wrong</h1>
-          <p>We're sorry, but something unexpected happened.</p>
-          <button onClick={this.handleReset}>Go to Home Page</button>
-          {process.env.NODE_ENV === 'development' && (
-            <details>
-              <summary>Error Details</summary>
-              <pre>{this.state.error?.toString()}</pre>
-              <pre>{this.state.errorInfo?.componentStack}</pre>
-            </details>
-          )}
+        <div className="error-boundary">
+          <h2>Oops! Something went wrong.</h2>
+          <p>
+            We encountered an unexpected error. Please try refreshing the page.
+          </p>
+          <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
+            <summary>Error Details</summary>
+            <pre>{this.state.error?.toString()}</pre>
+          </details>
+          <button onClick={this.handleReset}>Try Again</button>
+          <button onClick={() => window.location.href = '/'}>
+            Go Home
+          </button>
         </div>
       );
     }
-    
+
     return this.props.children;
   }
 }
-
-export default ErrorBoundary;
 ```
 
 **Usage:**
-```jsx
-// Wrap entire app
-<ErrorBoundary>
-  <App />
-</ErrorBoundary>
+- Wraps main content area in Layout component
+- Catches all rendering errors in child components
+- Provides user with recovery options (retry, go home)
+- Logs errors for debugging
+
+---
+
+### 2. Data Access Error Handling
+
+**Custom Hooks Error Handling:**
+
+```javascript
+// src/hooks/useJokes.js
+export function useJokes() {
+  const [jokes, error] = useMemo(() => {
+    try {
+      const data = jokesData;
+      
+      // Validate data structure
+      if (!Array.isArray(data)) {
+        throw new Error('Jokes data is not an array');
+      }
+      
+      // Validate each joke has required fields
+      data.forEach((joke, index) => {
+        if (!joke.id || !joke.setup || !joke.punchline || !joke.category) {
+          console.error(`Invalid joke at index ${index}:`, joke);
+          throw new Error(`Joke at index ${index} is missing required fields`);
+        }
+      });
+      
+      return [data, null];
+    } catch (err) {
+      console.error('Error loading jokes:', err);
+      return [[], err];
+    }
+  }, []);
+
+  const getJokeById = (id) => {
+    try {
+      if (!id) return null;
+      return jokes.find(joke => joke.id === id) || null;
+    } catch (err) {
+      console.error('Error getting joke by ID:', err);
+      return null;
+    }
+  };
+
+  // Return error state for components to handle
+  return {
+    jokes,
+    error,
+    getJokeById,
+    // ... other functions
+  };
+}
 ```
 
 ---
 
-### 3. User Input & Navigation Errors
+### 3. Component-Level Error Handling
 
-**404 Not Found:**
+**Example: JokePage with Missing Joke**
 
-**Location:** `src/pages/NotFound/NotFound.jsx`
+```javascript
+// src/pages/JokePage.jsx
+export default function JokePage() {
+  const { id } = useParams();
+  const { jokes, getJokeById, error } = useJokes();
+  
+  // Handle data loading error
+  if (error) {
+    return (
+      <div className={styles.error}>
+        <h2>Unable to Load Jokes</h2>
+        <p>We're having trouble loading the joke data. Please try again later.</p>
+        <Link to="/">Return Home</Link>
+      </div>
+    );
+  }
+  
+  const joke = getJokeById(id);
+  
+  // Handle missing joke (404)
+  if (!joke) {
+    return (
+      <NotFound 
+        message="This joke doesn't exist or has been removed."
+        showHomeLink={true}
+      />
+    );
+  }
+  
+  return <JokeCard joke={joke} variant="full" />;
+}
+```
 
-```jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styles from './NotFound.module.css';
+---
 
-function NotFound() {
+### 4. Routing Error Handling
+
+**React Router Error Handling:**
+
+```javascript
+// src/router.jsx
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+    children: [
+      // ... routes
+      {
+        path: '*',
+        element: <NotFound />
+      }
+    ]
+  }
+]);
+
+// src/components/common/ErrorPage.jsx
+export default function ErrorPage() {
+  const error = useRouteError();
+  
   return (
-    <div className={styles.container}>
-      <h1>404 - Page Not Found</h1>
-      <p>The page you're looking for doesn't exist.</p>
-      <Link to="/" className={styles.homeLink}>
-        Go to Home Page
-      </Link>
+    <div className={styles.errorPage}>
+      <h1>Routing Error</h1>
+      <p>Sorry, an unexpected error occurred.</p>
+      <p>
+        <i>{error.statusText || error.message}</i>
+      </p>
+      <Link to="/">Go Home</Link>
     </div>
   );
 }
-
-export default NotFound;
 ```
 
-**Invalid Joke ID:**
+---
 
-**Location:** `src/pages/JokeDetail/JokeDetail.jsx`
+### 5. User-Facing Error Messages
 
-```jsx
-function JokeDetail() {
-  const { id } = useParams();
-  const { jokes, loading } = useJokes();
-  
-  if (!loading && !jokes.find(j => j.id === id)) {
-    return <Navigate to="/404" replace />;
+**Error Message Guidelines:**
+
+| Scenario | User Message | Recovery Action |
+|----------|--------------|-----------------|
+| Joke not found | "This joke doesn't exist or has been removed." | Link to home or browse page |
+| Category not found | "Category not found." | Link to categories page |
+| Data load failure | "We're having trouble loading the joke data." | Refresh button |
+| Component crash | "Oops! Something went wrong." | Try again or go home |
+| Network error (future) | "Unable to connect. Check your internet." | Retry button |
+| Empty search results | "No jokes match your search." | Clear filters link |
+
+**Implementation Example:**
+
+```javascript
+// src/components/jokes/JokeList.jsx
+export default function JokeList({ jokes, emptyMessage, onReset }) {
+  if (!jokes || jokes.length === 0) {
+    return (
+      <div className={styles.empty}>
+        <p>{emptyMessage || 'No jokes found.'}</p>
+        {onReset && (
+          <button onClick={onReset}>Show All Jokes</button>
+        )}
+      </div>
+    );
   }
-  // ...
+  
+  // Render joke cards...
 }
 ```
 
 ---
 
-### 4. Error Messages (User-Facing)
+### 6. Validation Error Handling
 
-**Error Message Principles:**
-- Clear, non-technical language
-- Suggest actionable next steps
-- Friendly, apologetic tone
-- Include retry/recovery options
-
-**Standard Messages:**
-
-| Error Type | User Message |
-|------------|-------------|
-| Network failure | "We couldn't connect right now. Please check your internet connection and try again." |
-| Data load failure | "Oops! We couldn't load the jokes. Please refresh the page." |
-| Invalid joke ID | "This joke doesn't exist. Browse our collection to find more!" |
-| JSON parse error | "Something went wrong loading the content. Please try again later." |
-| React render error | "Something unexpected happened. We've been notified and are looking into it." |
-| Missing category | "This category doesn't exist. Check out our available categories." |
-
----
-
-### 5. Error Logging & Monitoring
-
-**Client-Side Logging:**
+**Data Validation Functions:**
 
 ```javascript
-// src/utils/errorLogger.js
-export function logError(error, context = {}) {
-  // Always log to console
-  console.error('Error:', error, context);
+// src/utils/validation.js
+
+/**
+ * Validate joke object structure
+ * @param {Object} joke - Joke object to validate
+ * @returns {Object} { valid: boolean, errors: string[] }
+ */
+export function validateJoke(joke) {
+  const errors = [];
   
-  // Send to error tracking service
-  if (window.Sentry) {
-    window.Sentry.captureException(error, {
-      extra: context
-    });
+  if (!joke) {
+    return { valid: false, errors: ['Joke is null or undefined'] };
   }
   
-  // Log to analytics
-  if (window.gtag) {
-    window.gtag('event', 'exception', {
-      description: error.message,
-      fatal: false
-    });
+  if (!joke.id || typeof joke.id !== 'string') {
+    errors.push('Invalid or missing joke ID');
   }
+  
+  if (!joke.setup || typeof joke.setup !== 'string') {
+    errors.push('Invalid or missing setup');
+  }
+  
+  if (!joke.punchline || typeof joke.punchline !== 'string') {
+    errors.push('Invalid or missing punchline');
+  }
+  
+  if (!joke.category || typeof joke.category !== 'string') {
+    errors.push('Invalid or missing category');
+  }
+  
+  return {
+    valid: errors.length === 0,
+    errors
+  };
+}
+
+/**
+ * Validate jokes array
+ * @param {Array} jokes - Array of jokes
+ * @returns {Object} { valid: boolean, invalidJokes: Array }
+ */
+export function validateJokesArray(jokes) {
+  if (!Array.isArray(jokes)) {
+    return { valid: false, invalidJokes: [] };
+  }
+  
+  const invalidJokes = [];
+  
+  jokes.forEach((joke, index) => {
+    const validation = validateJoke(joke);
+    if (!validation.valid) {
+      invalidJokes.push({ index, joke, errors: validation.errors });
+    }
+  });
+  
+  return {
+    valid: invalidJokes.length === 0,
+    invalidJokes
+  };
 }
 ```
 
-**Integration Points:**
-- Error Boundary: Catches React render errors
-- Network errors: Logged in data loader
-- User actions: Log failed share/copy actions
-
 ---
 
-### 6. Graceful Degradation
+### 7. Console Logging Strategy
 
-**Missing Data:**
-```javascript
-// Show placeholder if jokes empty
-{jokes.length === 0 && !loading && (
-  <div className={styles.empty}>
-    <p>No jokes available right now. Check back soon!</p>
-  </div>
-)}
-```
+**Development vs Production:**
 
-**Feature Detection:**
 ```javascript
-// Fallback if Web Share API not available
-const handleShare = () => {
-  if (navigator.share) {
-    navigator.share({ title, text, url });
-  } else {
-    // Copy to clipboard fallback
-    navigator.clipboard.writeText(url);
-    alert('Link copied to clipboard!');
+// src/utils/logger.js
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+export const logger = {
+  error: (message, ...args) => {
+    console.error(`[ERROR] ${message}`, ...args);
+  },
+  
+  warn: (message, ...args) => {
+    if (isDevelopment) {
+      console.warn(`[WARN] ${message}`, ...args);
+    }
+  },
+  
+  info: (message, ...args) => {
+    if (isDevelopment) {
+      console.info(`[INFO] ${message}`, ...args);
+    }
+  },
+  
+  debug: (message, ...args) => {
+    if (isDevelopment) {
+      console.debug(`[DEBUG] ${message}`, ...args);
+    }
   }
 };
+
+// Usage in components:
+import { logger } from '../utils/logger';
+
+export function useJokes() {
+  // ...
+  if (error) {
+    logger.error('Failed to load jokes:', error);
+  }
+}
 ```
 
 ---
 
-### 7. Development vs Production Error Handling
+### 8. Graceful Degradation
 
-**Development:**
-- Show full error stack traces
-- Console logs for all errors
-- Error boundary displays details
-- React strict mode warnings enabled
-
-**Production:**
-- User-friendly error messages only
-- Stack traces hidden from users
-- Errors sent to monitoring service
-- Graceful fallbacks and recovery options
+**Progressive Enhancement Strategy:**
 
 ```javascript
-if (process.env.NODE_ENV === 'development') {
-  console.log('Debug info:', debugData);
+// Handle missing features gracefully
+export default function HomePage() {
+  const { jokes, error } = useJokes();
+  const [featuredJoke, setFeaturedJoke] = useState(null);
+  
+  useEffect(() => {
+    if (jokes.length > 0) {
+      setFeaturedJoke(getRandomJoke(jokes));
+    }
+  }, [jokes]);
+  
+  // If data fails to load, still show UI with message
+  if (error || jokes.length === 0) {
+    return (
+      <div className={styles.home}>
+        <h1>Welcome to JokesHub</h1>
+        <div className={styles.error}>
+          {error ? (
+            <p>We're having trouble loading jokes. Please refresh the page.</p>
+          ) : (
+            <p>No jokes available yet. Check back soon!</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+  
+  // Normal rendering when data loads successfully
+  return (/* full homepage */);
 }
 ```
+
+---
+
+### Error Handling Checklist
+
+✅ **React Error Boundaries** wrap main content
+✅ **Null checks** before rendering data-dependent components
+✅ **Fallback UI** for empty states and missing data
+✅ **User-friendly messages** avoid technical jargon
+✅ **Recovery actions** (buttons, links) always provided
+✅ **Console logging** for debugging (dev only)
+✅ **Validation** at data import time catches issues early
+✅ **404 handling** for invalid routes and missing resources
+✅ **Graceful degradation** - always show something useful
 
 ---
 
@@ -1436,310 +1877,345 @@ if (process.env.NODE_ENV === 'development') {
 
 ### Unit Tests
 
-**Location:** `src/__tests__/`
+**Testing Framework:** Vitest + React Testing Library
 
-**Test Framework:** Jest + React Testing Library
+**Location:** `jokes-website/tests/unit/`
 
 ---
 
-#### Component Unit Tests
+#### **Component Unit Tests**
 
-**src/__tests__/components/JokeCard.test.jsx**
+**File:** `tests/unit/components/JokeCard.test.jsx`
+
 ```javascript
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import JokeCard from '../../components/JokeCard/JokeCard';
+import { describe, it, expect } from 'vitest';
+import JokeCard from '../../../src/components/jokes/JokeCard';
 
 describe('JokeCard', () => {
   const mockJoke = {
     id: 'joke-001',
-    type: 'qa',
-    category: 'puns',
     setup: 'Why did the chicken cross the road?',
     punchline: 'To get to the other side!',
-    tags: ['classic']
+    category: 'classic'
   };
-  
-  it('renders joke setup', () => {
+
+  it('renders joke setup and punchline', () => {
     render(
       <BrowserRouter>
         <JokeCard joke={mockJoke} />
       </BrowserRouter>
     );
+    
     expect(screen.getByText(mockJoke.setup)).toBeInTheDocument();
-  });
-  
-  it('hides punchline initially for Q&A jokes', () => {
-    render(
-      <BrowserRouter>
-        <JokeCard joke={mockJoke} />
-      </BrowserRouter>
-    );
-    expect(screen.queryByText(mockJoke.punchline)).not.toBeInTheDocument();
-  });
-  
-  it('reveals punchline when button clicked', () => {
-    render(
-      <BrowserRouter>
-        <JokeCard joke={mockJoke} />
-      </BrowserRouter>
-    );
-    fireEvent.click(screen.getByText('Show Punchline'));
     expect(screen.getByText(mockJoke.punchline)).toBeInTheDocument();
   });
-  
-  it('displays category link when showCategory is true', () => {
+
+  it('displays category', () => {
     render(
       <BrowserRouter>
-        <JokeCard joke={mockJoke} showCategory={true} />
+        <JokeCard joke={mockJoke} />
       </BrowserRouter>
     );
-    expect(screen.getByText('puns')).toBeInTheDocument();
+    
+    expect(screen.getByText('classic')).toBeInTheDocument();
   });
-  
-  it('calls onShare when share button clicked', () => {
-    const mockShare = jest.fn();
+
+  it('renders link when showLink is true', () => {
     render(
       <BrowserRouter>
-        <JokeCard joke={mockJoke} onShare={mockShare} />
+        <JokeCard joke={mockJoke} showLink={true} />
       </BrowserRouter>
     );
-    fireEvent.click(screen.getByText('Share'));
-    // Expect either native share or callback
-    expect(mockShare).toHaveBeenCalled();
+    
+    const link = screen.getByRole('link', { name: /view/i });
+    expect(link).toHaveAttribute('href', '/jokes/joke-001');
   });
-});
-```
 
----
-
-**src/__tests__/components/CategoryFilter.test.jsx**
-```javascript
-import { render, screen, fireEvent } from '@testing-library/react';
-import CategoryFilter from '../../components/CategoryFilter/CategoryFilter';
-
-describe('CategoryFilter', () => {
-  const categories = ['puns', 'dad-jokes', 'knock-knock'];
-  const mockOnChange = jest.fn();
-  
-  it('renders all categories', () => {
+  it('does not render link when showLink is false', () => {
     render(
-      <CategoryFilter 
-        categories={categories}
-        selectedCategory={null}
-        onCategoryChange={mockOnChange}
-      />
+      <BrowserRouter>
+        <JokeCard joke={mockJoke} showLink={false} />
+      </BrowserRouter>
     );
-    categories.forEach(cat => {
-      expect(screen.getByText(cat, { exact: false })).toBeInTheDocument();
-    });
+    
+    const link = screen.queryByRole('link', { name: /view/i });
+    expect(link).not.toBeInTheDocument();
   });
-  
-  it('calls onCategoryChange when category clicked', () => {
-    render(
-      <CategoryFilter 
-        categories={categories}
-        selectedCategory={null}
-        onCategoryChange={mockOnChange}
-      />
-    );
-    fireEvent.click(screen.getByText('puns', { exact: false }));
-    expect(mockOnChange).toHaveBeenCalledWith('puns');
-  });
-  
-  it('highlights selected category', () => {
+
+  it('applies correct variant class', () => {
     const { container } = render(
-      <CategoryFilter 
-        categories={categories}
-        selectedCategory="puns"
-        onCategoryChange={mockOnChange}
-      />
+      <BrowserRouter>
+        <JokeCard joke={mockJoke} variant="featured" />
+      </BrowserRouter>
     );
-    const selectedButton = container.querySelector('[aria-pressed="true"]');
-    expect(selectedButton).toHaveTextContent('puns');
+    
+    expect(container.querySelector('.featured')).toBeInTheDocument();
   });
 });
 ```
 
 ---
 
-#### Hook Unit Tests
+**File:** `tests/unit/components/JokeList.test.jsx`
 
-**src/__tests__/hooks/useJokes.test.js**
 ```javascript
-import { renderHook, waitFor } from '@testing-library/react';
-import useJokes from '../../hooks/useJokes';
-import * as jokeDataLoader from '../../utils/jokeDataLoader';
+import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import { describe, it, expect } from 'vitest';
+import JokeList from '../../../src/components/jokes/JokeList';
 
-jest.mock('../../utils/jokeDataLoader');
+describe('JokeList', () => {
+  const mockJokes = [
+    { id: 'joke-001', setup: 'Setup 1', punchline: 'Punchline 1', category: 'cat1' },
+    { id: 'joke-002', setup: 'Setup 2', punchline: 'Punchline 2', category: 'cat2' }
+  ];
+
+  it('renders all jokes', () => {
+    render(
+      <BrowserRouter>
+        <JokeList jokes={mockJokes} />
+      </BrowserRouter>
+    );
+    
+    expect(screen.getByText('Setup 1')).toBeInTheDocument();
+    expect(screen.getByText('Setup 2')).toBeInTheDocument();
+  });
+
+  it('shows empty message when jokes array is empty', () => {
+    render(
+      <BrowserRouter>
+        <JokeList jokes={[]} emptyMessage="No jokes here!" />
+      </BrowserRouter>
+    );
+    
+    expect(screen.getByText('No jokes here!')).toBeInTheDocument();
+  });
+
+  it('applies grid layout by default', () => {
+    const { container } = render(
+      <BrowserRouter>
+        <JokeList jokes={mockJokes} />
+      </BrowserRouter>
+    );
+    
+    expect(container.querySelector('.grid')).toBeInTheDocument();
+  });
+
+  it('applies list layout when specified', () => {
+    const { container } = render(
+      <BrowserRouter>
+        <JokeList jokes={mockJokes} layout="list" />
+      </BrowserRouter>
+    );
+    
+    expect(container.querySelector('.list')).toBeInTheDocument();
+  });
+});
+```
+
+---
+
+**File:** `tests/unit/components/CategoryCard.test.jsx`
+
+```javascript
+import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import { describe, it, expect } from 'vitest';
+import CategoryCard from '../../../src/components/categories/CategoryCard';
+
+describe('CategoryCard', () => {
+  const mockCategory = {
+    id: 'dad-jokes',
+    name: 'Dad Jokes',
+    description: 'Classic groan-worthy jokes',
+    jokeCount: 15
+  };
+
+  it('renders category name and description', () => {
+    render(
+      <BrowserRouter>
+        <CategoryCard category={mockCategory} />
+      </BrowserRouter>
+    );
+    
+    expect(screen.getByText('Dad Jokes')).toBeInTheDocument();
+    expect(screen.getByText('Classic groan-worthy jokes')).toBeInTheDocument();
+  });
+
+  it('displays joke count', () => {
+    render(
+      <BrowserRouter>
+        <CategoryCard category={mockCategory} />
+      </BrowserRouter>
+    );
+    
+    expect(screen.getByText('15 jokes')).toBeInTheDocument();
+  });
+
+  it('links to category page', () => {
+    render(
+      <BrowserRouter>
+        <CategoryCard category={mockCategory} />
+      </BrowserRouter>
+    );
+    
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', '/categories/dad-jokes');
+  });
+});
+```
+
+---
+
+#### **Hook Unit Tests**
+
+**File:** `tests/unit/hooks/useJokes.test.js`
+
+```javascript
+import { renderHook } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { useJokes } from '../../../src/hooks/useJokes';
 
 describe('useJokes', () => {
-  const mockJokesData = {
-    version: '1.0',
-    jokes: [
-      { id: '1', category: 'puns', type: 'qa', setup: 'Q?', punchline: 'A!' },
-      { id: '2', category: 'dad-jokes', type: 'one-liner', punchline: 'Ha!' }
-    ]
-  };
-  
-  beforeEach(() => {
-    jokeDataLoader.loadJokes.mockResolvedValue(mockJokesData);
-  });
-  
-  it('loads jokes on mount', async () => {
+  it('returns array of jokes', () => {
     const { result } = renderHook(() => useJokes());
     
-    expect(result.current.loading).toBe(true);
-    
-    await waitFor(() => expect(result.current.loading).toBe(false));
-    
-    expect(result.current.jokes).toHaveLength(2);
-    expect(result.current.error).toBeNull();
+    expect(Array.isArray(result.current.jokes)).toBe(true);
+    expect(result.current.jokes.length).toBeGreaterThan(0);
   });
-  
-  it('filters jokes by category', async () => {
-    const { result } = renderHook(() => useJokes({ category: 'puns' }));
+
+  it('getJokeById returns correct joke', () => {
+    const { result } = renderHook(() => useJokes());
+    const firstJoke = result.current.jokes[0];
     
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    const joke = result.current.getJokeById(firstJoke.id);
     
-    expect(result.current.jokes).toHaveLength(1);
-    expect(result.current.jokes[0].category).toBe('puns');
+    expect(joke).toEqual(firstJoke);
   });
-  
-  it('handles load errors', async () => {
-    const mockError = new Error('Network failure');
-    jokeDataLoader.loadJokes.mockRejectedValue(mockError);
-    
+
+  it('getJokeById returns null for invalid id', () => {
     const { result } = renderHook(() => useJokes());
     
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    const joke = result.current.getJokeById('invalid-id-999');
     
-    expect(result.current.error).toBe(mockError);
-    expect(result.current.jokes).toHaveLength(0);
+    expect(joke).toBeNull();
   });
-  
-  it('returns unique categories', async () => {
+
+  it('getJokesByCategory filters correctly', () => {
     const { result } = renderHook(() => useJokes());
+    const category = result.current.jokes[0].category;
     
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    const filtered = result.current.getJokesByCategory(category);
     
-    expect(result.current.categories).toEqual(['dad-jokes', 'puns']);
+    expect(filtered.every(j => j.category === category)).toBe(true);
+  });
+
+  it('searchJokes finds jokes by setup text', () => {
+    const { result } = renderHook(() => useJokes());
+    const searchTerm = result.current.jokes[0].setup.split(' ')[0];
+    
+    const results = result.current.searchJokes(searchTerm);
+    
+    expect(results.length).toBeGreaterThan(0);
   });
 });
 ```
 
 ---
 
-#### Utility Function Tests
+#### **Utility Function Tests**
 
-**src/__tests__/utils/filterHelpers.test.js**
+**File:** `tests/unit/utils/jokeHelpers.test.js`
+
 ```javascript
-import { filterJokes, searchJokes, getRandomJoke } from '../../utils/filterHelpers';
+import { describe, it, expect } from 'vitest';
+import {
+  getNextJoke,
+  getPreviousJoke,
+  getRandomJoke,
+  sortJokesByDate,
+  filterJokesByQuery
+} from '../../../src/utils/jokeHelpers';
 
-describe('filterHelpers', () => {
-  const jokes = [
-    { id: '1', category: 'puns', setup: 'Why?', punchline: 'Because!', tags: ['short'] },
-    { id: '2', category: 'dad-jokes', setup: null, punchline: 'Ha ha!', tags: ['long'] },
-    { id: '3', category: 'puns', setup: 'What?', punchline: 'That!', tags: ['short'] }
+describe('jokeHelpers', () => {
+  const mockJokes = [
+    { id: 'joke-001', setup: 'Setup 1', punchline: 'P1', category: 'cat1', dateAdded: '2026-01-01' },
+    { id: 'joke-002', setup: 'Setup 2', punchline: 'P2', category: 'cat2', dateAdded: '2026-01-02' },
+    { id: 'joke-003', setup: 'Setup 3', punchline: 'P3', category: 'cat1', dateAdded: '2026-01-03' }
   ];
-  
-  describe('filterJokes', () => {
-    it('filters by category', () => {
-      const result = filterJokes(jokes, { category: 'puns' });
-      expect(result).toHaveLength(2);
-      expect(result.every(j => j.category === 'puns')).toBe(true);
+
+  describe('getNextJoke', () => {
+    it('returns next joke in array', () => {
+      const next = getNextJoke('joke-001', mockJokes);
+      expect(next.id).toBe('joke-002');
     });
-    
-    it('filters by search term', () => {
-      const result = filterJokes(jokes, { searchTerm: 'ha' });
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('2');
+
+    it('wraps around to first joke at end', () => {
+      const next = getNextJoke('joke-003', mockJokes);
+      expect(next.id).toBe('joke-001');
     });
-    
-    it('returns all jokes when no filters', () => {
-      const result = filterJokes(jokes, {});
-      expect(result).toHaveLength(3);
-    });
-  });
-  
-  describe('searchJokes', () => {
-    it('searches in setup and punchline', () => {
-      const result = searchJokes(jokes, 'why');
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('1');
-    });
-    
-    it('is case-insensitive', () => {
-      const result = searchJokes(jokes, 'WHY');
-      expect(result).toHaveLength(1);
-    });
-  });
-  
-  describe('getRandomJoke', () => {
-    it('returns a joke from array', () => {
-      const result = getRandomJoke(jokes);
-      expect(jokes).toContain(result);
-    });
-    
+
     it('returns null for empty array', () => {
-      expect(getRandomJoke([])).toBeNull();
+      const next = getNextJoke('joke-001', []);
+      expect(next).toBeNull();
     });
   });
-});
-```
 
----
+  describe('getPreviousJoke', () => {
+    it('returns previous joke in array', () => {
+      const prev = getPreviousJoke('joke-002', mockJokes);
+      expect(prev.id).toBe('joke-001');
+    });
 
-**src/__tests__/utils/jokeDataLoader.test.js**
-```javascript
-import { loadJokes } from '../../utils/jokeDataLoader';
+    it('wraps around to last joke at beginning', () => {
+      const prev = getPreviousJoke('joke-001', mockJokes);
+      expect(prev.id).toBe('joke-003');
+    });
+  });
 
-global.fetch = jest.fn();
+  describe('getRandomJoke', () => {
+    it('returns a joke from the array', () => {
+      const random = getRandomJoke(mockJokes);
+      expect(mockJokes).toContain(random);
+    });
 
-describe('jokeDataLoader', () => {
-  beforeEach(() => {
-    fetch.mockClear();
-  });
-  
-  it('loads jokes successfully', async () => {
-    const mockData = { version: '1.0', jokes: [{ id: '1' }] };
-    fetch.mockResolvedValue({
-      ok: true,
-      json: async () => mockData
+    it('excludes specified joke', () => {
+      const random = getRandomJoke(mockJokes, 'joke-001');
+      expect(random.id).not.toBe('joke-001');
     });
-    
-    const result = await loadJokes();
-    
-    expect(fetch).toHaveBeenCalledWith('/data/jokes.json');
-    expect(result).toEqual(mockData);
-  });
-  
-  it('throws error on network failure', async () => {
-    fetch.mockResolvedValue({
-      ok: false,
-      status: 404,
-      statusText: 'Not Found'
+
+    it('returns null for empty array', () => {
+      const random = getRandomJoke([]);
+      expect(random).toBeNull();
     });
-    
-    await expect(loadJokes()).rejects.toThrow('Failed to load jokes');
   });
-  
-  it('throws error on invalid JSON', async () => {
-    fetch.mockResolvedValue({
-      ok: true,
-      json: async () => { throw new Error('Invalid JSON'); }
+
+  describe('sortJokesByDate', () => {
+    it('sorts jokes by date descending', () => {
+      const sorted = sortJokesByDate(mockJokes);
+      expect(sorted[0].id).toBe('joke-003');
+      expect(sorted[2].id).toBe('joke-001');
     });
-    
-    await expect(loadJokes()).rejects.toThrow();
   });
-  
-  it('validates joke data structure', async () => {
-    fetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({ invalid: 'data' })
+
+  describe('filterJokesByQuery', () => {
+    it('filters jokes by setup text', () => {
+      const filtered = filterJokesByQuery(mockJokes, 'Setup 1');
+      expect(filtered.length).toBe(1);
+      expect(filtered[0].id).toBe('joke-001');
     });
-    
-    await expect(loadJokes()).rejects.toThrow('Invalid jokes data format');
+
+    it('filters jokes by category', () => {
+      const filtered = filterJokesByQuery(mockJokes, 'cat1');
+      expect(filtered.length).toBe(2);
+    });
+
+    it('returns all jokes for empty query', () => {
+      const filtered = filterJokesByQuery(mockJokes, '');
+      expect(filtered.length).toBe(mockJokes.length);
+    });
   });
 });
 ```
@@ -1748,122 +2224,126 @@ describe('jokeDataLoader', () => {
 
 ### Integration Tests
 
-**Location:** `src/__tests__/integration/`
-
-**Test Framework:** React Testing Library with full app context
+**Location:** `jokes-website/tests/integration/`
 
 ---
 
-**src/__tests__/integration/JokeViewing.test.jsx**
+**File:** `tests/integration/navigation.test.jsx`
+
 ```javascript
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import App from '../../App';
-import * as jokeDataLoader from '../../utils/jokeDataLoader';
+import userEvent from '@testing-library/user-event';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { describe, it, expect } from 'vitest';
+import { routes } from '../../src/router';
 
-jest.mock('../../utils/jokeDataLoader');
+describe('Navigation Integration', () => {
+  it('navigates from home to browse page', async () => {
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/']
+    });
+    
+    render(<RouterProvider router={router} />);
+    
+    const browseLink = screen.getByRole('link', { name: /browse/i });
+    await userEvent.click(browseLink);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/browse all jokes/i)).toBeInTheDocument();
+    });
+  });
 
-describe('Joke Viewing Flow', () => {
-  const mockJokesData = {
-    jokes: [
-      { id: 'joke-1', category: 'puns', type: 'qa', setup: 'Q1?', punchline: 'A1' },
-      { id: 'joke-2', category: 'puns', type: 'qa', setup: 'Q2?', punchline: 'A2' }
-    ]
-  };
-  
-  beforeEach(() => {
-    jokeDataLoader.loadJokes.mockResolvedValue(mockJokesData);
-  });
-  
-  it('displays joke from direct URL', async () => {
-    render(
-      <MemoryRouter initialEntries={['/jokes/joke-1']}>
-        <App />
-      </MemoryRouter>
-    );
+  it('navigates to individual joke page', async () => {
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/browse']
+    });
+    
+    render(<RouterProvider router={router} />);
+    
+    const viewLinks = screen.getAllByRole('link', { name: /view/i });
+    await userEvent.click(viewLinks[0]);
     
     await waitFor(() => {
-      expect(screen.getByText('Q1?')).toBeInTheDocument();
+      expect(window.location.pathname).toMatch(/^\/jokes\/.+/);
     });
   });
-  
-  it('navigates between jokes using next button', async () => {
-    render(
-      <MemoryRouter initialEntries={['/jokes/joke-1']}>
-        <App />
-      </MemoryRouter>
-    );
+
+  it('navigates between jokes using next/previous', async () => {
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/jokes/joke-001']
+    });
     
-    await waitFor(() => screen.getByText('Q1?'));
+    render(<RouterProvider router={router} />);
     
-    fireEvent.click(screen.getByLabelText('Next joke'));
+    const nextButton = screen.getByRole('button', { name: /next/i });
+    await userEvent.click(nextButton);
     
     await waitFor(() => {
-      expect(screen.getByText('Q2?')).toBeInTheDocument();
+      expect(window.location.pathname).toBe('/jokes/joke-002');
     });
   });
-  
-  it('redirects to 404 for invalid joke ID', async () => {
-    render(
-      <MemoryRouter initialEntries={['/jokes/invalid']}>
-        <App />
-      </MemoryRouter>
-    );
-    
-    await waitFor(() => {
-      expect(screen.getByText(/404/i)).toBeInTheDocument();
+
+  it('shows 404 page for invalid route', async () => {
+    const router = createMemoryRouter(routes, {
+      initialEntries: ['/invalid-route']
     });
+    
+    render(<RouterProvider router={router} />);
+    
+    expect(screen.getByText(/404/i)).toBeInTheDocument();
+    expect(screen.getByText(/not found/i)).toBeInTheDocument();
   });
 });
 ```
 
 ---
 
-**src/__tests__/integration/CategoryBrowsing.test.jsx**
+**File:** `tests/integration/filtering.test.jsx`
+
 ```javascript
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import App from '../../App';
-import * as jokeDataLoader from '../../utils/jokeDataLoader';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { BrowserRouter } from 'react-router-dom';
+import { describe, it, expect } from 'vitest';
+import BrowsePage from '../../src/pages/BrowsePage';
 
-jest.mock('../../utils/jokeDataLoader');
-
-describe('Category Browsing', () => {
-  const mockJokesData = {
-    jokes: [
-      { id: '1', category: 'puns', type: 'qa', setup: 'Q', punchline: 'A' },
-      { id: '2', category: 'dad-jokes', type: 'qa', setup: 'Q', punchline: 'A' }
-    ]
-  };
-  
-  beforeEach(() => {
-    jokeDataLoader.loadJokes.mockResolvedValue(mockJokesData);
-  });
-  
-  it('displays all categories on categories page', async () => {
+describe('Joke Filtering Integration', () => {
+  it('filters jokes by category', async () => {
     render(
-      <MemoryRouter initialEntries={['/categories']}>
-        <App />
-      </MemoryRouter>
+      <BrowserRouter>
+        <BrowsePage />
+      </BrowserRouter>
     );
     
+    const initialCount = screen.getByText(/showing \d+ jokes?/i);
+    const select = screen.getByLabelText(/filter by category/i);
+    
+    await userEvent.selectOptions(select, 'dad-jokes');
+    
     await waitFor(() => {
-      expect(screen.getByText(/puns/i)).toBeInTheDocument();
-      expect(screen.getByText(/dad jokes/i)).toBeInTheDocument();
+      const newCount = screen.getByText(/showing \d+ jokes?/i);
+      expect(newCount).not.toBe(initialCount);
     });
   });
-  
-  it('filters jokes when category selected', async () => {
+
+  it('shows all jokes when "All Categories" selected', async () => {
     render(
-      <MemoryRouter initialEntries={['/categories/puns']}>
-        <App />
-      </MemoryRouter>
+      <BrowserRouter>
+        <BrowsePage />
+      </BrowserRouter>
     );
     
+    const select = screen.getByLabelText(/filter by category/i);
+    
+    // First filter
+    await userEvent.selectOptions(select, 'dad-jokes');
+    
+    // Then show all
+    await userEvent.selectOptions(select, 'all');
+    
     await waitFor(() => {
-      // Should only show puns category jokes
-      const jokeCards = screen.getAllByTestId('joke-card');
-      expect(jokeCards).toHaveLength(1);
+      const jokes = screen.getAllByRole('article');
+      expect(jokes.length).toBeGreaterThan(0);
     });
   });
 });
@@ -1873,110 +2353,242 @@ describe('Category Browsing', () => {
 
 ### E2E Tests
 
-**Location:** `e2e/`
+**Testing Framework:** Playwright
 
-**Test Framework:** Playwright or Cypress
+**Location:** `jokes-website/tests/e2e/`
 
 ---
 
-**e2e/smoke.spec.js**
+**File:** `tests/e2e/homepage.spec.js`
+
 ```javascript
-// Playwright E2E tests
 import { test, expect } from '@playwright/test';
 
-test.describe('Jokes Website Smoke Tests', () => {
-  test('home page loads successfully', async ({ page }) => {
+test.describe('Homepage', () => {
+  test('loads successfully', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('h1')).toContainText('Welcome');
-    await expect(page.locator('.joke-card')).toBeVisible();
-  });
-  
-  test('can browse jokes', async ({ page }) => {
-    await page.goto('/jokes');
-    await expect(page.locator('.joke-card').first()).toBeVisible();
     
-    const jokeCount = await page.locator('.joke-card').count();
-    expect(jokeCount).toBeGreaterThan(0);
+    await expect(page).toHaveTitle(/JokesHub/i);
+    await expect(page.locator('h1')).toContainText('Welcome to JokesHub');
   });
-  
-  test('can view individual joke', async ({ page }) => {
-    await page.goto('/jokes');
-    await page.locator('.joke-card').first().click();
+
+  test('displays featured joke', async ({ page }) => {
+    await page.goto('/');
     
-    await expect(page).toHaveURL(/\/jokes\/joke-\d+/);
-    await expect(page.locator('.joke-card')).toBeVisible();
+    const jokeCard = page.locator('article').first();
+    await expect(jokeCard).toBeVisible();
   });
-  
-  test('can navigate between jokes', async ({ page }) => {
-    await page.goto('/jokes/joke-001');
+
+  test('shows category cards', async ({ page }) => {
+    await page.goto('/');
     
-    await page.locator('[aria-label="Next joke"]').click();
-    await expect(page).toHaveURL(/\/jokes\/joke-\d+/);
-  });
-  
-  test('category filtering works', async ({ page }) => {
-    await page.goto('/categories');
-    await page.locator('text=Puns').click();
+    const categoryCards = page.locator('a[href^="/categories/"]');
+    await expect(categoryCards.first()).toBeVisible();
     
-    await expect(page).toHaveURL(/\/categories\/puns/);
-    await expect(page.locator('.joke-card')).toBeVisible();
+    const count = await categoryCards.count();
+    expect(count).toBeGreaterThan(0);
   });
-  
-  test('404 page for invalid routes', async ({ page }) => {
-    await page.goto('/invalid-page');
-    await expect(page.locator('text=/404/i')).toBeVisible();
+
+  test('navigates to browse page via CTA button', async ({ page }) => {
+    await page.goto('/');
+    
+    await page.click('text=Browse All Jokes');
+    
+    await expect(page).toHaveURL(/\/browse/);
+    await expect(page.locator('h1')).toContainText('Browse All Jokes');
   });
-  
-  test('mobile responsive layout', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 667 });
+
+  test('refreshes featured joke on button click', async ({ page }) => {
+    await page.goto('/');
+    
+    const firstJokeText = await page.locator('article p').first().textContent();
+    
+    await page.click('text=Show Another');
+    
+    // Wait for new joke to render
+    await page.waitForTimeout(100);
+    
+    const secondJokeText = await page.locator('article p').first().textContent();
+    
+    // May be the same joke by chance, but button should work
+    expect(secondJokeText).toBeTruthy();
+  });
+});
+```
+
+---
+
+**File:** `tests/e2e/browsing.spec.js`
+
+```javascript
+import { test, expect } from '@playwright/test';
+
+test.describe('Joke Browsing', () => {
+  test('browse page displays jokes grid', async ({ page }) => {
+    await page.goto('/browse');
+    
+    const jokes = page.locator('article');
+    const count = await jokes.count();
+    
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('filters jokes by category', async ({ page }) => {
+    await page.goto('/browse');
+    
+    const initialCount = await page.locator('article').count();
+    
+    await page.selectOption('select#category-filter', 'dad-jokes');
+    
+    await page.waitForTimeout(100);
+    
+    const filteredCount = await page.locator('article').count();
+    
+    // Filtered count should be different (assuming multiple categories exist)
+    expect(filteredCount).toBeGreaterThan(0);
+  });
+
+  test('navigates to individual joke', async ({ page }) => {
+    await page.goto('/browse');
+    
+    const firstJoke = page.locator('article').first();
+    await firstJoke.locator('a:has-text("View")').click();
+    
+    await expect(page).toHaveURL(/\/jokes\/.+/);
+  });
+
+  test('individual joke page shows navigation', async ({ page }) => {
+    await page.goto('/browse');
+    
+    await page.locator('article').first().locator('a:has-text("View")').click();
+    
+    await expect(page.locator('button:has-text("Next")')).toBeVisible();
+    await expect(page.locator('button:has-text("Previous")')).toBeVisible();
+    await expect(page.locator('button:has-text("Random")')).toBeVisible();
+  });
+
+  test('next/previous navigation works', async ({ page }) => {
+    await page.goto('/browse');
+    await page.locator('article').first().locator('a:has-text("View")').click();
+    
+    const firstUrl = page.url();
+    
+    await page.click('button:has-text("Next")');
+    
+    const secondUrl = page.url();
+    expect(secondUrl).not.toBe(firstUrl);
+    
+    await page.click('button:has-text("Previous")');
+    
+    await expect(page).toHaveURL(firstUrl);
+  });
+});
+```
+
+---
+
+**File:** `tests/e2e/categories.spec.js`
+
+```javascript
+import { test, expect } from '@playwright/test';
+
+test.describe('Category Navigation', () => {
+  test('displays all categories on homepage', async ({ page }) => {
+    await page.goto('/');
+    
+    const categoryCards = page.locator('a[href^="/categories/"]');
+    const count = await categoryCards.count();
+    
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('navigates to category page', async ({ page }) => {
+    await page.goto('/');
+    
+    const firstCategory = page.locator('a[href^="/categories/"]').first();
+    await firstCategory.click();
+    
+    await expect(page).toHaveURL(/\/categories\/.+/);
+  });
+
+  test('category page shows filtered jokes', async ({ page }) => {
+    await page.goto('/categories/dad-jokes');
+    
+    await expect(page.locator('h1')).toContainText('Dad Jokes');
+    
+    const jokes = page.locator('article');
+    const count = await jokes.count();
+    
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('shows 404 for invalid category', async ({ page }) => {
+    await page.goto('/categories/invalid-category-xyz');
+    
+    await expect(page.locator('text=404')).toBeVisible();
+    await expect(page.locator('text=/not found/i')).toBeVisible();
+  });
+});
+```
+
+---
+
+**File:** `tests/e2e/mobile.spec.js`
+
+```javascript
+import { test, expect, devices } from '@playwright/test';
+
+test.use(devices['iPhone 12']);
+
+test.describe('Mobile Responsiveness', () => {
+  test('homepage is mobile-friendly', async ({ page }) => {
     await page.goto('/');
     
     await expect(page.locator('h1')).toBeVisible();
-    await expect(page.locator('.joke-card')).toBeVisible();
+    
+    // Check hamburger menu exists
+    const hamburger = page.locator('button[aria-label="Toggle menu"]');
+    await expect(hamburger).toBeVisible();
+  });
+
+  test('mobile menu opens and closes', async ({ page }) => {
+    await page.goto('/');
+    
+    const hamburger = page.locator('button[aria-label="Toggle menu"]');
+    await hamburger.click();
+    
+    const nav = page.locator('nav');
+    await expect(nav).toHaveClass(/open/);
+    
+    await hamburger.click();
+    await expect(nav).not.toHaveClass(/open/);
+  });
+
+  test('jokes are readable on mobile', async ({ page }) => {
+    await page.goto('/browse');
+    
+    const jokeCard = page.locator('article').first();
+    await expect(jokeCard).toBeVisible();
+    
+    const boundingBox = await jokeCard.boundingBox();
+    expect(boundingBox.width).toBeLessThanOrEqual(400); // Mobile viewport
   });
 });
 ```
 
 ---
 
-**e2e/performance.spec.js**
-```javascript
-import { test, expect } from '@playwright/test';
+### Test Coverage Goals
 
-test.describe('Performance Tests', () => {
-  test('initial page load under 2 seconds', async ({ page }) => {
-    const startTime = Date.now();
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-    const loadTime = Date.now() - startTime;
-    
-    expect(loadTime).toBeLessThan(2000);
-  });
-  
-  test('lighthouse performance score above 90', async ({ page }) => {
-    await page.goto('/');
-    
-    const lighthouse = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        // Trigger lighthouse audit via Chrome DevTools Protocol
-        // This is a simplified example
-        resolve({ performanceScore: 95 });
-      });
-    });
-    
-    expect(lighthouse.performanceScore).toBeGreaterThan(90);
-  });
-});
+**Target Coverage:**
+- Unit tests: > 80% code coverage
+- Integration tests: All critical user flows
+- E2E tests: Core user journeys
+
+**Coverage Report Command:**
+```bash
+npm run test:coverage
 ```
-
----
-
-**Test Coverage Goals:**
-- Unit tests: >80% coverage for utils and hooks
-- Component tests: All major components tested
-- Integration tests: Critical user flows covered
-- E2E tests: Smoke tests for all pages
-- Performance tests: Lighthouse CI on every build
 
 ---
 
@@ -1986,317 +2598,330 @@ test.describe('Performance Tests', () => {
 
 ### Migration Overview
 
-**Current State:** Empty repository with Python-based projects
-
-**Target State:** Add standalone React jokes website in `jokes-website/` directory
-
-**Migration Type:** **Greenfield addition** (no existing code to migrate)
+This is a **greenfield implementation** - no existing jokes website to migrate from. The migration strategy focuses on setting up the new application within the existing repository structure without disrupting current projects.
 
 ---
 
-### Migration Steps
+### Phase 1: Repository Setup
 
-#### Phase 1: Project Setup (Day 1)
+**Objective:** Set up the jokes-website directory structure without affecting existing code.
 
-**Step 1.1: Create React Application**
-```bash
-cd /path/to/repo
-npm create vite@latest jokes-website -- --template react
-cd jokes-website
-npm install
-```
+**Steps:**
 
-**Step 1.2: Install Dependencies**
-```bash
-npm install react-router-dom
-npm install --save-dev @testing-library/react @testing-library/jest-dom
-npm install --save-dev jest jest-environment-jsdom
-npm install --save-dev eslint eslint-plugin-react
-npm install --save-dev @playwright/test
-```
+1. **Create jokes-website directory**
+   ```bash
+   mkdir -p jokes-website
+   cd jokes-website
+   ```
 
-**Step 1.3: Configure Vite for S3 Hosting**
+2. **Initialize Vite React project**
+   ```bash
+   npm create vite@latest . -- --template react
+   ```
 
-Edit `jokes-website/vite.config.js`:
-```javascript
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+3. **Install dependencies**
+   ```bash
+   npm install react-router-dom
+   npm install -D vitest @testing-library/react @testing-library/jest-dom
+   npm install -D @testing-library/user-event
+   npm install -D @playwright/test
+   npm install -D eslint prettier
+   ```
 
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-    sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom']
-        }
-      }
-    }
-  },
-  server: {
-    port: 3000
-  }
-});
-```
+4. **Update root .gitignore** (if needed)
+   ```
+   # Add to existing .gitignore
+   jokes-website/node_modules/
+   jokes-website/dist/
+   jokes-website/.env
+   ```
 
-**Step 1.4: Update Repository README**
+5. **Update root README.md**
+   Add section documenting the jokes-website subproject:
+   ```markdown
+   ## Jokes Website
+   
+   A static React-based jokes website hosted on S3.
+   
+   Location: `jokes-website/`
+   
+   See [jokes-website/README.md](jokes-website/README.md) for details.
+   ```
 
-Add section to root `README.md`:
-```markdown
-## Jokes Website
-
-A static React-based website for browsing jokes, deployed to AWS S3.
-
-- **Location:** `jokes-website/`
-- **Documentation:** See [jokes-website/docs/](jokes-website/docs/)
-- **Tech Stack:** React, Vite, React Router
-- **Deployment:** AWS S3 + CloudFront
-
-### Quick Start
-```bash
-cd jokes-website
-npm install
-npm run dev
-```
-```
+**Validation:**
+- Verify `npm run dev` works in jokes-website directory
+- Confirm existing projects (src/, notebooks/) are unaffected
+- Check git status shows no unwanted changes
 
 ---
 
-#### Phase 2: Core Development (Days 2-5)
+### Phase 2: Core Implementation
 
-**Step 2.1: Create Joke Dataset**
+**Objective:** Build the React application with all components and data.
 
-Create `jokes-website/public/data/jokes.json` with initial 50+ jokes:
-```json
-{
-  "version": "1.0",
-  "lastUpdated": "2026-02-03T08:00:00Z",
-  "jokes": [
-    {
-      "id": "joke-001",
-      "type": "qa",
-      "category": "puns",
-      "setup": "Why don't scientists trust atoms?",
-      "punchline": "Because they make up everything!",
-      "tags": ["science", "wordplay"],
-      "dateAdded": "2026-01-15T10:00:00Z"
-    }
-    // ... 49 more jokes
-  ]
-}
-```
+**Steps:**
 
-**Step 2.2: Implement Components**
+1. **Create directory structure**
+   ```bash
+   mkdir -p src/components/{layout,jokes,categories,common}
+   mkdir -p src/pages
+   mkdir -p src/data
+   mkdir -p src/hooks
+   mkdir -p src/utils
+   mkdir -p src/styles
+   mkdir -p tests/{unit,integration,e2e}
+   ```
 
-Follow the file structure defined in section 2, implementing:
-1. Layout components (Header, Footer, Layout)
-2. JokeCard component
-3. Navigation components
-4. Page components (Home, JokesList, JokeDetail, Categories)
+2. **Add joke data**
+   - Create `src/data/jokes.json` with 20-50 jokes
+   - Create `src/data/categories.json` with category metadata
+   - Validate JSON structure
 
-**Step 2.3: Implement Hooks and Utils**
+3. **Implement components** (in order)
+   - Common: ErrorBoundary, NotFound
+   - Layout: Header, Footer, Layout
+   - Jokes: JokeCard, JokeList, JokeNavigation
+   - Categories: CategoryCard, CategoryList
+   - Pages: HomePage, BrowsePage, JokePage, CategoryPage
 
-Implement:
-- `useJokes` hook for data loading
-- `jokeDataLoader.js` for JSON fetching
-- `filterHelpers.js` for filtering logic
+4. **Implement routing**
+   - Configure React Router in `src/router.jsx`
+   - Set up App.jsx with RouterProvider
+   - Test all routes
 
-**Step 2.4: Add Styling**
+5. **Add styles**
+   - Global styles in `src/styles/`
+   - Component CSS Modules
+   - Responsive breakpoints
 
-Create CSS Modules for each component with mobile-first responsive design.
+6. **Implement custom hooks**
+   - useJokes in `src/hooks/useJokes.js`
+   - useCategories in `src/hooks/useCategories.js`
 
----
+7. **Add utility functions**
+   - jokeHelpers.js for joke operations
+   - navigation.js for URL helpers
+   - validation.js for data validation
 
-#### Phase 3: Testing (Day 6)
-
-**Step 3.1: Write Unit Tests**
-
-Implement tests as defined in section 9:
-- Component tests for JokeCard, CategoryFilter
-- Hook tests for useJokes
-- Utility tests for filterHelpers, jokeDataLoader
-
-**Step 3.2: Write Integration Tests**
-
-Test critical user flows:
-- Joke viewing flow
-- Category browsing
-- Navigation between jokes
-
-**Step 3.3: Configure Jest**
-
-Create `jokes-website/jest.config.js`:
-```javascript
-export default {
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
-  moduleNameMapper: {
-    '\\.(css|less|scss)$': 'identity-obj-proxy'
-  }
-};
-```
+**Validation:**
+- Test all pages in development mode
+- Verify responsive design on mobile/desktop
+- Check all navigation flows work
+- Validate data loading and error handling
 
 ---
 
-#### Phase 4: Deployment Setup (Day 7)
+### Phase 3: Testing Implementation
 
-**Step 4.1: Create S3 Bucket**
+**Objective:** Implement comprehensive test suite.
 
-```bash
-aws s3 mb s3://jokes-website-prod
-aws s3 website s3://jokes-website-prod \
-  --index-document index.html \
-  --error-document index.html
-```
+**Steps:**
 
-**Step 4.2: Configure Bucket Policy**
+1. **Configure test frameworks**
+   - Create `vitest.config.js` for unit tests
+   - Create `playwright.config.js` for E2E tests
+   - Add test scripts to package.json
 
-Create `deploy/bucket-policy.json`:
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "PublicReadGetObject",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::jokes-website-prod/*"
-    }
-  ]
-}
-```
+2. **Write unit tests**
+   - Component tests (JokeCard, JokeList, etc.)
+   - Hook tests (useJokes, useCategories)
+   - Utility function tests
 
-Apply policy:
-```bash
-aws s3api put-bucket-policy \
-  --bucket jokes-website-prod \
-  --policy file://deploy/bucket-policy.json
-```
+3. **Write integration tests**
+   - Navigation flows
+   - Filtering and sorting
 
-**Step 4.3: Create CloudFront Distribution**
+4. **Write E2E tests**
+   - Homepage journey
+   - Browsing jokes
+   - Category filtering
+   - Mobile responsiveness
 
-```bash
-aws cloudfront create-distribution \
-  --origin-domain-name jokes-website-prod.s3.amazonaws.com \
-  --default-root-object index.html
-```
+5. **Run test suite and achieve coverage goals**
+   ```bash
+   npm run test:unit
+   npm run test:integration
+   npm run test:e2e
+   npm run test:coverage
+   ```
 
-**Step 4.4: Set Up GitHub Actions**
-
-Create `.github/workflows/deploy.yml`:
-```yaml
-name: Deploy to S3
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'jokes-website/**'
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-          cache-dependency-path: jokes-website/package-lock.json
-      
-      - name: Install dependencies
-        working-directory: jokes-website
-        run: npm ci
-      
-      - name: Run tests
-        working-directory: jokes-website
-        run: npm test
-      
-      - name: Build
-        working-directory: jokes-website
-        run: npm run build
-      
-      - name: Deploy to S3
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      
-      - name: Sync to S3
-        working-directory: jokes-website
-        run: aws s3 sync dist/ s3://jokes-website-prod --delete
-      
-      - name: Invalidate CloudFront
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} --paths "/*"
-```
+**Validation:**
+- All tests pass
+- Coverage > 80% for unit tests
+- E2E tests cover critical paths
 
 ---
 
-#### Phase 5: Launch (Day 8)
+### Phase 4: Build Optimization
 
-**Step 5.1: Final Testing**
+**Objective:** Optimize production build for performance.
 
-- Run E2E tests against staging environment
-- Run Lighthouse CI checks
-- Test on multiple devices and browsers
+**Steps:**
 
-**Step 5.2: Deploy to Production**
+1. **Configure Vite for optimization**
+   ```javascript
+   // vite.config.js
+   export default {
+     build: {
+       target: 'es2015',
+       minify: 'terser',
+       rollupOptions: {
+         output: {
+           manualChunks: {
+             vendor: ['react', 'react-dom', 'react-router-dom']
+           }
+         }
+       }
+     }
+   };
+   ```
 
-```bash
-cd jokes-website
-npm run build
-aws s3 sync dist/ s3://jokes-website-prod --delete
-aws cloudfront create-invalidation --distribution-id XXXXX --paths "/*"
-```
+2. **Add compression**
+   ```bash
+   npm install -D vite-plugin-compression
+   ```
 
-**Step 5.3: Verify Deployment**
+3. **Optimize images** (if any)
+   - Compress favicon and any graphics
+   - Use appropriate formats (WebP, SVG)
 
-- Check website loads at CloudFront URL
-- Test all routes and navigation
-- Verify Lighthouse score >90
-- Confirm load time <2s
+4. **Test production build**
+   ```bash
+   npm run build
+   npm run preview
+   ```
+
+5. **Analyze bundle size**
+   ```bash
+   npm run build -- --report
+   ```
+
+**Validation:**
+- Bundle size < 500KB (gzipped)
+- Lighthouse performance score > 90
+- All assets load correctly in preview
 
 ---
 
-### Data Migration
+### Phase 5: Documentation
 
-**No data migration required** - starting with fresh joke dataset.
+**Objective:** Create comprehensive documentation.
 
-**Initial Joke Dataset Creation:**
-1. Curate 50+ jokes across 5-7 categories
-2. Format as JSON following schema
-3. Validate JSON structure
-4. Commit to repository in `jokes-website/public/data/`
+**Steps:**
+
+1. **Create jokes-website/README.md**
+   - Project overview
+   - Local development setup
+   - Available scripts
+   - Project structure
+   - Testing guide
+
+2. **Update docs/plans/jokes-website/ documentation**
+   - Create IMPLEMENTATION.md (detailed setup guide)
+   - Create DEPLOYMENT.md (S3 deployment instructions)
+
+3. **Add inline code comments**
+   - Document complex functions
+   - Add JSDoc comments for public APIs
+
+4. **Create CONTRIBUTING.md** (if accepting contributions)
+   - Code style guide
+   - PR process
+   - Testing requirements
+
+**Validation:**
+- New developer can follow README and run project
+- All documentation is accurate and up-to-date
 
 ---
 
-### Configuration Migration
+### Phase 6: Deployment Setup
 
-**No existing configuration to migrate.**
+**Objective:** Configure S3 hosting and CI/CD pipeline.
 
-**New Configuration Files:**
-- `jokes-website/vite.config.js` - Build configuration
-- `jokes-website/jest.config.js` - Test configuration
-- `.github/workflows/deploy.yml` - CI/CD pipeline
-- `deploy/bucket-policy.json` - S3 permissions
+**Steps:**
+
+1. **Create S3 bucket**
+   ```bash
+   aws s3 mb s3://jokes-website-bucket
+   aws s3 website s3://jokes-website-bucket \
+     --index-document index.html \
+     --error-document index.html
+   ```
+
+2. **Configure bucket policy for public access**
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [{
+       "Effect": "Allow",
+       "Principal": "*",
+       "Action": "s3:GetObject",
+       "Resource": "arn:aws:s3:::jokes-website-bucket/*"
+     }]
+   }
+   ```
+
+3. **Create deployment script**
+   - `scripts/deploy-s3.sh`
+   - Test manual deployment
+
+4. **Set up GitHub Actions**
+   - Create `.github/workflows/deploy.yml`
+   - Configure AWS credentials in GitHub Secrets
+   - Test automated deployment
+
+5. **(Optional) Set up CloudFront**
+   - Create CloudFront distribution
+   - Configure SSL certificate
+   - Update deployment script to invalidate cache
+
+**Validation:**
+- Manual deployment works
+- CI/CD pipeline deploys on push to main
+- Website is accessible via S3 URL
 
 ---
 
-### User Impact
+### Migration Timeline
 
-**No existing users** - this is a new application.
+| Phase | Duration | Deliverables |
+|-------|----------|--------------|
+| Phase 1: Repository Setup | 1 day | Directory structure, dependencies |
+| Phase 2: Core Implementation | 3-5 days | All components, pages, routing |
+| Phase 3: Testing | 2-3 days | Complete test suite |
+| Phase 4: Build Optimization | 1 day | Optimized production build |
+| Phase 5: Documentation | 1 day | Complete documentation |
+| Phase 6: Deployment | 1-2 days | S3 hosting, CI/CD |
+| **Total** | **9-13 days** | Production-ready website |
 
-**Launch Communication:**
-- Update repository README with jokes-website section
-- Add documentation in `jokes-website/docs/`
-- Create CHANGELOG.md for future updates
+---
+
+### Risk Mitigation
+
+**Risk: Breaking existing repository code**
+- Mitigation: jokes-website is isolated directory, no shared dependencies
+
+**Risk: Data structure issues**
+- Mitigation: Validate JSON schema before implementation, add validation tests
+
+**Risk: S3 configuration errors**
+- Mitigation: Test with manual deployment before automating, document rollback
+
+**Risk: Build failures in CI/CD**
+- Mitigation: Test build locally, use GitHub Actions cache, add build validation
+
+---
+
+### Success Criteria
+
+✅ Jokes website runs independently in jokes-website/ directory
+✅ Existing repository projects are unaffected
+✅ All tests pass with > 80% coverage
+✅ Production build is optimized (< 500KB gzipped)
+✅ Website is deployed and accessible via S3
+✅ CI/CD pipeline deploys automatically on merge to main
+✅ Documentation is complete and accurate
 
 ---
 
@@ -2306,233 +2931,324 @@ aws cloudfront create-invalidation --distribution-id XXXXX --paths "/*"
 
 ### Rollback Strategy
 
-**Objective:** Quickly restore previous working version if deployment issues occur.
+Since this is a static website hosted on S3, rollback is straightforward and fast. The strategy includes automated rollback mechanisms and manual procedures.
 
 ---
 
-### Rollback Triggers
+### 1. S3 Versioning Rollback
 
-**Initiate rollback if:**
-1. Critical errors in production (500 errors, site down)
-2. Lighthouse performance score drops below 70
-3. >10% of users experience load failures
-4. Major functionality broken (navigation, joke display)
-5. Security vulnerability discovered
+**Setup: Enable S3 Versioning**
 
----
-
-### Rollback Methods
-
-#### Method 1: S3 Versioning Rollback (Recommended)
-
-**Prerequisites:**
-- Enable S3 bucket versioning before first deployment
-
-**Enable Versioning:**
 ```bash
 aws s3api put-bucket-versioning \
-  --bucket jokes-website-prod \
+  --bucket jokes-website-bucket \
   --versioning-configuration Status=Enabled
 ```
 
-**Rollback Process:**
+**Rollback Procedure:**
 
-**Step 1: Identify Previous Version**
-```bash
-# List object versions
-aws s3api list-object-versions \
-  --bucket jokes-website-prod \
-  --prefix index.html
-```
-
-**Step 2: Restore Previous Version**
-```bash
-# Copy previous version to current
-aws s3api copy-object \
-  --bucket jokes-website-prod \
-  --copy-source jokes-website-prod/index.html?versionId=PREVIOUS_VERSION_ID \
-  --key index.html
-```
-
-**Step 3: Sync Full Previous Build**
-```bash
-# If full rollback needed, restore from backup
-aws s3 sync s3://jokes-website-backup/build-<timestamp>/ \
-  s3://jokes-website-prod/ --delete
-```
-
-**Step 4: Invalidate CloudFront Cache**
-```bash
-aws cloudfront create-invalidation \
-  --distribution-id $DIST_ID \
-  --paths "/*"
-```
-
-**Time to Rollback:** 2-5 minutes
-
----
-
-#### Method 2: Git Revert + Redeploy
-
-**When to Use:** For issues discovered after some time, or when S3 versioning not available.
-
-**Rollback Process:**
-
-**Step 1: Identify Working Commit**
-```bash
-git log --oneline jokes-website/
-# Find last known good commit
-```
-
-**Step 2: Revert Code**
-```bash
-git revert <bad-commit-hash>
-# Or
-git reset --hard <good-commit-hash>
-git push --force origin main
-```
-
-**Step 3: Trigger CI/CD Pipeline**
-- GitHub Actions will automatically rebuild and deploy
-- Or manually trigger workflow
-
-**Time to Rollback:** 5-10 minutes (includes rebuild)
-
----
-
-#### Method 3: Blue-Green Deployment Rollback
-
-**Setup (before deployment):**
-
-Create two S3 buckets:
-- `jokes-website-blue` (current production)
-- `jokes-website-green` (new deployment)
-
-CloudFront origin points to blue bucket initially.
-
-**Deployment Process:**
-1. Deploy new version to green bucket
-2. Test green bucket URL directly
-3. If tests pass, switch CloudFront origin to green
-4. Blue bucket remains as instant rollback option
-
-**Rollback Process:**
-
-**Step 1: Switch CloudFront Origin**
-```bash
-aws cloudfront update-distribution \
-  --id $DIST_ID \
-  --distribution-config file://cloudfront-config-blue.json
-```
-
-**Step 2: Invalidate Cache**
-```bash
-aws cloudfront create-invalidation \
-  --distribution-id $DIST_ID \
-  --paths "/*"
-```
-
-**Time to Rollback:** 1-2 minutes (instant origin swap)
-
----
-
-### Rollback Testing
-
-**Before Production Deployment:**
-
-1. **Test Rollback in Staging:**
-   - Deploy v2 to staging
-   - Rollback to v1
-   - Verify v1 functionality restored
-
-2. **Document Rollback Procedures:**
-   - Create runbook with exact commands
-   - Store in `jokes-website/docs/ROLLBACK.md`
-   - Include credentials/permissions needed
-
-3. **Automate Rollback:**
+1. **List recent versions of index.html**
    ```bash
-   # jokes-website/scripts/rollback.sh
-   #!/bin/bash
-   PREVIOUS_VERSION=$1
-   aws s3 sync s3://jokes-website-backup/build-$PREVIOUS_VERSION/ \
-     s3://jokes-website-prod/ --delete
-   aws cloudfront create-invalidation --distribution-id $DIST_ID --paths "/*"
+   aws s3api list-object-versions \
+     --bucket jokes-website-bucket \
+     --prefix index.html \
+     --max-items 10
    ```
 
----
+2. **Identify previous working version ID**
+   - Note the VersionId of the previous deployment
 
-### Monitoring During Rollback
+3. **Restore previous version**
+   ```bash
+   aws s3api copy-object \
+     --bucket jokes-website-bucket \
+     --copy-source jokes-website-bucket/index.html?versionId=PREVIOUS_VERSION_ID \
+     --key index.html
+   ```
 
-**Key Metrics to Watch:**
+4. **Invalidate CloudFront cache** (if using CDN)
+   ```bash
+   aws cloudfront create-invalidation \
+     --distribution-id DISTRIBUTION_ID \
+     --paths "/*"
+   ```
 
-1. **CloudFront Error Rate:**
-   - Should drop to 0% after rollback
-   - Monitor for 5 minutes post-rollback
-
-2. **Cache Hit Rate:**
-   - May drop temporarily due to invalidation
-   - Should recover to 80%+ within 10 minutes
-
-3. **User Load Times:**
-   - Verify <2s load times restored
-   - Check from multiple geographic locations
-
-4. **Error Logs:**
-   - Monitor browser console errors
-   - Check CloudWatch logs for S3 access errors
+**Time to Rollback:** < 2 minutes
 
 ---
 
-### Communication Plan
+### 2. Deployment Artifact Rollback
 
-**Internal Notification:**
-1. Alert team in Slack/Teams: "Rollback initiated"
-2. Create incident ticket with details
-3. Document rollback reason and steps taken
+**Setup: Keep Previous Build Artifacts**
 
-**User Communication:**
-- If site was down <5 minutes: No user notification needed
-- If downtime >5 minutes: Post status update on social media
-- If data affected: Email affected users (N/A for this static site)
+Store each deployment build with timestamp:
+
+```bash
+# In deployment script
+BUILD_ID=$(date +%Y%m%d-%H%M%S)
+tar -czf "builds/jokes-website-${BUILD_ID}.tar.gz" dist/
+```
+
+**Rollback Procedure:**
+
+1. **List available builds**
+   ```bash
+   ls -lt builds/
+   ```
+
+2. **Extract previous build**
+   ```bash
+   tar -xzf builds/jokes-website-PREVIOUS_TIMESTAMP.tar.gz
+   ```
+
+3. **Deploy previous build to S3**
+   ```bash
+   aws s3 sync dist/ s3://jokes-website-bucket --delete
+   ```
+
+4. **Invalidate CloudFront cache**
+   ```bash
+   aws cloudfront create-invalidation \
+     --distribution-id DISTRIBUTION_ID \
+     --paths "/*"
+   ```
+
+**Time to Rollback:** < 5 minutes
 
 ---
 
-### Post-Rollback Actions
+### 3. Git-Based Rollback
 
-**Step 1: Root Cause Analysis**
-- Review deployment logs
-- Identify what caused the issue
-- Document findings in post-mortem
+**Rollback to Previous Git Commit:**
 
-**Step 2: Fix Issues**
-- Create hotfix branch
-- Implement fixes
-- Add tests to prevent regression
+1. **Identify last working commit**
+   ```bash
+   git log --oneline jokes-website/ -10
+   ```
 
-**Step 3: Safe Redeployment**
-- Deploy fix to staging
-- Run full test suite
-- Verify Lighthouse scores
-- Deploy to production with monitoring
+2. **Create rollback branch**
+   ```bash
+   git checkout -b rollback/jokes-website-YYYYMMDD COMMIT_SHA
+   ```
 
-**Step 4: Update Runbooks**
-- Document new failure modes
-- Update rollback procedures if needed
-- Share lessons learned with team
+3. **Trigger CI/CD deployment**
+   ```bash
+   git push origin rollback/jokes-website-YYYYMMDD
+   ```
+   
+   Or manually deploy:
+   ```bash
+   cd jokes-website
+   npm run build
+   ./scripts/deploy-s3.sh
+   ```
+
+**Time to Rollback:** 5-10 minutes (includes build time)
 
 ---
 
-### Rollback Decision Matrix
+### 4. Emergency S3 Bucket Replacement
 
-| Issue Severity | Rollback Decision | Timeline |
-|----------------|------------------|----------|
-| Site completely down | Immediate rollback | <2 min |
-| Critical feature broken | Immediate rollback | <5 min |
-| Performance degraded (Lighthouse <70) | Rollback recommended | <10 min |
-| Minor UI bug | Fix forward, no rollback | N/A |
-| Analytics not tracking | Fix forward, no rollback | N/A |
-| One joke rendering incorrectly | Fix forward, no rollback | N/A |
+**Setup: Maintain Backup Bucket**
+
+Keep a mirror of last known good deployment:
+
+```bash
+aws s3 sync s3://jokes-website-bucket s3://jokes-website-backup \
+  --delete
+```
+
+**Rollback Procedure:**
+
+1. **Sync backup bucket to production**
+   ```bash
+   aws s3 sync s3://jokes-website-backup s3://jokes-website-bucket \
+     --delete
+   ```
+
+2. **Invalidate CloudFront cache**
+   ```bash
+   aws cloudfront create-invalidation \
+     --distribution-id DISTRIBUTION_ID \
+     --paths "/*"
+   ```
+
+**Time to Rollback:** < 2 minutes
+
+---
+
+### 5. Automated Rollback in CI/CD
+
+**GitHub Actions Workflow with Rollback:**
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to S3
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Backup current S3 state
+        run: |
+          aws s3 sync s3://jokes-website-bucket s3://jokes-website-backup --delete
+      
+      - name: Build
+        working-directory: jokes-website
+        run: |
+          npm ci
+          npm run build
+      
+      - name: Deploy to S3
+        run: |
+          aws s3 sync jokes-website/dist/ s3://jokes-website-bucket --delete
+        id: deploy
+      
+      - name: Health Check
+        id: health
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://jokes-website.example.com)
+          if [ $RESPONSE -ne 200 ]; then
+            echo "Health check failed with status $RESPONSE"
+            exit 1
+          fi
+      
+      - name: Rollback on Failure
+        if: failure()
+        run: |
+          echo "Deployment failed, rolling back..."
+          aws s3 sync s3://jokes-website-backup s3://jokes-website-bucket --delete
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} --paths "/*"
+```
+
+---
+
+### 6. Rollback Decision Matrix
+
+| Scenario | Recommended Rollback Method | Estimated Time |
+|----------|----------------------------|----------------|
+| Build artifact corrupted | S3 Versioning Rollback | < 2 min |
+| New feature breaks UI | Git-Based Rollback | 5-10 min |
+| Data file error (jokes.json) | Deployment Artifact Rollback | < 5 min |
+| Complete site failure | Emergency S3 Bucket Replacement | < 2 min |
+| Routing issues | Git-Based Rollback | 5-10 min |
+| CI/CD pipeline failure | Automated Rollback (built-in) | Automatic |
+
+---
+
+### 7. Rollback Validation Checklist
+
+After performing rollback, validate:
+
+- ✅ Website loads at S3/CloudFront URL
+- ✅ All pages are accessible (home, browse, jokes, categories)
+- ✅ Navigation works correctly
+- ✅ Jokes display properly
+- ✅ No console errors in browser
+- ✅ Lighthouse performance score > 85
+- ✅ Mobile responsiveness intact
+
+**Validation Script:**
+
+```bash
+#!/bin/bash
+# scripts/validate-deployment.sh
+
+SITE_URL="https://jokes-website.example.com"
+
+echo "Validating deployment..."
+
+# Check homepage
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $SITE_URL)
+if [ $HTTP_CODE -ne 200 ]; then
+  echo "❌ Homepage failed: HTTP $HTTP_CODE"
+  exit 1
+fi
+echo "✅ Homepage OK"
+
+# Check joke page
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $SITE_URL/jokes/joke-001)
+if [ $HTTP_CODE -ne 200 ]; then
+  echo "❌ Joke page failed: HTTP $HTTP_CODE"
+  exit 1
+fi
+echo "✅ Joke page OK"
+
+# Check category page
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $SITE_URL/categories/dad-jokes)
+if [ $HTTP_CODE -ne 200 ]; then
+  echo "❌ Category page failed: HTTP $HTTP_CODE"
+  exit 1
+fi
+echo "✅ Category page OK"
+
+echo "✅ All checks passed"
+```
+
+---
+
+### 8. Post-Rollback Actions
+
+1. **Notify team** of rollback via Slack/email
+2. **Document incident** in incident log
+3. **Create bug ticket** for the issue that caused rollback
+4. **Review logs** to identify root cause
+5. **Update tests** to prevent similar issues
+6. **Plan fix and redeploy** after thorough testing
+
+---
+
+### 9. Prevention Measures
+
+**To minimize need for rollbacks:**
+
+1. **Staging Environment** - Test deployments in staging S3 bucket first
+2. **Pre-deployment Checks** - Run full test suite before deploy
+3. **Smoke Tests** - Automated health checks post-deployment
+4. **Progressive Rollout** - Deploy to subset of users first (if using CloudFront with Lambda@Edge)
+5. **Monitoring** - Set up CloudWatch alarms for 4xx/5xx errors
+6. **Blue-Green Deployment** - Maintain two S3 buckets, switch DNS on success
+
+---
+
+### 10. Rollback Contact and Escalation
+
+**Primary Contact:** DevOps Lead
+**Secondary Contact:** Project Owner
+**Escalation Path:** CTO → VP Engineering
+
+**Emergency Rollback Authority:**
+- Any team member can initiate rollback if site is down
+- Document decision and notify team immediately
+- Post-mortem required within 24 hours
+
+---
+
+### Rollback Runbook Summary
+
+**Quick Rollback Commands:**
+
+```bash
+# 1. Rollback using S3 sync from backup (fastest)
+aws s3 sync s3://jokes-website-backup s3://jokes-website-bucket --delete
+aws cloudfront create-invalidation --distribution-id XYZ --paths "/*"
+
+# 2. Rollback to previous git commit and redeploy
+cd jokes-website
+git checkout PREVIOUS_COMMIT_SHA
+npm run build
+./scripts/deploy-s3.sh
+
+# 3. Restore from build artifact
+tar -xzf builds/jokes-website-TIMESTAMP.tar.gz
+aws s3 sync dist/ s3://jokes-website-bucket --delete
+```
 
 ---
 
@@ -2540,371 +3256,201 @@ aws cloudfront create-invalidation \
 
 <!-- AI: Performance optimizations, caching, indexing -->
 
-### Performance Goals
+### Performance Strategy
 
-**Targets (from PRD & HLD):**
-- Initial page load: <2 seconds on 3G
-- Lighthouse performance score: >90
-- JavaScript bundle: <500KB gzipped
-- Time to Interactive: <3 seconds
-- First Contentful Paint: <1.5 seconds
+The jokes website will be optimized for fast load times, minimal bundle size, and excellent user experience metrics. Target performance metrics:
+
+- **First Contentful Paint (FCP):** < 1.5s
+- **Largest Contentful Paint (LCP):** < 2.5s
+- **Time to Interactive (TTI):** < 3.5s
+- **Cumulative Layout Shift (CLS):** < 0.1
+- **First Input Delay (FID):** < 100ms
+- **Lighthouse Performance Score:** > 90
 
 ---
 
 ### 1. Bundle Size Optimization
 
-**Code Splitting:**
+#### **Code Splitting**
 
-**Implementation in `vite.config.js`:**
+**Vite Configuration** (`vite.config.js`):
+
 ```javascript
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
 export default defineConfig({
+  plugins: [react()],
   build: {
+    target: 'es2015',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.logs in production
+        drop_debugger: true
+      }
+    },
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor': ['react', 'react-dom'],
-          'router': ['react-router-dom']
+          // Separate vendor chunk
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom']
         }
       }
-    }
+    },
+    chunkSizeWarningLimit: 500 // Warn if chunk > 500KB
   }
 });
 ```
 
-**Route-Based Lazy Loading:**
+**Route-Based Code Splitting:**
 
-```jsx
-// src/App.jsx
+```javascript
+// src/router.jsx
 import { lazy, Suspense } from 'react';
+import { createBrowserRouter } from 'react-router-dom';
 
-const Home = lazy(() => import('./pages/Home/Home'));
-const JokesList = lazy(() => import('./pages/JokesList/JokesList'));
-const JokeDetail = lazy(() => import('./pages/JokeDetail/JokeDetail'));
-const Categories = lazy(() => import('./pages/Categories/Categories'));
+// Lazy load page components
+const HomePage = lazy(() => import('./pages/HomePage'));
+const BrowsePage = lazy(() => import('./pages/BrowsePage'));
+const JokePage = lazy(() => import('./pages/JokePage'));
+const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 
-function App() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/jokes" element={<JokesList />} />
-        {/* ... */}
-      </Routes>
-    </Suspense>
-  );
-}
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <HomePage />
+          </Suspense>
+        )
+      },
+      {
+        path: 'browse',
+        element: (
+          <Suspense fallback={<div>Loading...</div>}>
+            <BrowsePage />
+          </Suspense>
+        )
+      }
+      // ... other routes
+    ]
+  }
+]);
 ```
 
-**Expected Bundle Sizes:**
-- Vendor chunk: ~150KB gzipped
-- App code: ~50KB gzipped
-- Each route: ~10-20KB gzipped
-- Total initial load: ~200KB gzipped
+**Expected Results:**
+- Initial bundle: ~80-120 KB (gzipped)
+- Vendor chunk: ~40-50 KB (gzipped)
+- Route chunks: ~10-20 KB each (gzipped)
+- Total page load: < 150 KB (gzipped)
 
 ---
 
 ### 2. Asset Optimization
 
-**Image Optimization:**
-- Use WebP format for all images
-- Implement responsive images with srcset
-- Lazy load images below fold
-
-```jsx
-<img 
-  src="icon.webp" 
-  loading="lazy"
-  srcset="icon-320.webp 320w, icon-640.webp 640w"
-  sizes="(max-width: 600px) 320px, 640px"
-  alt="Icon"
-/>
-```
-
-**Font Optimization:**
-- Use system fonts (no web fonts initially)
-- If custom fonts needed, use font-display: swap
-- Subset fonts to include only used characters
-
-```css
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-}
-```
-
-**CSS Optimization:**
-- CSS Modules for automatic tree-shaking
-- Minify and compress CSS
-- Inline critical CSS (Vite handles automatically)
-
----
-
-### 3. Data Loading Optimization
-
-**JSON Data Strategy:**
-
-**Option A: Bundle jokes data (for <1MB)**
-```javascript
-// Import directly in build
-import jokesData from '../data/jokes.json';
-```
-- Pros: No network request, instant availability
-- Cons: Increases initial bundle size
-
-**Option B: Lazy load JSON (recommended for >500KB)**
-```javascript
-// Fetch on demand
-fetch('/data/jokes.json')
-  .then(res => res.json())
-  .then(data => setJokes(data.jokes));
-```
-- Pros: Smaller initial bundle, progressive loading
-- Cons: Additional network request
-
-**Recommendation:** Use Option B with aggressive caching
-
-**Data Pagination (if joke count exceeds 1000):**
-```javascript
-// Load jokes in chunks
-async function loadJokesPage(page = 1, pageSize = 100) {
-  const response = await fetch(`/data/jokes-page-${page}.json`);
-  return response.json();
-}
-```
-
----
-
-### 4. Caching Strategy
-
-**S3 Cache-Control Headers:**
+#### **Image Optimization**
 
 ```bash
-# Set cache headers during deployment
-aws s3 sync dist/ s3://jokes-website-prod \
-  --cache-control "public, max-age=31536000, immutable" \
-  --exclude "index.html"
+# Optimize favicon and any images
+npm install -D vite-plugin-imagemin
 
-# index.html with short cache
-aws s3 cp dist/index.html s3://jokes-website-prod/index.html \
-  --cache-control "public, max-age=300, must-revalidate"
+# Configure in vite.config.js
+import viteImagemin from 'vite-plugin-imagemin';
+
+export default defineConfig({
+  plugins: [
+    viteImagemin({
+      gifsicle: { optimizationLevel: 7 },
+      optipng: { optimizationLevel: 7 },
+      mozjpeg: { quality: 80 },
+      svgo: {
+        plugins: [
+          { removeViewBox: false },
+          { removeEmptyAttrs: false }
+        ]
+      }
+    })
+  ]
+});
+```
+
+#### **Font Optimization**
+
+```css
+/* Use system font stack for instant rendering */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+               'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 
+               'Fira Sans', 'Droid Sans', 'Helvetica Neue', 
+               sans-serif;
+}
+
+/* If using web fonts, preload critical fonts */
+/* <link rel="preload" href="/fonts/font.woff2" as="font" crossorigin> */
+```
+
+---
+
+### 3. Caching Strategy
+
+#### **S3 Cache Headers**
+
+```bash
+# Deploy script with cache headers
+aws s3 sync dist/ s3://jokes-website-bucket \
+  --delete \
+  --cache-control "public, max-age=31536000, immutable" \
+  --exclude "index.html" \
+  --exclude "*.json"
+
+# HTML files: short cache (use ETags for validation)
+aws s3 cp dist/index.html s3://jokes-website-bucket/index.html \
+  --cache-control "public, max-age=300, must-revalidate" \
+  --content-type "text/html"
 ```
 
 **Cache Strategy:**
-| File Type | Cache Duration | Rationale |
-|-----------|----------------|-----------|
-| JS/CSS (hashed) | 1 year | Immutable, hash changes on update |
-| Images | 1 year | Static, rarely change |
-| index.html | 5 minutes | Entry point, needs fresh version |
-| jokes.json | 1 hour | Data file, updates occasionally |
+- **Hashed Assets** (JS, CSS): 1 year cache, immutable
+- **HTML Files**: 5 minutes cache, must-revalidate
+- **JSON Data** (if external): 1 hour cache, stale-while-revalidate
+- **Favicon**: 7 days cache
 
-**CloudFront Caching:**
-- Enable compression (Gzip + Brotli)
-- Cache based on query strings for filtered views
-- Set appropriate TTL per file type
+#### **CloudFront Caching**
 
-**Browser Caching:**
-```javascript
-// Service worker for offline support (future enhancement)
-// Cache jokes data in browser for offline viewing
-```
-
----
-
-### 5. React Performance Optimization
-
-**Memoization:**
-
-```jsx
-import { memo, useMemo, useCallback } from 'react';
-
-// Memoize expensive components
-const JokeCard = memo(({ joke }) => {
-  return <div>{joke.punchline}</div>;
-});
-
-// Memoize computed values
-function JokesList({ jokes }) {
-  const sortedJokes = useMemo(() => {
-    return jokes.sort((a, b) => a.id.localeCompare(b.id));
-  }, [jokes]);
-  
-  const handleClick = useCallback((id) => {
-    navigate(`/jokes/${id}`);
-  }, [navigate]);
-  
-  return <div>{/* ... */}</div>;
-}
-```
-
-**Virtual Scrolling (if >500 jokes displayed):**
-```jsx
-import { FixedSizeList } from 'react-window';
-
-function JokesList({ jokes }) {
-  return (
-    <FixedSizeList
-      height={600}
-      itemCount={jokes.length}
-      itemSize={200}
-    >
-      {({ index, style }) => (
-        <div style={style}>
-          <JokeCard joke={jokes[index]} />
-        </div>
-      )}
-    </FixedSizeList>
-  );
-}
-```
-
-**Avoid Unnecessary Re-renders:**
-- Use `React.memo` for pure components
-- Keep state as local as possible
-- Use `useCallback` for event handlers passed as props
-
----
-
-### 6. Network Optimization
-
-**HTTP/2 & Compression:**
-- CloudFront supports HTTP/2 automatically
-- Enable Brotli compression (better than Gzip)
-
-**Resource Hints:**
-```html
-<!-- index.html -->
-<link rel="dns-prefetch" href="//jokes-website-prod.s3.amazonaws.com">
-<link rel="preconnect" href="https://cloudfront.net">
-<link rel="preload" href="/data/jokes.json" as="fetch" crossorigin>
-```
-
-**Reduce Request Count:**
-- Bundle CSS into single file per route
-- Inline small critical CSS
-- Use SVG sprites instead of multiple icon files
-
----
-
-### 7. Rendering Optimization
-
-**Minimize Layout Thrashing:**
-```javascript
-// Bad: Forces layout recalculation in loop
-jokes.forEach(joke => {
-  element.style.height = element.offsetHeight + 10 + 'px';
-});
-
-// Good: Batch DOM reads and writes
-const heights = jokes.map(joke => element.offsetHeight);
-heights.forEach((height, i) => {
-  elements[i].style.height = height + 10 + 'px';
-});
-```
-
-**CSS Containment:**
-```css
-.joke-card {
-  contain: content; /* Isolate layout/paint/style */
-}
-```
-
-**Avoid Expensive CSS:**
-- Minimize box-shadow (performance-intensive)
-- Use transform/opacity for animations (GPU-accelerated)
-- Avoid complex selectors
-
-```css
-/* Good: GPU-accelerated */
-.fade-enter {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s, transform 0.3s;
-}
-
-/* Avoid: Forces repaints */
-.fade-enter {
-  height: 0;
-  margin-top: -100px;
-  transition: height 0.3s, margin 0.3s;
-}
-```
-
----
-
-### 8. Performance Monitoring
-
-**Lighthouse CI Integration:**
-
-`.github/workflows/lighthouse.yml`:
-```yaml
-name: Lighthouse CI
-
-on: [pull_request]
-
-jobs:
-  lighthouse:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v9
-        with:
-          urls: |
-            https://staging.jokes-website.com
-            https://staging.jokes-website.com/jokes
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-```
-
-**Real User Monitoring:**
-
-```javascript
-// src/utils/analytics.js
-export function reportWebVitals(metric) {
-  // Send to analytics endpoint
-  if (window.gtag) {
-    window.gtag('event', metric.name, {
-      value: Math.round(metric.value),
-      metric_id: metric.id,
-      metric_value: metric.value,
-      metric_delta: metric.delta
-    });
-  }
-}
-```
-
-```jsx
-// src/main.jsx
-import { reportWebVitals } from './utils/analytics';
-import { getCLS, getFID, getLCP } from 'web-vitals';
-
-getCLS(reportWebVitals);
-getFID(reportWebVitals);
-getLCP(reportWebVitals);
-```
-
-**Performance Budget:**
-
-`jokes-website/budget.json`:
 ```json
 {
-  "timings": [
+  "DefaultCacheBehavior": {
+    "MinTTL": 0,
+    "DefaultTTL": 86400,
+    "MaxTTL": 31536000,
+    "Compress": true,
+    "ViewerProtocolPolicy": "redirect-to-https"
+  },
+  "CacheBehaviors": [
     {
-      "metric": "first-contentful-paint",
-      "budget": 1500
+      "PathPattern": "*.js",
+      "MinTTL": 31536000,
+      "DefaultTTL": 31536000,
+      "Compress": true
     },
     {
-      "metric": "interactive",
-      "budget": 3000
-    }
-  ],
-  "resourceSizes": [
-    {
-      "resourceType": "script",
-      "budget": 500
+      "PathPattern": "*.css",
+      "MinTTL": 31536000,
+      "DefaultTTL": 31536000,
+      "Compress": true
     },
     {
-      "resourceType": "total",
-      "budget": 1000
+      "PathPattern": "index.html",
+      "MinTTL": 0,
+      "DefaultTTL": 300,
+      "MaxTTL": 3600,
+      "Compress": true
     }
   ]
 }
@@ -2912,36 +3458,348 @@ getLCP(reportWebVitals);
 
 ---
 
-### 9. Performance Checklist
+### 4. React Performance Optimizations
 
-**Build-Time Optimizations:**
-- ✅ Code splitting by route
-- ✅ Minify JavaScript and CSS
-- ✅ Tree-shake unused code
-- ✅ Compress images
-- ✅ Generate source maps for debugging only
-- ✅ Hash filenames for cache busting
+#### **Memoization**
 
-**Runtime Optimizations:**
-- ✅ Lazy load routes with React.lazy
-- ✅ Memoize expensive computations
-- ✅ Use React.memo for pure components
-- ✅ Debounce search inputs
-- ✅ Virtual scrolling for long lists
-- ✅ Optimize images with loading="lazy"
+```javascript
+// src/components/jokes/JokeList.jsx
+import { memo } from 'react';
 
-**Network Optimizations:**
-- ✅ Enable HTTP/2 and compression
-- ✅ Set appropriate cache headers
-- ✅ Use CDN (CloudFront)
-- ✅ Minimize number of requests
-- ✅ Preload critical resources
+// Memoize expensive list rendering
+const JokeList = memo(({ jokes, variant, layout }) => {
+  return (
+    <div className={`${styles.list} ${styles[layout]}`}>
+      {jokes.map(joke => (
+        <JokeCard key={joke.id} joke={joke} variant={variant} />
+      ))}
+    </div>
+  );
+});
 
-**Monitoring:**
-- ✅ Lighthouse CI in pipeline
-- ✅ Real User Monitoring (RUM)
-- ✅ Performance budget enforcement
-- ✅ CloudWatch metrics for S3/CloudFront
+export default JokeList;
+```
+
+#### **useMemo for Expensive Computations**
+
+```javascript
+// src/pages/BrowsePage.jsx
+import { useMemo } from 'react';
+
+export default function BrowsePage() {
+  const { jokes } = useJokes();
+  const [selectedCategory, setSelectedCategory] = useState('all');
+
+  // Memoize filtered jokes (only recompute when dependencies change)
+  const filteredJokes = useMemo(() => {
+    return selectedCategory === 'all'
+      ? jokes
+      : jokes.filter(j => j.category === selectedCategory);
+  }, [jokes, selectedCategory]);
+
+  return <JokeList jokes={filteredJokes} />;
+}
+```
+
+#### **Virtual Scrolling** (if joke count grows significantly)
+
+```bash
+npm install react-window
+```
+
+```javascript
+// Only implement if > 100 jokes
+import { FixedSizeList } from 'react-window';
+
+export default function VirtualJokeList({ jokes }) {
+  const Row = ({ index, style }) => (
+    <div style={style}>
+      <JokeCard joke={jokes[index]} variant="compact" />
+    </div>
+  );
+
+  return (
+    <FixedSizeList
+      height={600}
+      itemCount={jokes.length}
+      itemSize={200}
+      width="100%"
+    >
+      {Row}
+    </FixedSizeList>
+  );
+}
+```
+
+---
+
+### 5. CSS Performance
+
+#### **Critical CSS Inlining**
+
+```javascript
+// vite.config.js - Extract critical CSS
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  build: {
+    cssCodeSplit: true, // Split CSS by route
+    assetsInlineLimit: 4096 // Inline small assets < 4KB
+  }
+});
+```
+
+#### **CSS Optimization**
+
+```css
+/* Use CSS containment for better paint performance */
+.joke-card {
+  contain: layout style paint;
+}
+
+/* Use will-change sparingly for animations */
+.hamburger:active {
+  will-change: transform;
+}
+
+/* Avoid expensive properties */
+/* Bad: box-shadow on scroll */
+/* Good: Add shadow only on hover */
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+```
+
+---
+
+### 6. Data Loading Optimization
+
+#### **Static Data Optimization**
+
+```javascript
+// src/data/jokes.json
+// Keep JSON minified in production (Vite does this automatically)
+// Validate data structure at build time
+
+// src/hooks/useJokes.js
+import { useMemo } from 'react';
+import jokesData from '../data/jokes.json';
+
+export function useJokes() {
+  // Memoize to prevent re-parsing on every render
+  const jokes = useMemo(() => jokesData, []);
+  
+  // Lazy compute categories only when needed
+  const categories = useMemo(() => {
+    const categorySet = new Set(jokes.map(j => j.category));
+    return Array.from(categorySet);
+  }, [jokes]);
+
+  return { jokes, categories };
+}
+```
+
+#### **Avoid Unnecessary Re-renders**
+
+```javascript
+// src/components/jokes/JokeCard.jsx
+import { memo } from 'react';
+
+// Memoize component - only re-render if props change
+export default memo(function JokeCard({ joke, variant, showLink }) {
+  return (/* JSX */);
+}, (prevProps, nextProps) => {
+  // Custom comparison - only re-render if joke ID changes
+  return prevProps.joke.id === nextProps.joke.id &&
+         prevProps.variant === nextProps.variant &&
+         prevProps.showLink === nextProps.showLink;
+});
+```
+
+---
+
+### 7. Network Performance
+
+#### **Compression**
+
+```bash
+npm install -D vite-plugin-compression
+```
+
+```javascript
+// vite.config.js
+import viteCompression from 'vite-plugin-compression';
+
+export default defineConfig({
+  plugins: [
+    viteCompression({
+      algorithm: 'gzip',
+      ext: '.gz'
+    }),
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br'
+    })
+  ]
+});
+```
+
+**S3 Configuration:**
+```bash
+# Serve .br files with correct headers
+aws s3 cp dist/assets/*.br s3://jokes-website-bucket/assets/ \
+  --content-encoding "br" \
+  --recursive
+```
+
+#### **Preconnect and DNS Prefetch**
+
+```html
+<!-- index.html -->
+<head>
+  <!-- Preconnect to CDN if using external resources -->
+  <link rel="preconnect" href="https://cdn.example.com">
+  <link rel="dns-prefetch" href="https://cdn.example.com">
+</head>
+```
+
+---
+
+### 8. Rendering Performance
+
+#### **Reduce Layout Shifts**
+
+```css
+/* Reserve space for images to prevent CLS */
+.joke-card img {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: auto;
+}
+
+/* Use min-height for dynamic content areas */
+.joke-list {
+  min-height: 400px;
+}
+```
+
+#### **Optimize Animations**
+
+```css
+/* Use transform and opacity for smooth animations */
+.joke-card {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Avoid animating layout properties */
+/* Bad: transition: width 0.3s; */
+/* Good: transition: transform 0.3s; */
+```
+
+---
+
+### 9. Monitoring and Measurement
+
+#### **Performance Monitoring Setup**
+
+```javascript
+// src/utils/performance.js
+export function reportWebVitals(onPerfEntry) {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(onPerfEntry);
+      getFID(onPerfEntry);
+      getFCP(onPerfEntry);
+      getLCP(onPerfEntry);
+      getTTFB(onPerfEntry);
+    });
+  }
+}
+
+// Usage in main.jsx
+import { reportWebVitals } from './utils/performance';
+
+reportWebVitals((metric) => {
+  console.log(metric);
+  // Send to analytics service in production
+});
+```
+
+#### **Lighthouse CI in GitHub Actions**
+
+```yaml
+# .github/workflows/lighthouse.yml
+name: Lighthouse CI
+on: [push]
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          urls: |
+            https://jokes-website.example.com
+            https://jokes-website.example.com/browse
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+```
+
+---
+
+### 10. Performance Budget
+
+**Enforce budgets in Vite:**
+
+```javascript
+// vite.config.js
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Create separate chunks
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        }
+      }
+    }
+  }
+});
+
+// Add build size check
+// package.json
+{
+  "scripts": {
+    "build": "vite build",
+    "build:check": "vite build && npm run size-limit"
+  },
+  "size-limit": [
+    {
+      "path": "dist/assets/*.js",
+      "limit": "150 KB"
+    }
+  ]
+}
+```
+
+---
+
+### Performance Checklist
+
+✅ Bundle size < 500 KB (gzipped)
+✅ Code splitting by route
+✅ Image optimization
+✅ Aggressive caching strategy (S3 + CloudFront)
+✅ React component memoization
+✅ useMemo for expensive computations
+✅ CSS containment for layout optimization
+✅ Gzip/Brotli compression
+✅ Web Vitals monitoring
+✅ Lighthouse CI in pipeline
+✅ Performance budget enforcement
 
 ---
 
@@ -2969,7 +3827,14 @@ docs/
       PRD.md
     jokes-website/
       HLD.md
+      LLD.md
       PRD.md
+      ROAM.md
+      epic.yaml
+      slices.yaml
+      tasks.yaml
+      timeline.md
+      timeline.yaml
 notebooks/
   README.md
 random_colors.py
