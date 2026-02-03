@@ -1,0 +1,2072 @@
+GeneratedAt: "2026-02-03T13:51:36Z"
+Plan: adult-book-website-plan
+Sprints:
+- Features:
+  - FeatureID: adult-book-website-feat-project-setup
+    FeatureTitle: Project Setup and Infrastructure
+    Tasks:
+    - AcceptanceCriteria:
+      - Project initializes and runs dev server successfully
+      - TypeScript strict mode enabled with no compilation errors
+      - Vite build produces optimized production bundle
+      - Path aliases configured and resolving correctly
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create new Vite project with React 18 and TypeScript 5 template.
+        Configure tsconfig.json with strict mode and path aliases. Set up package.json
+        with all core dependencies including React, TypeScript, and Vite. Configure
+        vite.config.ts with build optimizations and environment variable handling.
+      EstimatedEffort: S
+      Files:
+      - package.json
+      - vite.config.ts
+      - tsconfig.json
+      ID: task-adult-book-website-feat-project-setup-1
+      Title: Initialize React + TypeScript project with Vite
+    - AcceptanceCriteria:
+      - ESLint runs without errors on sample code
+      - Prettier formats code consistently
+      - Pre-commit hooks execute successfully
+      - npm run lint and npm run format scripts work
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-project-setup-1
+      Description: Set up ESLint with TypeScript parser and React plugin. Configure
+        Prettier for consistent code formatting. Add lint-staged and husky for pre-commit
+        hooks. Create npm scripts for linting and formatting. Ensure ESLint and Prettier
+        configs are compatible and non-conflicting.
+      EstimatedEffort: S
+      Files:
+      - package.json
+      - .eslintrc.json
+      - .prettierrc
+      - .husky/pre-commit
+      ID: task-adult-book-website-feat-project-setup-2
+      Title: Configure ESLint and Prettier tooling
+    - AcceptanceCriteria:
+      - Vitest runs and executes test files successfully
+      - React Testing Library renders components in tests
+      - Coverage reports generate with configured thresholds
+      - Sample test passes with proper assertions
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-project-setup-1
+      Description: Install and configure Vitest for unit testing and React Testing
+        Library for component tests. Set up jsdom environment for browser simulation.
+        Configure test coverage thresholds and reporting. Create sample test file
+        to validate setup.
+      EstimatedEffort: M
+      Files:
+      - package.json
+      - vite.config.ts
+      - src/setupTests.ts
+      - src/App.test.tsx
+      ID: task-adult-book-website-feat-project-setup-3
+      Title: Set up testing frameworks and configuration
+    - AcceptanceCriteria:
+      - web-vitals library integrated successfully
+      - LCP, FID, and CLS metrics captured and logged
+      - Google Analytics events fire with correct metric values
+      - Performance monitoring initializes without errors
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-project-setup-1
+      Description: Install web-vitals library and create performance monitoring utility.
+        Implement tracking for LCP, FID, and CLS metrics with console logging. Add
+        Google Analytics event integration for metrics reporting. Initialize performance
+        monitoring in application entry point.
+      EstimatedEffort: M
+      Files:
+      - package.json
+      - src/utils/performance.ts
+      - src/main.tsx
+      - index.html
+      ID: task-adult-book-website-feat-project-setup-4
+      Title: Implement Core Web Vitals monitoring
+    - AcceptanceCriteria:
+      - Lighthouse CI runs locally against dev server
+      - All performance assertions configured correctly
+      - Budget violations fail the CI check
+      - Results upload to temporary public storage
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-project-setup-1
+      Description: Install Lighthouse CI and create configuration file with performance
+        assertions. Define budget thresholds for performance score (85+), accessibility
+        (90+), FCP (2000ms), LCP (2500ms), CLS (0.1), and TBT (300ms). Configure to
+        run 3 iterations per test and upload results to temporary storage.
+      EstimatedEffort: S
+      Files:
+      - package.json
+      - lighthouse-ci.config.js
+      ID: task-adult-book-website-feat-project-setup-5
+      Title: Configure Lighthouse CI for performance budgets
+    - AcceptanceCriteria:
+      - S3 bucket created and accessible
+      - Static website hosting enabled with correct index document
+      - Public read policy allows asset access
+      - CORS configuration permits cross-origin requests
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Create S3 bucket with appropriate naming and region. Configure
+        bucket for static website hosting with index.html as default document. Set
+        up bucket policy for public read access. Configure CORS settings for asset
+        loading. Document bucket configuration in infrastructure notes.
+      EstimatedEffort: S
+      Files:
+      - infrastructure/s3-bucket-config.json
+      - infrastructure/bucket-policy.json
+      ID: task-adult-book-website-feat-project-setup-6
+      Title: Configure AWS S3 bucket for static hosting
+    - AcceptanceCriteria:
+      - CloudFront distribution created and active
+      - Distribution serves content from S3 origin
+      - Caching behaviors optimize asset delivery
+      - HTTPS enabled with valid certificate
+      AgentType: devops-engineer
+      Dependencies:
+      - task-adult-book-website-feat-project-setup-6
+      Description: Create CloudFront distribution pointing to S3 bucket origin. Configure
+        custom error pages and default root object. Set up caching behaviors with
+        appropriate TTLs for assets. Enable compression and HTTP/2. Configure SSL/TLS
+        certificate for HTTPS.
+      EstimatedEffort: M
+      Files:
+      - infrastructure/cloudfront-config.json
+      ID: task-adult-book-website-feat-project-setup-7
+      Title: Set up CloudFront CDN distribution
+    - AcceptanceCriteria:
+      - Workflow triggers on push to main branch
+      - All linting and testing steps pass
+      - Build artifacts deploy to S3 successfully
+      - CloudFront cache invalidates after deployment
+      AgentType: devops-engineer
+      Dependencies:
+      - task-adult-book-website-feat-project-setup-2
+      - task-adult-book-website-feat-project-setup-3
+      - task-adult-book-website-feat-project-setup-5
+      - task-adult-book-website-feat-project-setup-7
+      Description: Create workflow file for automated build and deployment. Configure
+        job to run on push to main branch. Add steps for dependency installation,
+        linting, testing, building, and Lighthouse CI. Set up AWS credentials and
+        S3 sync for deployment. Add CloudFront cache invalidation step.
+      EstimatedEffort: M
+      Files:
+      - .github/workflows/deploy.yml
+      ID: task-adult-book-website-feat-project-setup-8
+      Title: Create GitHub Actions CI/CD pipeline
+    - AcceptanceCriteria:
+      - README contains complete setup and deployment instructions
+      - Environment variables documented with examples
+      - Local production build script works correctly
+      - Full deployment cycle verified and documented
+      AgentType: devops-engineer
+      Dependencies:
+      - task-adult-book-website-feat-project-setup-8
+      Description: Create README with setup instructions, deployment process, and
+        troubleshooting guide. Document environment variables and AWS configuration
+        requirements. Add scripts for local testing of production build. Verify end-to-end
+        deployment flow from commit to live site.
+      EstimatedEffort: S
+      Files:
+      - README.md
+      - package.json
+      - .env.example
+      ID: task-adult-book-website-feat-project-setup-9
+      Title: Add deployment documentation and verification
+  - FeatureID: adult-book-website-feat-data-pipeline
+    FeatureTitle: Book Data Pipeline and Search Index
+    Tasks:
+    - AcceptanceCriteria:
+      - Script successfully fetches books from Google Books API with configurable
+        genre filters
+      - Rate limiting prevents API quota exhaustion (max 1 request per second)
+      - Raw API responses cached in temporary directory with proper error handling
+      - Progress logging shows fetch status and handles network failures gracefully
+      - Configuration file supports API keys and query parameters
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Implement the fetch-books.js script to query Google Books API with
+        rate limiting and error handling. Support filtering by genre, fetching detailed
+        metadata including title, authors, ISBN, description, cover images, and publication
+        date. Store raw API responses in a temporary cache directory for processing.
+        Implement retry logic for failed requests and progress logging.
+      EstimatedEffort: M
+      Files:
+      - scripts/fetch-books.js
+      - scripts/config/api-config.json
+      ID: task-adult-book-website-feat-data-pipeline-1
+      Title: Create build script for Google Books API integration
+    - AcceptanceCriteria:
+      - Open Library API integration fetches supplementary book metadata
+      - Data merging logic deduplicates books using ISBN matching
+      - Missing fields from Google Books are populated from Open Library
+      - Unified data structure handles both API response formats
+      - Logging distinguishes between primary and fallback data sources
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-data-pipeline-1
+      Description: Extend fetch-books.js to query Open Library API as a secondary
+        data source. Implement fallback logic to fetch missing metadata from Open
+        Library when Google Books data is incomplete. Merge and deduplicate data from
+        both sources using ISBN as the primary key. Handle different response formats
+        and map fields to a unified schema.
+      EstimatedEffort: M
+      Files:
+      - scripts/fetch-books.js
+      - scripts/utils/data-merger.js
+      ID: task-adult-book-website-feat-data-pipeline-2
+      Title: Add Open Library API integration to build script
+    - AcceptanceCriteria:
+      - Book objects match defined TypeScript schema with all required fields
+      - Author records extracted and deduplicated across all books
+      - Cover image URLs validated and normalized to HTTPS
+      - HTML content sanitized and safe for rendering
+      - Missing data handled with default values or placeholders
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-data-pipeline-2
+      Description: Create transformation logic to normalize raw API data into a consistent
+        Book and Author schema. Extract author information and create separate author
+        records with biography links. Sanitize HTML in descriptions, validate ISBNs,
+        normalize cover image URLs to use HTTPS, and handle missing fields with sensible
+        defaults. Generate unique IDs for books and authors.
+      EstimatedEffort: M
+      Files:
+      - scripts/transform-data.js
+      - scripts/utils/sanitizer.js
+      - scripts/schemas/book-schema.json
+      ID: task-adult-book-website-feat-data-pipeline-3
+      Title: Implement data transformation and normalization pipeline
+    - AcceptanceCriteria:
+      - Book catalog split into chunks of max 1000 books each
+      - Chunk files named with zero-padded sequential numbers
+      - Manifest file includes total count and chunk metadata
+      - Author data chunked with cross-references to book chunks
+      - Chunk boundaries don't break related data integrity
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-data-pipeline-3
+      Description: Implement chunking logic to split the book catalog into 1000-book
+        segments for efficient lazy loading. Generate chunk manifest with metadata
+        (total count, chunk count, size). Create chunk files named books-001.json,
+        books-002.json, etc. Implement similar chunking for author data. Ensure chunks
+        are balanced and include index metadata for quick lookup.
+      EstimatedEffort: M
+      Files:
+      - scripts/chunk-data.js
+      - public/data/manifest.json
+      - public/data/books/books-001.json
+      - public/data/authors/authors-001.json
+      ID: task-adult-book-website-feat-data-pipeline-4
+      Title: Create data chunking strategy for large catalogs
+    - AcceptanceCriteria:
+      - Lunr.js index includes all searchable book fields with proper weights
+      - Index supports full-text search on titles, authors, and descriptions
+      - Serialized index saved to public/data/search-index.json
+      - Index file size optimized through compression
+      - Index generation integrated into build pipeline
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-data-pipeline-3
+      Description: Create search index generation script using Lunr.js. Index book
+        titles, authors, descriptions, and genres with appropriate field weights.
+        Configure stemming and stop words for English language. Serialize index to
+        JSON format. Implement index compression to reduce file size. Generate search
+        index after data normalization completes.
+      EstimatedEffort: M
+      Files:
+      - scripts/build-search-index.js
+      - public/data/search-index.json
+      ID: task-adult-book-website-feat-data-pipeline-5
+      Title: Build Lunr.js search index from normalized data
+    - AcceptanceCriteria:
+      - DataLoader service loads JSON chunks asynchronously with type safety
+      - In-memory cache prevents duplicate network requests for same data
+      - Cache size monitoring prevents memory overflow
+      - Loading errors handled with exponential backoff retry
+      - Public API supports loading books, authors, and search index
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-data-pipeline-4
+      Description: Create DataLoader.ts service to handle async loading of JSON data
+        chunks. Implement in-memory caching to prevent redundant network requests.
+        Add cache invalidation strategy and storage quota checks. Support loading
+        books, authors, and search index with proper TypeScript types. Handle loading
+        errors gracefully with retry logic.
+      EstimatedEffort: M
+      Files:
+      - src/services/DataLoader.ts
+      - src/types/data.ts
+      ID: task-adult-book-website-feat-data-pipeline-6
+      Title: Implement DataLoader service with caching
+    - AcceptanceCriteria:
+      - BookService calculates correct chunk number for any page request
+      - Pagination works seamlessly across chunk boundaries
+      - Book cache populated efficiently without loading entire catalog
+      - Search and filter operations work with chunked data
+      - Public methods match LLD TypeScript signatures
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-data-pipeline-6
+      Description: Create BookService.ts that uses DataLoader to fetch book data with
+        pagination support. Implement chunk-aware logic to calculate which chunk contains
+        requested page data. Maintain book cache across chunks for efficient retrieval.
+        Support filtering by genre and author. Implement getBooks, getBookById, and
+        searchBooks methods matching the LLD specification.
+      EstimatedEffort: M
+      Files:
+      - src/services/BookService.ts
+      - src/types/book.ts
+      ID: task-adult-book-website-feat-data-pipeline-7
+      Title: Build BookService with chunk-aware pagination
+    - AcceptanceCriteria:
+      - StorageService accurately reports storage usage and quota
+      - Automatic cache eviction when approaching quota limits
+      - LRU strategy removes least recently used items first
+      - Fallback implementation for unsupported browsers
+      - Public API provides getStorageUsage, clearCache, and setItem methods
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create StorageService.ts to manage localStorage usage for cached
+        book data and preferences. Implement storage quota detection using navigator.storage.estimate
+        API. Add methods to check available space, clear old cache entries, and handle
+        quota exceeded errors. Provide fallback for browsers without storage API support.
+        Implement LRU cache eviction strategy.
+      EstimatedEffort: M
+      Files:
+      - src/services/StorageService.ts
+      ID: task-adult-book-website-feat-data-pipeline-8
+      Title: Implement StorageService for quota management
+    - AcceptanceCriteria:
+      - Orchestration script executes all pipeline steps in correct order
+      - Build fails gracefully with clear error messages on any step failure
+      - npm run build:data command triggers full pipeline execution
+      - Environment variables configure API keys and build options
+      - Build output validated for completeness and data integrity
+      AgentType: devops-engineer
+      Dependencies:
+      - task-adult-book-website-feat-data-pipeline-1
+      - task-adult-book-website-feat-data-pipeline-2
+      - task-adult-book-website-feat-data-pipeline-3
+      - task-adult-book-website-feat-data-pipeline-4
+      - task-adult-book-website-feat-data-pipeline-5
+      Description: Build main build.js orchestration script that runs fetch, transform,
+        chunk, and index generation in sequence. Add error handling and rollback logic
+        for failed builds. Integrate into package.json build scripts. Add environment
+        variable support for API keys. Create documentation for running the data pipeline
+        locally and in CI/CD. Implement progress reporting and build artifacts validation.
+      EstimatedEffort: M
+      Files:
+      - scripts/build.js
+      - package.json
+      - README.md
+      ID: task-adult-book-website-feat-data-pipeline-9
+      Title: Create orchestration script and integrate into build pipeline
+    - AcceptanceCriteria:
+      - Unit tests cover all data transformation and chunking logic with 80%+ coverage
+      - Integration tests verify end-to-end pipeline execution with sample data
+      - Service layer tests validate caching, pagination, and error handling
+      - Mocked API responses test failure scenarios and retry logic
+      - Tests integrated into CI pipeline with coverage reports
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-data-pipeline-7
+      - task-adult-book-website-feat-data-pipeline-8
+      - task-adult-book-website-feat-data-pipeline-9
+      Description: Create comprehensive tests for the data pipeline scripts and frontend
+        services. Test API fetching with mocked responses, data transformation correctness,
+        chunking logic, search index generation, and service layer functionality.
+        Verify error handling, caching behavior, and pagination across chunks. Add
+        tests to CI pipeline with coverage reporting.
+      EstimatedEffort: L
+      Files:
+      - scripts/__tests__/fetch-books.test.js
+      - scripts/__tests__/transform-data.test.js
+      - src/services/__tests__/BookService.test.ts
+      - src/services/__tests__/DataLoader.test.ts
+      ID: task-adult-book-website-feat-data-pipeline-10
+      Title: Add integration tests for data pipeline and services
+  - FeatureID: adult-book-website-feat-state-management
+    FeatureTitle: Redux State Management and Storage
+    Tasks:
+    - AcceptanceCriteria:
+      - Store configured with Redux Toolkit configureStore
+      - TypeScript types exported (RootState, AppDispatch, AppThunk)
+      - Development middleware configured (logger, devtools)
+      - Store exports properly typed and ready for provider integration
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Initialize Redux Toolkit store with TypeScript configuration. Configure
+        middleware including thunk and logger for development. Setup store exports
+        with proper TypeScript types (RootState, AppDispatch). Create store provider
+        structure for React integration.
+      EstimatedEffort: S
+      Files:
+      - src/store/index.ts
+      ID: task-adult-book-website-feat-state-management-1
+      Title: Setup Redux store configuration with Redux Toolkit
+    - AcceptanceCriteria:
+      - StorageService set/get methods compress/decompress data using LZString
+      - getStorageUsage returns accurate used/quota values with fallback
+      - checkQuota warns at 75% and throws StorageQuotaError at 90%
+      - Error handling for QuotaExceededError implemented
+      - TypeScript generics support for type-safe operations
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create StorageService class with LZString compression for get/set
+        operations. Implement getStorageUsage using Storage API with fallback calculation.
+        Add checkQuota method with warning at 75% and error at 90% usage. Implement
+        handleQuotaExceeded with cleanup strategy.
+      EstimatedEffort: M
+      Files:
+      - src/services/StorageService.ts
+      ID: task-adult-book-website-feat-state-management-2
+      Title: Implement StorageService with compression and quota management
+    - AcceptanceCriteria:
+      - bookSlice created with typed state (books, selectedBook, loading, error)
+      - Reducers implemented for addBook, updateBook, deleteBook, selectBook
+      - Actions and selectors exported with proper types
+      - Slice registered in store reducer
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-state-management-1
+      Description: Implement Redux slice for book management with state structure
+        (books array, selectedBook, loading, error). Create reducers for add/update/delete/select
+        book operations. Add async thunks for fetching book data if needed. Include
+        proper TypeScript types for Book entity and slice state.
+      EstimatedEffort: M
+      Files:
+      - src/store/slices/bookSlice.ts
+      - src/store/index.ts
+      ID: task-adult-book-website-feat-state-management-3
+      Title: Create bookSlice with CRUD operations
+    - AcceptanceCriteria:
+      - reviewSlice created with typed state (reviews, reviewsByBook)
+      - Reducers for addReview, updateReview, deleteReview implemented
+      - Selectors for getReviewsByBookId and getAverageRating implemented
+      - Slice registered in store reducer
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-state-management-1
+      Description: Implement Redux slice for review management with state for reviews
+        by book ID. Create reducers for adding, updating, deleting reviews. Implement
+        selectors for fetching reviews by book ID. Add review aggregation logic (average
+        ratings, counts).
+      EstimatedEffort: M
+      Files:
+      - src/store/slices/reviewSlice.ts
+      - src/store/index.ts
+      ID: task-adult-book-website-feat-state-management-4
+      Title: Create reviewSlice with review management
+    - AcceptanceCriteria:
+      - readingListSlice created with typed state (lists, activeList)
+      - Reducers for createList, addToList, removeFromList, reorderList implemented
+      - Selectors for getListById, getBooksInList implemented
+      - Support for multiple reading lists per user
+      - Slice registered in store reducer
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-state-management-1
+      Description: Implement Redux slice for reading list management with state for
+        multiple lists. Create reducers for creating lists, adding/removing books
+        from lists, reordering books. Implement list filtering and sorting logic.
+        Add selectors for accessing lists and books within lists.
+      EstimatedEffort: M
+      Files:
+      - src/store/slices/readingListSlice.ts
+      - src/store/index.ts
+      ID: task-adult-book-website-feat-state-management-5
+      Title: Create readingListSlice with list operations
+    - AcceptanceCriteria:
+      - userSlice created with typed state (preferences, theme, filters, profile)
+      - Reducers for updatePreferences, setTheme, updateFilters implemented
+      - Selectors for getUserPreferences and getTheme implemented
+      - Slice registered in store reducer
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-state-management-1
+      Description: Implement Redux slice for user preferences and settings. Create
+        state for theme, display preferences, filter settings, and user profile. Add
+        reducers for updating preferences. Implement selectors for accessing user
+        settings throughout the app.
+      EstimatedEffort: S
+      Files:
+      - src/store/slices/userSlice.ts
+      - src/store/index.ts
+      ID: task-adult-book-website-feat-state-management-6
+      Title: Create userSlice with preferences management
+    - AcceptanceCriteria:
+      - Persistence middleware intercepts actions and saves to StorageService
+      - Debouncing prevents writes more frequent than 1 second
+      - State rehydration loads from localStorage on store initialization
+      - Error handling with IndexedDB fallback implemented
+      - Middleware integrated into store configuration
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-state-management-1
+      - task-adult-book-website-feat-state-management-2
+      Description: Create custom Redux middleware for persisting state to localStorage
+        using StorageService. Implement selective persistence (choose which slices
+        to persist). Add debouncing to prevent excessive writes. Implement state rehydration
+        on app initialization with error handling and fallback to IndexedDB.
+      EstimatedEffort: L
+      Files:
+      - src/store/middleware/persistenceMiddleware.ts
+      - src/store/index.ts
+      - src/services/StorageService.ts
+      ID: task-adult-book-website-feat-state-management-7
+      Title: Implement localStorage persistence middleware
+    - AcceptanceCriteria:
+      - IndexedDB database initialized with proper schema
+      - Automatic fallback when localStorage quota exceeded
+      - Migration utility moves data from localStorage to IndexedDB
+      - Same StorageService interface works with both backends
+      - Feature detection chooses optimal storage backend
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-state-management-2
+      Description: Extend StorageService to detect localStorage failures and automatically
+        fallback to IndexedDB. Implement IndexedDB wrapper with same get/set interface.
+        Add migration logic to move data from localStorage to IndexedDB when quota
+        exceeded. Ensure transparent fallback for all operations.
+      EstimatedEffort: L
+      Files:
+      - src/services/StorageService.ts
+      ID: task-adult-book-website-feat-state-management-8
+      Title: Add IndexedDB fallback to StorageService
+  - FeatureID: adult-book-website-feat-ui-components
+    FeatureTitle: Core UI Component Library
+    Tasks:
+    - AcceptanceCriteria:
+      - BookCover component renders with lazy loading using intersection observer
+      - Error state displays placeholder image on load failure
+      - useIntersectionObserver hook created with configurable rootMargin
+      - Component properly memoized to prevent unnecessary re-renders
+      - Placeholder image displays before lazy load triggers
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the BookCover component with intersection observer for lazy
+        loading images. Implement error handling with fallback placeholder images.
+        Add loading states and optimize for performance with proper memoization. Create
+        the useIntersectionObserver custom hook for detecting when images enter viewport.
+      EstimatedEffort: M
+      Files:
+      - src/components/book/BookCover.tsx
+      - src/hooks/useIntersectionObserver.ts
+      ID: task-adult-book-website-feat-ui-components-1
+      Title: Implement BookCover component with lazy loading
+    - AcceptanceCriteria:
+      - BookCard component displays all book metadata correctly
+      - BookCover component integrated for image display
+      - Material-UI Card components used with proper styling
+      - Responsive layout works on mobile, tablet, and desktop
+      - Hover states and interactions implemented
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-ui-components-1
+      Description: Implement the BookCard component using Material-UI Card components.
+        Integrate BookCover component for image display. Add book metadata display
+        including title, author, rating, and price. Implement responsive design with
+        mobile-first approach and proper spacing.
+      EstimatedEffort: M
+      Files:
+      - src/components/book/BookCard.tsx
+      ID: task-adult-book-website-feat-ui-components-2
+      Title: Create BookCard component with Material-UI
+    - AcceptanceCriteria:
+      - SearchBar component with debounced input (300ms delay)
+      - FilterPanel displays category, price, and rating filters
+      - Filter state properly managed and can be cleared
+      - Material-UI components used consistently
+      - Accessible keyboard navigation implemented
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create SearchBar component with debounced input for search queries.
+        Implement FilterPanel component with checkboxes, sliders, and dropdowns for
+        filtering books by category, price range, and rating. Use Material-UI TextField
+        and form components. Add clear filters functionality and filter state management.
+      EstimatedEffort: M
+      Files:
+      - src/components/common/SearchBar.tsx
+      - src/components/common/FilterPanel.tsx
+      ID: task-adult-book-website-feat-ui-components-3
+      Title: Build SearchBar and FilterPanel components
+    - AcceptanceCriteria:
+      - RatingStars displays full, half, and empty stars correctly
+      - Both read-only and interactive modes implemented
+      - Size and color variants configurable via props
+      - ARIA labels present for screen readers
+      - Hover effects work in interactive mode
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create a reusable RatingStars component that displays star ratings
+        with half-star precision. Support both read-only display mode and interactive
+        rating input mode. Use Material-UI Rating component as base. Add customizable
+        size and color props. Include aria labels for accessibility.
+      EstimatedEffort: S
+      Files:
+      - src/components/common/RatingStars.tsx
+      ID: task-adult-book-website-feat-ui-components-4
+      Title: Implement RatingStars component
+    - AcceptanceCriteria:
+      - ReviewCard displays all review metadata correctly
+      - RatingStars component integrated for rating display
+      - Long reviews truncate with read more/less toggle
+      - Responsive layout adapts to container width
+      - Proper date formatting implemented
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-ui-components-4
+      Description: Build ReviewCard component to display user reviews with rating,
+        reviewer name, date, and review text. Integrate RatingStars component for
+        rating display. Add expand/collapse functionality for long reviews. Implement
+        proper text truncation and read more functionality. Use Material-UI Card and
+        Typography components.
+      EstimatedEffort: M
+      Files:
+      - src/components/review/ReviewCard.tsx
+      ID: task-adult-book-website-feat-ui-components-5
+      Title: Create ReviewCard component
+    - AcceptanceCriteria:
+      - BookCardSkeleton matches BookCard layout
+      - ReviewCardSkeleton matches ReviewCard layout
+      - SkeletonGrid component supports configurable count and columns
+      - Skeleton animations smooth and performant
+      - Proper dimensions match actual components
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-ui-components-2
+      - task-adult-book-website-feat-ui-components-5
+      Description: Create loading skeleton components for BookCard, ReviewCard, and
+        list views using Material-UI Skeleton. Implement different skeleton variants
+        matching the actual component layouts. Add animation and proper spacing to
+        match real components. Create a reusable SkeletonGrid component for list loading
+        states.
+      EstimatedEffort: S
+      Files:
+      - src/components/common/LoadingSkeletons.tsx
+      ID: task-adult-book-website-feat-ui-components-6
+      Title: Build LoadingSkeletons components
+    - AcceptanceCriteria:
+      - ErrorBoundary catches and handles React errors
+      - Fallback UI displays with retry button
+      - Error details logged to console in development
+      - Different boundary variants for page and component levels
+      - User-friendly error messages without technical details
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create ErrorBoundary class component to catch React errors and
+        display fallback UI. Implement error logging with error details and component
+        stack. Create multiple error boundary variants for different contexts (page-level,
+        component-level). Add retry functionality and user-friendly error messages.
+        Include development mode with detailed error information.
+      EstimatedEffort: M
+      Files:
+      - src/components/common/ErrorBoundary.tsx
+      ID: task-adult-book-website-feat-ui-components-7
+      Title: Implement ErrorBoundary components
+    - AcceptanceCriteria:
+      - Responsive Container component with max-width constraints
+      - Grid system works across mobile, tablet, and desktop
+      - useMediaQuery hook implemented for breakpoint detection
+      - Semantic HTML structure with proper ARIA landmarks
+      - Spacing system consistent across all components
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Build responsive layout components including Container, Grid, and
+        Stack using Material-UI system. Implement mobile-first responsive breakpoints
+        and spacing system. Create layout hooks for responsive behavior detection.
+        Add proper semantic HTML structure with main, section, and article tags. Ensure
+        proper accessibility landmarks.
+      EstimatedEffort: M
+      Files:
+      - src/components/layout/Container.tsx
+      - src/components/layout/Grid.tsx
+      - src/hooks/useMediaQuery.ts
+      ID: task-adult-book-website-feat-ui-components-8
+      Title: Create responsive layout components
+    - AcceptanceCriteria:
+      - All components have unit tests with 80%+ coverage
+      - User interactions tested with fireEvent and userEvent
+      - Accessibility tested with axe and ARIA queries
+      - Loading and error states covered in tests
+      - IntersectionObserver properly mocked for BookCover tests
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-ui-components-2
+      - task-adult-book-website-feat-ui-components-3
+      - task-adult-book-website-feat-ui-components-5
+      - task-adult-book-website-feat-ui-components-6
+      - task-adult-book-website-feat-ui-components-7
+      Description: Create comprehensive unit tests for all UI components using React
+        Testing Library and Jest. Test component rendering, user interactions, accessibility,
+        and error states. Mock intersection observer for BookCover tests. Test responsive
+        behavior and loading states. Achieve minimum 80% code coverage for all components.
+      EstimatedEffort: L
+      Files:
+      - src/components/book/BookCard.test.tsx
+      - src/components/book/BookCover.test.tsx
+      - src/components/common/SearchBar.test.tsx
+      - src/components/common/FilterPanel.test.tsx
+      - src/components/common/RatingStars.test.tsx
+      - src/components/review/ReviewCard.test.tsx
+      - src/components/common/LoadingSkeletons.test.tsx
+      - src/components/common/ErrorBoundary.test.tsx
+      ID: task-adult-book-website-feat-ui-components-9
+      Title: Write component unit tests
+    - AcceptanceCriteria:
+      - All components have Storybook stories with multiple variants
+      - Interactive controls configured for all component props
+      - Component documentation includes usage examples
+      - Accessibility addon configured and showing no violations
+      - Stories include loading, error, and empty states
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-ui-components-2
+      - task-adult-book-website-feat-ui-components-3
+      - task-adult-book-website-feat-ui-components-5
+      - task-adult-book-website-feat-ui-components-6
+      - task-adult-book-website-feat-ui-components-7
+      - task-adult-book-website-feat-ui-components-8
+      Description: Build Storybook stories for visual documentation and testing of
+        all UI components. Create stories with different component states, variants,
+        and props. Add controls for interactive property manipulation. Document component
+        APIs with JSDoc comments. Include accessibility addon for a11y testing in
+        Storybook.
+      EstimatedEffort: M
+      Files:
+      - src/components/book/BookCard.stories.tsx
+      - src/components/book/BookCover.stories.tsx
+      - src/components/common/SearchBar.stories.tsx
+      - src/components/common/FilterPanel.stories.tsx
+      - src/components/common/RatingStars.stories.tsx
+      - src/components/review/ReviewCard.stories.tsx
+      - src/components/common/LoadingSkeletons.stories.tsx
+      - src/components/common/ErrorBoundary.stories.tsx
+      ID: task-adult-book-website-feat-ui-components-10
+      Title: Create Storybook stories for all components
+  - FeatureID: adult-book-website-feat-book-catalog
+    FeatureTitle: Book Catalog and Search
+    Tasks:
+    - AcceptanceCriteria:
+      - BookService class created with loadedChunks Set and bookCache Map
+      - getBooks method loads chunks lazily and returns paginated results
+      - Individual book lookup by ID works from cache
+      - Chunk loading only occurs once per chunk ID
+      - Proper error handling for missing or malformed chunk files
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create the BookService class with chunked data loading logic. Implement
+        the getBooks method that loads 1000-record JSON chunks on demand and caches
+        them in memory. Add methods for fetching individual books by ID and managing
+        the loaded chunks set. Ensure proper error handling for missing chunks.
+      EstimatedEffort: M
+      Files:
+      - src/services/BookService.ts
+      ID: task-adult-book-website-feat-book-catalog-1
+      Title: Implement BookService with chunked data loading
+    - AcceptanceCriteria:
+      - SearchService builds Lunr.js index from book array
+      - Search method returns results in under 500ms
+      - Index includes title, author, description, and genre fields
+      - Results include relevance scores
+      - Index can be updated incrementally as new data loads
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-catalog-1
+      Description: Create SearchService that builds a Lunr.js index from book data.
+        Implement index building with fields for title, author, description, and genre.
+        Add search method with debouncing support and result scoring. Ensure search
+        response time is under 500ms for typical queries. Support incremental index
+        updates as new chunks load.
+      EstimatedEffort: M
+      Files:
+      - src/services/SearchService.ts
+      ID: task-adult-book-website-feat-book-catalog-2
+      Title: Implement Lunr.js SearchService with indexing
+    - AcceptanceCriteria:
+      - useSearch hook accepts search query and filter criteria
+      - Search input debounced to 300ms
+      - Multi-criteria filtering works for genre, rating, year, and author
+      - Hook returns results, loading state, and error state
+      - Pagination metadata included in return value
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-catalog-2
+      Description: Implement custom React hook for search and filtering. Integrate
+        SearchService for full-text search with debounced input (300ms delay). Add
+        multi-criteria filtering for genre, rating, publication year, and author.
+        Manage loading and error states. Return filtered and sorted results with pagination
+        metadata.
+      EstimatedEffort: M
+      Files:
+      - src/hooks/useSearch.ts
+      ID: task-adult-book-website-feat-book-catalog-3
+      Title: Create useSearch hook with debouncing and filtering
+    - AcceptanceCriteria:
+      - Hook accepts ref and options (rootMargin, threshold)
+      - Returns boolean visibility state
+      - Observer properly cleaned up on unmount
+      - Works with multiple elements simultaneously
+      - Graceful fallback for unsupported browsers
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Implement custom React hook using Intersection Observer API. Support
+        configurable root margin and threshold options. Return visibility state that
+        components can use to trigger lazy loading. Properly clean up observers on
+        unmount. Handle edge cases for SSR and browsers without Intersection Observer
+        support.
+      EstimatedEffort: S
+      Files:
+      - src/hooks/useIntersectionObserver.ts
+      ID: task-adult-book-website-feat-book-catalog-4
+      Title: Create useIntersectionObserver hook for lazy loading
+    - AcceptanceCriteria:
+      - BookCover component uses useIntersectionObserver hook
+      - Images only load when within 50px of viewport
+      - Placeholder shown until image loads
+      - Error state handled with fallback image
+      - Component properly typed with TypeScript
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-catalog-4
+      Description: Create BookCover component using useIntersectionObserver for lazy
+        image loading. Implement placeholder image display until book cover loads.
+        Add error handling with fallback to placeholder on load failure. Use 50px
+        root margin for preloading images slightly before they enter viewport. Ensure
+        proper TypeScript typing for props.
+      EstimatedEffort: S
+      Files:
+      - src/components/book/BookCover.tsx
+      ID: task-adult-book-website-feat-book-catalog-5
+      Title: Implement BookCover component with lazy loading
+    - AcceptanceCriteria:
+      - CatalogPage uses React Window FixedSizeList or VariableSizeList
+      - Search input and filter controls integrated
+      - List handles 10000+ items with smooth scrolling
+      - Pagination controls functional and display metadata
+      - BookCover components render correctly in virtualized list
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-catalog-3
+      - task-adult-book-website-feat-book-catalog-5
+      Description: Create the main catalog page component using React Window for list
+        virtualization. Integrate useSearch hook for search and filtering UI. Implement
+        filter controls for genre, rating, year, and author. Add pagination controls
+        and display current page info. Use BookCover component for rendering book
+        items. Ensure smooth scrolling with virtualized list of 10000+ items.
+      EstimatedEffort: L
+      Files:
+      - src/pages/CatalogPage.tsx
+      ID: task-adult-book-website-feat-book-catalog-6
+      Title: Build CatalogPage with React Window virtualization
+    - AcceptanceCriteria:
+      - BookService tests cover chunk loading and caching
+      - SearchService tests verify index building and search accuracy
+      - Performance tests confirm sub-500ms search responses
+      - Edge cases tested (missing data, errors, empty results)
+      - Test coverage above 80% for both services
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-catalog-1
+      - task-adult-book-website-feat-book-catalog-2
+      Description: Write comprehensive unit tests for BookService chunked loading
+        and caching logic. Test SearchService index building and search performance.
+        Mock data loading and verify chunk management. Test edge cases like missing
+        chunks, malformed data, and cache invalidation. Ensure search performance
+        meets 500ms requirement.
+      EstimatedEffort: M
+      Files:
+      - src/services/BookService.test.ts
+      - src/services/SearchService.test.ts
+      ID: task-adult-book-website-feat-book-catalog-7
+      Title: Add unit tests for BookService and SearchService
+    - AcceptanceCriteria:
+      - Search input debouncing verified with timer mocks
+      - All filter controls tested independently and combined
+      - Pagination updates list correctly
+      - Virtualized list renders with mocked book data
+      - User interactions trigger expected state updates
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-catalog-6
+      Description: Write React Testing Library tests for CatalogPage component. Test
+        search input with debouncing behavior. Verify filtering by genre, rating,
+        year, and author. Test pagination controls and virtualized list rendering.
+        Mock BookService and SearchService. Verify lazy loading behavior for book
+        covers.
+      EstimatedEffort: M
+      Files:
+      - src/pages/CatalogPage.test.tsx
+      ID: task-adult-book-website-feat-book-catalog-8
+      Title: Add integration tests for CatalogPage
+  - FeatureID: adult-book-website-feat-book-details
+    FeatureTitle: Book Detail Pages and Author Profiles
+    Tasks:
+    - AcceptanceCriteria:
+      - BookDetail component renders book metadata, synopsis, and average rating
+      - BookCover component lazy loads images using intersection observer
+      - Placeholder image displays when cover fails to load
+      - Component is responsive and accessible
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the BookDetail component that displays book information
+        including cover, metadata, synopsis, and ratings. Implement the BookCover
+        component with intersection observer for lazy loading images. Include error
+        handling for missing images with placeholder fallback.
+      EstimatedEffort: M
+      Files:
+      - src/components/book/BookDetail.tsx
+      - src/components/book/BookCover.tsx
+      - src/hooks/useIntersectionObserver.ts
+      ID: task-adult-book-website-feat-book-details-1
+      Title: Implement BookDetail component with lazy-loaded cover
+    - AcceptanceCriteria:
+      - Page extracts book ID from React Router params
+      - Book data fetched and passed to BookDetail component
+      - Loading spinner displays while fetching data
+      - 404 error displayed for invalid book IDs
+      - Navigation links work correctly
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-details-1
+      Description: Build the BookDetailPage that fetches book data by ID from URL
+        params. Integrate with React Router for navigation. Display BookDetail component
+        and reviews section. Handle loading states and error cases when book is not
+        found.
+      EstimatedEffort: M
+      Files:
+      - src/pages/BookDetailPage.tsx
+      ID: task-adult-book-website-feat-book-details-2
+      Title: Create BookDetailPage with routing integration
+    - AcceptanceCriteria:
+      - getBookById method retrieves book from cache or loads appropriate chunk
+      - Chunks loaded on-demand and cached in memory
+      - Book cache stores individual books efficiently
+      - Method returns null for non-existent book IDs
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Extend BookService to support chunked data loading for efficient
+        memory usage. Implement getBookById method with caching. Add chunk management
+        to load only necessary data files. Ensure cache invalidation and quota management
+        work correctly.
+      EstimatedEffort: M
+      Files:
+      - src/services/BookService.ts
+      ID: task-adult-book-website-feat-book-details-3
+      Title: Implement BookService with chunked data loading
+    - AcceptanceCriteria:
+      - Component displays author photo, name, and biography
+      - Placeholder image shown when author photo unavailable
+      - Bibliography section lists all author books
+      - Links to individual books work correctly
+      - Component is mobile-responsive
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Build the AuthorProfile component that displays author biography,
+        photo, and metadata. Include responsive layout for author information. Add
+        error handling for missing author photos with placeholder. Support navigation
+        to author's books.
+      EstimatedEffort: M
+      Files:
+      - src/components/author/AuthorProfile.tsx
+      ID: task-adult-book-website-feat-book-details-4
+      Title: Create AuthorProfile component
+    - AcceptanceCriteria:
+      - Page extracts author ID from route params
+      - Author data and bibliography fetched successfully
+      - Loading state displayed during data fetch
+      - Error page shown for invalid author IDs
+      - Navigation between books and author works bidirectionally
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-details-4
+      Description: Create AuthorProfilePage that fetches author data by ID from URL
+        params. Display AuthorProfile component and complete bibliography. Integrate
+        with React Router. Handle loading and error states appropriately.
+      EstimatedEffort: M
+      Files:
+      - src/pages/AuthorProfilePage.tsx
+      ID: task-adult-book-website-feat-book-details-5
+      Title: Build AuthorProfilePage with data fetching
+    - AcceptanceCriteria:
+      - AuthorService fetches author data by ID
+      - getBooksByAuthor returns all books for a specific author
+      - Author data cached to minimize file reads
+      - Chunk-based loading implemented for scalability
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create AuthorService to fetch and cache author data. Implement
+        methods for getAuthorById and getBooksByAuthor. Add chunked data loading similar
+        to BookService. Include cache management and efficient data retrieval patterns.
+      EstimatedEffort: M
+      Files:
+      - src/services/AuthorService.ts
+      ID: task-adult-book-website-feat-book-details-6
+      Title: Implement AuthorService with data management
+    - AcceptanceCriteria:
+      - Clicking author name in BookDetail navigates to AuthorProfilePage
+      - Clicking book title in AuthorProfile navigates to BookDetailPage
+      - Browser back button works correctly
+      - URLs are clean and SEO-friendly
+      - Active links have appropriate styling
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-details-2
+      - task-adult-book-website-feat-book-details-5
+      Description: Integrate React Router links in BookDetail to navigate to author
+        profiles. Add links in AuthorProfile to navigate to individual books. Ensure
+        all navigation preserves browser history and supports back button. Update
+        routing configuration if needed.
+      EstimatedEffort: S
+      Files:
+      - src/components/book/BookDetail.tsx
+      - src/components/author/AuthorProfile.tsx
+      - src/routes/index.tsx
+      ID: task-adult-book-website-feat-book-details-7
+      Title: Add navigation links between books and authors
+    - AcceptanceCriteria:
+      - Reviews section displays on BookDetailPage below book details
+      - Each review shows rating, comment, and user info
+      - Reviews paginated or lazy-loaded for performance
+      - Empty state shown when no reviews exist
+      - Rating stars render correctly
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-details-2
+      Description: Add reviews section to BookDetailPage that displays user reviews
+        with ratings, comments, and timestamps. Implement pagination or infinite scroll
+        for reviews. Style review cards with user information and rating stars. Connect
+        to review data source.
+      EstimatedEffort: M
+      Files:
+      - src/pages/BookDetailPage.tsx
+      - src/components/book/ReviewsList.tsx
+      - src/services/ReviewService.ts
+      ID: task-adult-book-website-feat-book-details-8
+      Title: Implement user reviews display section
+    - AcceptanceCriteria:
+      - Tests verify BookDetailPage renders with valid book ID
+      - Tests verify AuthorProfilePage renders with valid author ID
+      - Error states tested for invalid IDs
+      - Navigation between pages tested
+      - Accessibility audit passes for both pages
+      - Test coverage above 80%
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-book-details-2
+      - task-adult-book-website-feat-book-details-5
+      - task-adult-book-website-feat-book-details-8
+      Description: Create comprehensive integration tests for BookDetailPage and AuthorProfilePage.
+        Test routing, data fetching, error states, and navigation flows. Mock service
+        calls and verify component rendering. Ensure accessibility standards met.
+      EstimatedEffort: M
+      Files:
+      - src/pages/BookDetailPage.test.tsx
+      - src/pages/AuthorProfilePage.test.tsx
+      ID: task-adult-book-website-feat-book-details-9
+      Title: Write integration tests for detail pages
+  - FeatureID: adult-book-website-feat-reading-lists
+    FeatureTitle: Personal Reading Lists Management
+    Tasks:
+    - AcceptanceCriteria:
+      - ReadingListService class created with all CRUD methods
+      - Books can be added/removed from lists correctly
+      - Lists persist to local storage using StorageService
+      - Storage quota is checked before writes
+      - Service handles default lists (To Read, Currently Reading, Favorites)
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the ReadingListService with CRUD operations for managing
+        reading lists. Implement methods for creating, updating, deleting, and retrieving
+        reading lists. Include logic for adding/removing books from lists. Integrate
+        with StorageService for persistence in local storage with quota management.
+      EstimatedEffort: M
+      Files:
+      - src/services/ReadingListService.ts
+      - src/services/StorageService.ts
+      ID: task-adult-book-website-feat-reading-lists-1
+      Title: Implement ReadingListService core logic
+    - AcceptanceCriteria:
+      - JSON export generates valid, parseable output
+      - CSV export includes headers and properly escaped values
+      - Export functions handle empty lists gracefully
+      - Browser download is triggered with correct MIME types
+      - Filename includes list name and timestamp
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create utility functions in exportData.ts to export reading lists
+        in JSON and CSV formats. Implement JSON serialization for complete list data
+        and CSV formatting for tabular export. Include proper escaping and formatting
+        for both file types. Add download functionality to trigger browser downloads.
+      EstimatedEffort: S
+      Files:
+      - src/utils/exportData.ts
+      ID: task-adult-book-website-feat-reading-lists-2
+      Title: Implement data export utilities
+    - AcceptanceCriteria:
+      - Component renders list name and book count
+      - Book cover previews display with lazy loading
+      - Edit and delete actions trigger appropriate callbacks
+      - Component is responsive and accessible
+      - Empty state handled when list has no books
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reading-lists-1
+      Description: Create the ReadingListCard component to display individual reading
+        list summary. Show list name, book count, and preview of first few book covers.
+        Include action buttons for viewing, editing, and deleting the list. Implement
+        lazy loading for book cover images using BookCover component pattern.
+      EstimatedEffort: M
+      Files:
+      - src/components/list/ReadingListCard.tsx
+      - src/components/book/BookCover.tsx
+      ID: task-adult-book-website-feat-reading-lists-3
+      Title: Build ReadingListCard component
+    - AcceptanceCriteria:
+      - Users can create new custom lists with names
+      - Lists can be renamed inline or via modal
+      - Books can be added/removed from lists
+      - Delete confirmation prevents accidental deletion
+      - Component updates reflect immediately in UI
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reading-lists-1
+      - task-adult-book-website-feat-reading-lists-3
+      Description: Create the ReadingListManager component with UI for creating new
+        lists, renaming existing lists, and managing list contents. Implement drag-and-drop
+        or selection UI for adding/removing books. Include list deletion with confirmation
+        dialog. Connect to ReadingListService for all operations.
+      EstimatedEffort: M
+      Files:
+      - src/components/list/ReadingListManager.tsx
+      ID: task-adult-book-website-feat-reading-lists-4
+      Title: Build ReadingListManager component
+    - AcceptanceCriteria:
+      - Page displays all reading lists in grid layout
+      - Export buttons trigger JSON and CSV downloads
+      - Search/filter functionality works correctly
+      - Page is responsive on mobile and desktop
+      - Loading states handled during data fetch
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reading-lists-2
+      - task-adult-book-website-feat-reading-lists-3
+      Description: Create the ReadingListsPage that displays all user reading lists
+        using ReadingListCard components. Add export buttons for each list with JSON
+        and CSV format options. Implement page layout with grid/list view options.
+        Include search/filter functionality for lists. Integrate with ReadingListService
+        and exportData utilities.
+      EstimatedEffort: M
+      Files:
+      - src/pages/ReadingListsPage.tsx
+      - src/utils/exportData.ts
+      ID: task-adult-book-website-feat-reading-lists-5
+      Title: Implement ReadingListsPage with export functionality
+    - AcceptanceCriteria:
+      - Profile page shows reading lists summary section
+      - Summary displays accurate book and list counts
+      - Links navigate to full ReadingListsPage correctly
+      - Section integrates smoothly with existing profile UI
+      - Data refreshes when lists are modified
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reading-lists-3
+      - task-adult-book-website-feat-reading-lists-5
+      Description: Add reading lists section to the existing user profile page. Display
+        summary of all lists with quick stats (total books, lists count). Add navigation
+        links to full ReadingListsPage. Implement mini-version of ReadingListCard
+        for profile display. Ensure proper state management integration.
+      EstimatedEffort: S
+      Files:
+      - src/pages/UserProfilePage.tsx
+      - src/components/list/ReadingListCard.tsx
+      ID: task-adult-book-website-feat-reading-lists-6
+      Title: Integrate reading lists into user profile page
+    - AcceptanceCriteria:
+      - Add to list button appears on book cards in catalog
+      - Dropdown shows all available reading lists
+      - Visual indicator shows which lists contain the book
+      - Optimistic updates provide instant feedback
+      - Changes persist correctly to local storage
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reading-lists-1
+      - task-adult-book-website-feat-reading-lists-4
+      Description: Integrate reading list quick actions into book catalog UI. Add
+        dropdown/modal for adding books to lists directly from browse/search views.
+        Display visual indicators for books already in lists. Implement optimistic
+        UI updates for immediate feedback. Connect to ReadingListService for persistence.
+      EstimatedEffort: M
+      Files:
+      - src/pages/BookCatalogPage.tsx
+      - src/components/book/BookCard.tsx
+      - src/services/ReadingListService.ts
+      ID: task-adult-book-website-feat-reading-lists-7
+      Title: Add reading list quick actions to book catalog
+    - AcceptanceCriteria:
+      - All CRUD methods have test coverage
+      - Edge cases and error scenarios tested
+      - Storage quota handling verified
+      - Test coverage exceeds 80%
+      - All tests pass successfully
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reading-lists-1
+      Description: Create comprehensive unit tests for ReadingListService covering
+        all CRUD operations. Test edge cases like duplicate books, non-existent lists,
+        and storage quota exceeded. Mock StorageService dependencies. Ensure test
+        coverage above 80%. Validate error handling and data integrity.
+      EstimatedEffort: M
+      Files:
+      - src/services/ReadingListService.test.ts
+      - src/services/ReadingListService.ts
+      ID: task-adult-book-website-feat-reading-lists-8
+      Title: Write unit tests for ReadingListService
+    - AcceptanceCriteria:
+      - All major user interactions tested
+      - Accessibility tests pass for all components
+      - Responsive behavior verified
+      - Export functionality tested with mocked downloads
+      - Component integration with service layer validated
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reading-lists-3
+      - task-adult-book-website-feat-reading-lists-4
+      - task-adult-book-website-feat-reading-lists-5
+      Description: Create integration tests for ReadingListCard, ReadingListManager,
+        and ReadingListsPage components. Test user interactions like creating lists,
+        adding/removing books, and exporting data. Verify accessibility standards
+        compliance. Test responsive behavior on different screen sizes. Use React
+        Testing Library and Jest.
+      EstimatedEffort: M
+      Files:
+      - src/components/list/ReadingListCard.test.tsx
+      - src/components/list/ReadingListManager.test.tsx
+      - src/pages/ReadingListsPage.test.tsx
+      ID: task-adult-book-website-feat-reading-lists-9
+      Title: Write component tests for reading list UI
+  - FeatureID: adult-book-website-feat-security
+    FeatureTitle: Security Implementation
+    Tasks:
+    - AcceptanceCriteria:
+      - sanitization.ts exports functions for HTML, URL, and text sanitization
+      - DOMPurify integration prevents XSS in HTML content
+      - URL validator only allows HTTPS URLs from approved domains
+      - Unit tests pass for all sanitization functions with malicious input
+      - TypeScript types enforce sanitized string usage
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create a comprehensive sanitization utility module that handles
+        user-generated content. Implement functions for HTML sanitization, URL validation,
+        and text input cleaning. Use DOMPurify for HTML sanitization and implement
+        custom validators for URLs and text. Ensure all functions handle edge cases
+        and return sanitized output safely.
+      EstimatedEffort: M
+      Files:
+      - src/utils/sanitization.ts
+      - src/utils/sanitization.test.ts
+      ID: task-adult-book-website-feat-security-1
+      Title: Implement input sanitization utilities
+    - AcceptanceCriteria:
+      - public/_headers file created with CSP directives
+      - All resource directives use HTTPS-only sources
+      - upgrade-insecure-requests directive present
+      - CSP report-uri configured for violation monitoring
+      - No console errors from CSP violations in development
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Define and implement comprehensive CSP headers in the _headers
+        file to prevent XSS attacks. Configure directives for script-src, style-src,
+        img-src, font-src, and connect-src. Ensure HTTPS-only resource loading by
+        setting upgrade-insecure-requests. Add frame-ancestors to prevent clickjacking.
+        Test CSP configuration doesn't break existing functionality.
+      EstimatedEffort: S
+      Files:
+      - public/_headers
+      ID: task-adult-book-website-feat-security-2
+      Title: Configure Content Security Policy headers
+    - AcceptanceCriteria:
+      - s3-bucket-policy.json defines CORS rules with HTTPS-only origins
+      - Only GET and HEAD methods allowed for public access
+      - AllowedOrigins restricted to production domain
+      - Policy includes deny-by-default rules
+      - MaxAgeSeconds set to appropriate cache duration
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Create S3 bucket policy JSON that implements secure CORS settings.
+        Define allowed origins (only the production domain), allowed methods (GET,
+        HEAD), and required headers. Set max-age for preflight caching. Ensure the
+        policy denies access from unauthorized origins and implements least-privilege
+        access.
+      EstimatedEffort: S
+      Files:
+      - s3-bucket-policy.json
+      ID: task-adult-book-website-feat-security-3
+      Title: Configure S3 bucket CORS policy
+    - AcceptanceCriteria:
+      - cloudfront-config.json enforces MinimumProtocolVersion TLSv1.2
+      - HSTS header configured with max-age of at least 31536000
+      - All security headers (X-Content-Type-Options, X-Frame-Options, etc.) present
+      - OriginProtocolPolicy set to https-only
+      - ViewerProtocolPolicy set to redirect-to-https
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Create CloudFront configuration JSON that enforces TLS 1.2+ minimum
+        version. Configure HSTS headers with appropriate max-age. Set up security
+        headers including X-Content-Type-Options, X-Frame-Options, and Referrer-Policy.
+        Configure origin protocol policy to require HTTPS. Add custom error responses
+        for security-related errors.
+      EstimatedEffort: M
+      Files:
+      - cloudfront-config.json
+      ID: task-adult-book-website-feat-security-4
+      Title: Configure CloudFront security settings
+    - AcceptanceCriteria:
+      - ReviewForm component sanitizes input before submission
+      - ReviewDisplay component sanitizes content before rendering
+      - Malicious script tags are removed from review text
+      - Safe formatting (line breaks, basic text) is preserved
+      - Integration tests verify XSS prevention
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-security-1
+      Description: Apply input sanitization to all book review submission and display
+        components. Sanitize review text before saving and before rendering. Integrate
+        the sanitization utility in ReviewForm and ReviewDisplay components. Ensure
+        user-generated HTML is stripped while preserving safe formatting like line
+        breaks.
+      EstimatedEffort: M
+      Files:
+      - src/components/reviews/ReviewForm.tsx
+      - src/components/reviews/ReviewDisplay.tsx
+      - src/utils/sanitization.ts
+      ID: task-adult-book-website-feat-security-5
+      Title: Integrate sanitization in book review components
+    - AcceptanceCriteria:
+      - BookCover component validates image URLs using sanitization utility
+      - Only HTTPS URLs from approved domains are loaded
+      - Invalid URLs fall back to placeholder image
+      - Error handling prevents console warnings
+      - Component works correctly with CSP restrictions
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-security-1
+      Description: Enhance the BookCover component to validate image URLs before loading.
+        Integrate URL sanitization to ensure only HTTPS images from approved CDN domains
+        are loaded. Add error handling for failed security checks. Implement Content
+        Security Policy compatibility in lazy loading logic.
+      EstimatedEffort: S
+      Files:
+      - src/components/book/BookCover.tsx
+      - src/utils/sanitization.ts
+      ID: task-adult-book-website-feat-security-6
+      Title: Implement secure image loading in BookCover
+    - AcceptanceCriteria:
+      - getBooks method validates page and limit parameters
+      - Book data from JSON chunks is sanitized before caching
+      - Error messages don't expose internal paths or stack traces
+      - Type guards prevent malformed data from entering cache
+      - Unit tests verify parameter validation
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-security-1
+      Description: Integrate input validation and output sanitization in the BookService
+        class. Validate page and limit parameters to prevent injection attacks. Sanitize
+        book data loaded from JSON chunks before caching. Implement secure error handling
+        that doesn't leak sensitive information. Add request rate limiting logic.
+      EstimatedEffort: M
+      Files:
+      - src/services/BookService.ts
+      - src/utils/sanitization.ts
+      ID: task-adult-book-website-feat-security-7
+      Title: Add security validation to BookService API calls
+    - AcceptanceCriteria:
+      - Integration test suite covers XSS attack scenarios
+      - Tests verify CSP blocks inline scripts and unauthorized sources
+      - CORS policy tests confirm origin restrictions
+      - Sanitization tests include edge cases and Unicode attacks
+      - All security tests pass in CI/CD pipeline
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-security-1
+      - task-adult-book-website-feat-security-2
+      - task-adult-book-website-feat-security-5
+      Description: Develop comprehensive integration tests that verify all security
+        measures work together. Test CSP enforcement, XSS prevention across components,
+        HTTPS-only loading, and CORS restrictions. Create test cases for common attack
+        vectors. Verify sanitization doesn't break legitimate use cases.
+      EstimatedEffort: L
+      Files:
+      - src/__tests__/security/integration.test.ts
+      - src/utils/sanitization.test.ts
+      ID: task-adult-book-website-feat-security-8
+      Title: Create security integration tests
+  Sprint: 1
+- Features:
+  - FeatureID: adult-book-website-feat-reviews-ratings
+    FeatureTitle: User Reviews and Ratings System
+    Tasks:
+    - AcceptanceCriteria:
+      - sanitization.ts module created with DOMPurify integration
+      - Text sanitization function validates 10-2000 character constraint
+      - XSS attack vectors are properly sanitized
+      - TypeScript types defined for sanitization options
+      - Unit tests verify sanitization against common XSS patterns
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create the sanitization utility module that wraps DOMPurify for
+        XSS prevention. Implement text sanitization functions for review content with
+        configurable options. Add input validation helpers for character length constraints
+        (10-2000 characters). Include TypeScript types for sanitization configuration.
+      EstimatedEffort: S
+      Files:
+      - src/utils/sanitization.ts
+      ID: task-adult-book-website-feat-reviews-ratings-1
+      Title: Implement sanitization utility with DOMPurify
+    - AcceptanceCriteria:
+      - ReviewService.ts implements all CRUD operations
+      - Anonymous UUID generated and persisted for user identification
+      - Average rating calculated correctly for each book
+      - Storage quota checked before writing reviews
+      - Reviews properly serialized/deserialized from local storage
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reviews-ratings-1
+      Description: Implement ReviewService.ts to manage review CRUD operations using
+        local storage. Generate anonymous UUID for user identification on first visit.
+        Implement methods for submitting, fetching, updating, and deleting reviews.
+        Add average rating calculation logic per book. Include storage quota management
+        and error handling for storage limits.
+      EstimatedEffort: M
+      Files:
+      - src/services/ReviewService.ts
+      ID: task-adult-book-website-feat-reviews-ratings-2
+      Title: Create ReviewService with local storage integration
+    - AcceptanceCriteria:
+      - Star rating selector allows selection of 1-5 stars
+      - Textarea enforces 10-2000 character limit with counter
+      - Input sanitization applied before submission
+      - Form submission calls ReviewService successfully
+      - Loading and error states display correctly
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reviews-ratings-2
+      Description: Create ReviewForm.tsx component with star rating selector (1-5)
+        and textarea for review text. Integrate sanitization utility for real-time
+        input validation. Implement character counter (10-2000 range) with visual
+        feedback. Connect form to ReviewService for submission. Add loading states
+        and error handling for form submission.
+      EstimatedEffort: M
+      Files:
+      - src/components/review/ReviewForm.tsx
+      ID: task-adult-book-website-feat-reviews-ratings-3
+      Title: Build ReviewForm component with validation
+    - AcceptanceCriteria:
+      - Reviews displayed in chronological order
+      - Average rating shown prominently with star visualization
+      - User's review clearly marked with 'My Review' indicator
+      - Edit and delete buttons visible only on user's own reviews
+      - Pagination or infinite scroll implemented for performance
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reviews-ratings-2
+      Description: Create ReviewList.tsx to display all reviews for a book sorted
+        by date. Show average rating aggregate at the top of the list. Implement 'My
+        Review' indicator to highlight current user's review. Add pagination or infinite
+        scroll for large review lists. Include edit/delete actions for user's own
+        reviews.
+      EstimatedEffort: M
+      Files:
+      - src/components/review/ReviewList.tsx
+      ID: task-adult-book-website-feat-reviews-ratings-4
+      Title: Implement ReviewList component with user review indicator
+    - AcceptanceCriteria:
+      - ReviewForm and ReviewList components rendered on book details page
+      - Average rating updates immediately after review submission
+      - State management properly handles review lifecycle
+      - Responsive layout works on mobile and desktop
+      - Review data correctly filtered by book ID
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reviews-ratings-3
+      - task-adult-book-website-feat-reviews-ratings-4
+      Description: Connect ReviewForm and ReviewList components to the book details
+        page. Wire up state management to handle review submissions and updates. Implement
+        real-time average rating updates when new reviews are submitted. Add responsive
+        layout for review section. Ensure review data loads properly based on book
+        ID from dependencies.
+      EstimatedEffort: M
+      Files:
+      - src/components/book/BookDetails.tsx
+      - src/components/review/ReviewForm.tsx
+      - src/components/review/ReviewList.tsx
+      ID: task-adult-book-website-feat-reviews-ratings-5
+      Title: Integrate reviews into book details page
+    - AcceptanceCriteria:
+      - Users cannot submit multiple reviews for same book
+      - Rate limiting prevents spam submissions
+      - Clear error messages shown for all validation failures
+      - Toast notifications display for success and error cases
+      - Retry logic handles storage quota exceeded errors
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reviews-ratings-5
+      Description: Implement comprehensive validation for review submissions including
+        duplicate review prevention, rate limiting, and profanity filtering. Add user-friendly
+        error messages for all validation failures. Implement retry logic for transient
+        storage errors. Add toast notifications for success/error states.
+      EstimatedEffort: S
+      Files:
+      - src/services/ReviewService.ts
+      - src/components/review/ReviewForm.tsx
+      ID: task-adult-book-website-feat-reviews-ratings-6
+      Title: Add review validation and error handling
+    - AcceptanceCriteria:
+      - All ReviewService methods have unit tests
+      - Sanitization tested against common XSS attack patterns
+      - Local storage properly mocked in test environment
+      - Storage quota exceeded scenarios tested
+      - Code coverage exceeds 90% for service and utility modules
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reviews-ratings-6
+      Description: Create comprehensive unit tests for ReviewService covering all
+        CRUD operations, UUID generation, and average rating calculations. Test sanitization
+        utility against OWASP XSS vectors. Mock local storage for isolated testing.
+        Test storage quota handling and error scenarios. Achieve 90%+ code coverage
+        for critical paths.
+      EstimatedEffort: M
+      Files:
+      - src/services/ReviewService.test.ts
+      - src/utils/sanitization.test.ts
+      ID: task-adult-book-website-feat-reviews-ratings-7
+      Title: Write unit tests for ReviewService and sanitization
+    - AcceptanceCriteria:
+      - ReviewForm component fully tested with user interactions
+      - ReviewList component tested including 'My Review' indicator
+      - Form validation feedback tested for all error cases
+      - Edit and delete functionality tested end-to-end
+      - Component integration with ReviewService verified
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-reviews-ratings-7
+      Description: Create React Testing Library tests for ReviewForm and ReviewList
+        components. Test user interactions including star selection, text input, form
+        submission, and review editing. Verify 'My Review' indicator displays correctly.
+        Test error states and validation feedback. Ensure components properly integrate
+        with ReviewService.
+      EstimatedEffort: M
+      Files:
+      - src/components/review/ReviewForm.test.tsx
+      - src/components/review/ReviewList.test.tsx
+      ID: task-adult-book-website-feat-reviews-ratings-8
+      Title: Write integration tests for review components
+  - FeatureID: adult-book-website-feat-recommendations
+    FeatureTitle: Personalized Book Recommendations
+    Tasks:
+    - AcceptanceCriteria:
+      - TF-IDF algorithm implemented for genre and author features
+      - Similarity scoring function returns relevance scores for books
+      - Algorithm accepts user ratings and returns ranked book recommendations
+      - Unit tests verify correct similarity calculations
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create the content-based filtering algorithm using TF-IDF for genre
+        and author similarity. Implement vector similarity calculations to find books
+        similar to those the user has rated highly. Include genre matching and author
+        similarity scoring. Set up data structures for efficient book metadata processing.
+      EstimatedEffort: M
+      Files:
+      - src/algorithms/contentBasedFiltering.ts
+      ID: task-adult-book-website-feat-recommendations-1
+      Title: Implement content-based filtering algorithm
+    - AcceptanceCriteria:
+      - User similarity calculation implemented with appropriate metric
+      - Algorithm identifies top K similar users correctly
+      - Recommendations generated from similar users' ratings
+      - Unit tests validate collaborative filtering logic
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create user-based collaborative filtering algorithm that finds
+        similar users based on rating patterns. Calculate user similarity scores using
+        cosine similarity or Pearson correlation. Generate recommendations based on
+        what similar users have rated highly. Handle sparse rating matrices efficiently.
+      EstimatedEffort: M
+      Files:
+      - src/algorithms/collaborativeFiltering.ts
+      ID: task-adult-book-website-feat-recommendations-2
+      Title: Implement collaborative filtering algorithm
+    - AcceptanceCriteria:
+      - Web Worker file created and properly configured
+      - Message passing interface handles userRatings, allBooks, and allReviews
+      - Both algorithms executed and results combined in worker
+      - Worker terminates properly after sending results
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-recommendations-1
+      - task-adult-book-website-feat-recommendations-2
+      Description: Implement Web Worker to run recommendation algorithms in background
+        thread. Set up message passing interface for sending user data and receiving
+        recommendations. Integrate both content-based and collaborative filtering
+        algorithms. Implement hybrid approach that combines both algorithm results.
+      EstimatedEffort: M
+      Files:
+      - public/recommendation-worker.js
+      ID: task-adult-book-website-feat-recommendations-3
+      Title: Create Web Worker for recommendation computation
+    - AcceptanceCriteria:
+      - Service validates minimum 5 rated books before generating recommendations
+      - Cache stores recommendations with timestamp for 24 hours
+      - Cached results returned when valid, fresh calculations when expired
+      - Service properly spawns and terminates Web Workers
+      - Cache invalidates when user adds new ratings
+      AgentType: backend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-recommendations-3
+      Description: Create RecommendationService class that manages Web Worker lifecycle
+        and implements 24-hour caching. Add validation for minimum 5 rated books requirement.
+        Implement cache invalidation on new user interactions. Handle worker initialization,
+        message passing, and cleanup. Add methods for cache management and fresh recommendation
+        generation.
+      EstimatedEffort: M
+      Files:
+      - src/services/RecommendationService.ts
+      ID: task-adult-book-website-feat-recommendations-4
+      Title: Implement RecommendationService with caching
+    - AcceptanceCriteria:
+      - Page displays loading state during recommendation calculation
+      - Recommendations shown in responsive grid with book details
+      - Informative message shown when user has insufficient ratings
+      - Refresh button triggers new recommendation calculation
+      - Page integrates with RecommendationService correctly
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-recommendations-4
+      Description: Create React page component that displays personalized recommendations.
+        Show loading state while Web Worker computes recommendations. Display recommendations
+        in grid layout with book covers and metadata. Handle case where user has fewer
+        than 5 ratings with helpful message. Add refresh functionality to get new
+        recommendations.
+      EstimatedEffort: M
+      Files:
+      - src/pages/RecommendationsPage.tsx
+      ID: task-adult-book-website-feat-recommendations-5
+      Title: Build RecommendationsPage UI component
+    - AcceptanceCriteria:
+      - Cache invalidates when user rates a book
+      - Cache invalidates when user modifies reading lists
+      - Background refresh triggers without blocking UI
+      - User notified when fresh recommendations are available
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-recommendations-5
+      Description: Add event listeners to detect when users rate books or modify reading
+        lists. Trigger cache invalidation in RecommendationService when relevant user
+        actions occur. Implement background recommendation refresh that doesn't block
+        UI. Add optimistic UI updates that show recommendations will refresh soon.
+      EstimatedEffort: S
+      Files:
+      - src/services/RecommendationService.ts
+      - src/pages/RecommendationsPage.tsx
+      ID: task-adult-book-website-feat-recommendations-6
+      Title: Implement dynamic adaptation to user interactions
+    - AcceptanceCriteria:
+      - Content-based filtering has 80%+ test coverage
+      - Collaborative filtering has 80%+ test coverage
+      - Edge cases properly tested and handled
+      - All tests pass successfully
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-recommendations-1
+      - task-adult-book-website-feat-recommendations-2
+      Description: Write unit tests for content-based filtering algorithm covering
+        TF-IDF calculations and similarity scoring. Add tests for collaborative filtering
+        covering user similarity and recommendation generation. Test edge cases like
+        sparse data, single user, and identical ratings. Verify algorithm performance
+        with realistic datasets.
+      EstimatedEffort: M
+      Files:
+      - src/algorithms/contentBasedFiltering.test.ts
+      - src/algorithms/collaborativeFiltering.test.ts
+      ID: task-adult-book-website-feat-recommendations-7
+      Title: Add comprehensive unit tests for algorithms
+    - AcceptanceCriteria:
+      - Tests verify Web Worker spawning and termination
+      - Cache TTL behavior validated with time manipulation
+      - Minimum 5 ratings requirement tested
+      - Error handling tests pass for worker failures
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-recommendations-4
+      Description: Create integration tests for RecommendationService that verify
+        Web Worker integration, caching behavior, and cache invalidation. Test minimum
+        rating requirement enforcement. Mock Web Worker responses for consistent test
+        results. Verify service handles worker errors gracefully.
+      EstimatedEffort: M
+      Files:
+      - src/services/RecommendationService.test.ts
+      ID: task-adult-book-website-feat-recommendations-8
+      Title: Add integration tests for RecommendationService
+  - FeatureID: adult-book-website-feat-homepage
+    FeatureTitle: Homepage with Featured Content
+    Tasks:
+    - AcceptanceCriteria:
+      - useIntersectionObserver hook created with TypeScript types
+      - Hook returns boolean indicating element visibility
+      - Observer properly disconnects on cleanup
+      - Hook supports configurable options (rootMargin, threshold)
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the useIntersectionObserver hook for detecting element visibility.
+        Implement configurable root margin and threshold options. Add proper cleanup
+        for observers when components unmount. This hook will be used by BookCover
+        and other components for lazy loading.
+      EstimatedEffort: S
+      Files:
+      - src/hooks/useIntersectionObserver.ts
+      ID: task-adult-book-website-feat-homepage-1
+      Title: Implement lazy loading utility hook
+    - AcceptanceCriteria:
+      - BookCover component renders with lazy loading enabled
+      - Placeholder image shows before actual image loads
+      - Error state displays fallback image on load failure
+      - Component properly integrates with useIntersectionObserver hook
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-homepage-1
+      Description: Build the BookCover component using the intersection observer hook.
+        Implement progressive image loading with placeholder fallback. Handle error
+        states gracefully with a default placeholder image. Optimize for performance
+        with proper ref management.
+      EstimatedEffort: S
+      Files:
+      - src/components/book/BookCover.tsx
+      ID: task-adult-book-website-feat-homepage-2
+      Title: Create BookCover component with lazy loading
+    - AcceptanceCriteria:
+      - FeaturedContentService class created with proper interfaces
+      - Chunk-based loading implemented for books data
+      - Cache management tracks loaded chunks and prevents duplicates
+      - Pagination methods return correct slices from cache
+      - Service integrates with StorageService for quota management
+      AgentType: backend-engineer
+      Dependencies: []
+      Description: Create the FeaturedContentService to manage featured books, trending
+        books, and curated lists. Implement chunk-based data loading with cache management.
+        Add methods for fetching paginated content and managing loaded chunks. Integrate
+        with local storage for persistence.
+      EstimatedEffort: M
+      Files:
+      - src/services/FeaturedContentService.ts
+      - src/services/BookService.ts
+      - src/services/StorageService.ts
+      ID: task-adult-book-website-feat-homepage-3
+      Title: Implement FeaturedContentService with caching
+    - AcceptanceCriteria:
+      - FeaturedBooks component renders grid of featured books
+      - Component fetches data from FeaturedContentService on mount
+      - Loading skeleton displays while fetching data
+      - Error boundary handles fetch failures gracefully
+      - Responsive design works on mobile and desktop
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-homepage-2
+      - task-adult-book-website-feat-homepage-3
+      Description: Create the FeaturedBooks component displaying curated book selections.
+        Integrate with FeaturedContentService to fetch featured content. Implement
+        responsive grid layout with BookCover components. Add loading states and error
+        handling for data fetching.
+      EstimatedEffort: M
+      Files:
+      - src/components/home/FeaturedBooks.tsx
+      ID: task-adult-book-website-feat-homepage-4
+      Title: Build FeaturedBooks component
+    - AcceptanceCriteria:
+      - TrendingBooks component displays paginated trending books
+      - Component supports horizontal scroll on mobile devices
+      - Book cards show cover, title, rating, and author
+      - Pagination controls work correctly
+      - Component integrates with BookCover for lazy loading
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-homepage-2
+      - task-adult-book-website-feat-homepage-3
+      Description: Implement the TrendingBooks component showing currently popular
+        books. Fetch trending data with pagination support from FeaturedContentService.
+        Display book cards with covers, ratings, and quick preview information. Implement
+        horizontal scroll or carousel pattern for mobile.
+      EstimatedEffort: M
+      Files:
+      - src/components/home/TrendingBooks.tsx
+      ID: task-adult-book-website-feat-homepage-5
+      Title: Build TrendingBooks component
+    - AcceptanceCriteria:
+      - HomePage component renders with all sections
+      - Code splitting implemented using React.lazy
+      - Suspense boundaries provide smooth loading experience
+      - Recent reviews section displays properly
+      - Call-to-action elements visible and functional
+      - Initial bundle size reduced by lazy loading components
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-homepage-4
+      - task-adult-book-website-feat-homepage-5
+      Description: Build the main HomePage component orchestrating all homepage sections.
+        Implement React.lazy for code splitting of FeaturedBooks and TrendingBooks.
+        Add Suspense boundaries with loading fallbacks. Display recent reviews section
+        and call-to-action banners. Optimize initial bundle size.
+      EstimatedEffort: M
+      Files:
+      - src/pages/HomePage.tsx
+      ID: task-adult-book-website-feat-homepage-6
+      Title: Create HomePage with code splitting
+    - AcceptanceCriteria:
+      - Web Vitals tracking implemented and reporting metrics
+      - LCP occurs within 2.5 seconds on 3G connection
+      - Code splitting produces optimal chunk sizes
+      - Critical CSS inlined for above-the-fold content
+      - Prefetching configured for immediate user interactions
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-homepage-6
+      Description: Implement performance tracking for homepage load times and render
+        performance. Add Web Vitals monitoring (LCP, FID, CLS). Optimize chunk sizes
+        and implement prefetching for above-the-fold content. Configure webpack/vite
+        for optimal code splitting.
+      EstimatedEffort: M
+      Files:
+      - src/pages/HomePage.tsx
+      - src/utils/performance.ts
+      - vite.config.ts
+      ID: task-adult-book-website-feat-homepage-7
+      Title: Add performance monitoring and optimization
+    - AcceptanceCriteria:
+      - Unit tests cover 90%+ of component logic
+      - Integration tests verify component interactions
+      - Mock intersection observer API properly
+      - Test lazy loading behavior with visibility changes
+      - All tests pass in CI environment
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-homepage-6
+      Description: Create comprehensive test suite for all homepage components and
+        services. Write unit tests for useIntersectionObserver hook, BookCover component,
+        and FeaturedContentService. Add integration tests for FeaturedBooks, TrendingBooks,
+        and HomePage. Mock API calls and intersection observer API.
+      EstimatedEffort: L
+      Files:
+      - src/hooks/__tests__/useIntersectionObserver.test.ts
+      - src/components/book/__tests__/BookCover.test.tsx
+      - src/components/home/__tests__/FeaturedBooks.test.tsx
+      - src/components/home/__tests__/TrendingBooks.test.tsx
+      - src/pages/__tests__/HomePage.test.tsx
+      - src/services/__tests__/FeaturedContentService.test.ts
+      ID: task-adult-book-website-feat-homepage-8
+      Title: Write unit and integration tests
+  - FeatureID: adult-book-website-feat-monitoring
+    FeatureTitle: Performance Monitoring and Analytics
+    Tasks:
+    - AcceptanceCriteria:
+      - GA4 SDK installed and configured in package.json
+      - Analytics utility file created with initialization function
+      - Environment variable GA4_TRACKING_ID properly configured
+      - TypeScript types defined for gtag and window extensions
+      - Analytics initializes successfully on app load
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Install Google Analytics 4 SDK and configure the GA4 property.
+        Create the analytics utility module with initialization logic and type definitions.
+        Set up environment variables for GA4 tracking ID. Implement the base gtag
+        integration with TypeScript support and proper window type extensions.
+      EstimatedEffort: S
+      Files:
+      - src/utils/analytics.ts
+      - package.json
+      - .env.example
+      ID: task-adult-book-website-feat-monitoring-1
+      Title: Setup Google Analytics 4 integration
+    - AcceptanceCriteria:
+      - Custom event functions created for search, reviews, and reading lists
+      - TypeScript interfaces defined for all event types
+      - Event naming follows GA4 conventions
+      - PII sanitization implemented for user data
+      - All custom events send successfully to GA4
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-monitoring-1
+      Description: Create tracking functions for custom events including search queries,
+        book reviews, reading list actions, and user interactions. Implement type-safe
+        event interfaces and event naming conventions. Add helper functions for common
+        tracking patterns and ensure proper data sanitization for PII compliance.
+      EstimatedEffort: M
+      Files:
+      - src/utils/analytics.ts
+      ID: task-adult-book-website-feat-monitoring-2
+      Title: Implement custom event tracking functions
+    - AcceptanceCriteria:
+      - web-vitals library installed and configured
+      - Performance utility file created with initPerformanceMonitoring function
+      - LCP, FID, and CLS metrics tracked and sent to GA4
+      - Metric values properly rounded and formatted
+      - Console logging works in development mode
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-monitoring-1
+      Description: Install web-vitals library and implement tracking for LCP, FID,
+        and CLS metrics. Create the performance monitoring utility that captures Core
+        Web Vitals and sends them to GA4. Implement proper metric formatting and categorization.
+        Add console logging for development debugging.
+      EstimatedEffort: M
+      Files:
+      - src/utils/performance.ts
+      - package.json
+      ID: task-adult-book-website-feat-monitoring-3
+      Title: Setup Core Web Vitals tracking
+    - AcceptanceCriteria:
+      - Sentry SDK installed and configured
+      - Error tracking utility created with initialization function
+      - Source maps configured for production builds
+      - Environment variables for Sentry DSN set up
+      - Errors successfully captured and sent to Sentry dashboard
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Install Sentry SDK and configure client-side error tracking. Create
+        error tracking utility with initialization logic and custom error handlers.
+        Set up source maps for production builds. Configure Sentry environment variables
+        and DSN. Implement error boundary integration and custom context tracking.
+      EstimatedEffort: M
+      Files:
+      - src/utils/errorTracking.ts
+      - package.json
+      - .env.example
+      - next.config.js
+      ID: task-adult-book-website-feat-monitoring-4
+      Title: Integrate Sentry for error tracking
+    - AcceptanceCriteria:
+      - Sentry performance monitoring enabled and configured
+      - Transaction tracking implemented for key user flows
+      - Custom spans created for critical operations
+      - Sampling rates configured appropriately
+      - Performance data visible in Sentry dashboard
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-monitoring-4
+      - task-adult-book-website-feat-monitoring-3
+      Description: Configure Sentry performance monitoring with transaction tracking
+        for page loads, API calls, and user interactions. Implement custom performance
+        spans for critical user flows. Set up trace sampling rates and performance
+        thresholds. Integrate with existing performance monitoring to avoid duplicate
+        tracking.
+      EstimatedEffort: M
+      Files:
+      - src/utils/errorTracking.ts
+      - src/utils/performance.ts
+      ID: task-adult-book-website-feat-monitoring-5
+      Title: Setup Sentry performance monitoring
+    - AcceptanceCriteria:
+      - lighthouse-ci.config.js created with proper assertions
+      - Performance budget thresholds defined for all metrics
+      - Configuration validates successfully with Lighthouse CI
+      - Assertions cover performance, accessibility, FCP, LCP, CLS, TBT
+      - Temporary public storage configured for reports
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Create Lighthouse CI configuration file with performance budgets
+        and assertions. Configure performance, accessibility, and Core Web Vitals
+        thresholds. Set up Lighthouse CI to run on pull requests. Implement temporary
+        public storage for reports. Document performance budget rationale and thresholds.
+      EstimatedEffort: S
+      Files:
+      - lighthouse-ci.config.js
+      - package.json
+      ID: task-adult-book-website-feat-monitoring-6
+      Title: Configure Lighthouse CI pipeline
+    - AcceptanceCriteria:
+      - Lighthouse CI integrated into CI/CD pipeline
+      - CI runs Lighthouse on every pull request
+      - Build fails if performance budgets are violated
+      - PR comments show Lighthouse results automatically
+      - Documentation exists for troubleshooting failures
+      AgentType: devops-engineer
+      Dependencies:
+      - task-adult-book-website-feat-monitoring-6
+      Description: Add Lighthouse CI steps to GitHub Actions workflow or deployment
+        pipeline. Configure CI to run Lighthouse on build previews. Set up failure
+        conditions based on performance budgets. Implement report storage and PR comments
+        with results. Add documentation for interpreting Lighthouse CI results and
+        fixing failures.
+      EstimatedEffort: M
+      Files:
+      - .github/workflows/ci.yml
+      - lighthouse-ci.config.js
+      - README.md
+      ID: task-adult-book-website-feat-monitoring-7
+      Title: Integrate Lighthouse CI into deployment workflow
+    - AcceptanceCriteria:
+      - CloudWatch configured for all infrastructure components
+      - Custom metrics defined and sending data
+      - CloudWatch dashboard created with key metrics
+      - Alarms configured for critical thresholds
+      - Documentation covers monitoring strategy and alert response
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Configure AWS CloudWatch for monitoring Next.js application infrastructure
+        including Lambda functions, API Gateway, and CloudFront. Set up custom metrics
+        for application health. Create CloudWatch dashboards for key infrastructure
+        metrics. Configure alarms for critical thresholds. Document CloudWatch monitoring
+        strategy and alert response procedures.
+      EstimatedEffort: L
+      Files:
+      - infrastructure/cloudwatch.tf
+      - infrastructure/alarms.tf
+      - docs/monitoring.md
+      ID: task-adult-book-website-feat-monitoring-8
+      Title: Setup CloudWatch infrastructure monitoring
+    - AcceptanceCriteria:
+      - All monitoring utilities integrated into app initialization
+      - Analytics initializes before first user interaction
+      - Performance monitoring captures all Core Web Vitals
+      - Error tracking catches and reports errors successfully
+      - Monitoring works correctly in both dev and prod environments
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-adult-book-website-feat-monitoring-2
+      - task-adult-book-website-feat-monitoring-5
+      Description: Wire up all monitoring utilities into the Next.js application bootstrap
+        process. Ensure analytics, performance monitoring, and error tracking initialize
+        on app load. Implement conditional initialization based on environment. Add
+        proper error handling for monitoring initialization failures. Verify monitoring
+        works in both development and production modes.
+      EstimatedEffort: S
+      Files:
+      - src/pages/_app.tsx
+      - src/utils/analytics.ts
+      - src/utils/performance.ts
+      - src/utils/errorTracking.ts
+      ID: task-adult-book-website-feat-monitoring-9
+      Title: Integrate monitoring into application bootstrap
+    - AcceptanceCriteria:
+      - Unit tests created for analytics, performance, and error tracking utilities
+      - Integration tests verify monitoring initialization flow
+      - Mock implementations test tracking without external dependencies
+      - E2E tests validate monitoring in browser environment
+      - All tests pass and coverage meets project standards
+      AgentType: qa-engineer
+      Dependencies:
+      - task-adult-book-website-feat-monitoring-9
+      Description: Write unit and integration tests for all monitoring utilities.
+        Test GA4 event tracking with mock gtag functions. Test Core Web Vitals reporting
+        with mock web-vitals library. Test Sentry error capture with mock Sentry SDK.
+        Create E2E tests to verify monitoring in real browser environment. Document
+        testing strategy and add monitoring test examples.
+      EstimatedEffort: L
+      Files:
+      - src/utils/analytics.test.ts
+      - src/utils/performance.test.ts
+      - src/utils/errorTracking.test.ts
+      - tests/e2e/monitoring.spec.ts
+      ID: task-adult-book-website-feat-monitoring-10
+      Title: Create monitoring validation tests
+  Sprint: 2
