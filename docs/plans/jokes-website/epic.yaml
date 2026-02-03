@@ -1,213 +1,222 @@
 Epic: jokes-website
 Features:
 - dependencies: []
-  description: Initialize React application using Vite, configure build settings for
-    S3 hosting, install dependencies (React Router, testing libraries), and set up
-    project structure with CSS Modules support
+  description: Initialize Vite React project with dependencies, ESLint, Prettier,
+    and test framework configuration
   estimatedComplexity: low
   files:
   - jokes-website/package.json
   - jokes-website/vite.config.js
-  - jokes-website/index.html
-  - jokes-website/.gitignore
+  - jokes-website/vitest.config.js
+  - jokes-website/playwright.config.js
+  - jokes-website/.eslintrc.json
+  - jokes-website/.prettierrc
   id: jokes-website-feat-project-setup
-  name: React Project Setup with Vite
+  name: Project Setup and Configuration
   project: jokes-website
   type: enabler
 - dependencies:
   - jokes-website-feat-project-setup
-  description: Create static JSON files with joke dataset (50+ jokes) and category
-    metadata, define data schema with validation, and organize jokes by categories
-    (puns, dad-jokes, knock-knock, etc.)
+  description: Create JSON data files containing 20-50 jokes with categories, metadata,
+    and validation schema
   estimatedComplexity: low
   files:
-  - jokes-website/public/data/jokes.json
-  - jokes-website/public/data/categories.json
-  id: jokes-website-feat-joke-data-structure
-  name: Joke Data Structure and JSON Files
+  - jokes-website/src/data/jokes.json
+  - jokes-website/src/data/categories.json
+  id: jokes-website-feat-static-data
+  name: Static Joke Data and Categories
   project: jokes-website
   type: enabler
 - dependencies:
-  - jokes-website-feat-joke-data-structure
-  description: Implement utility functions to fetch and parse jokes from static JSON
-    files, with validation, error handling, and fallback logic for missing data
-  estimatedComplexity: low
-  files:
-  - jokes-website/src/utils/jokeDataLoader.js
-  - jokes-website/src/utils/filterHelpers.js
-  - jokes-website/src/utils/urlHelpers.js
-  id: jokes-website-feat-data-loading-utils
-  name: Data Loading Utilities
-  project: jokes-website
-  type: enabler
-- dependencies:
-  - jokes-website-feat-data-loading-utils
-  description: Create useJokes hook for loading and filtering jokes with caching,
-    useCategories hook for category data, and usePersistedState hook for localStorage
-    persistence
+  - jokes-website-feat-static-data
+  description: Implement useJokes and useCategories hooks for accessing joke data
+    with filtering, searching, and category operations
   estimatedComplexity: medium
   files:
   - jokes-website/src/hooks/useJokes.js
   - jokes-website/src/hooks/useCategories.js
-  - jokes-website/src/hooks/usePersistedState.js
-  id: jokes-website-feat-custom-hooks
-  name: Custom React Hooks for Data Management
+  - jokes-website/src/utils/jokeHelpers.js
+  - jokes-website/src/utils/validation.js
+  id: jokes-website-feat-data-hooks
+  name: Custom Data Access Hooks
   project: jokes-website
   type: enabler
 - dependencies:
   - jokes-website-feat-project-setup
-  description: Build reusable layout components including site header with navigation,
-    footer, and layout wrapper component with responsive design and CSS Modules styling
+  description: Build responsive header with mobile hamburger menu, footer, main layout
+    wrapper, and error boundary
+  estimatedComplexity: medium
+  files:
+  - jokes-website/src/components/layout/Header.jsx
+  - jokes-website/src/components/layout/Header.module.css
+  - jokes-website/src/components/layout/Footer.jsx
+  - jokes-website/src/components/layout/Footer.module.css
+  - jokes-website/src/components/layout/Layout.jsx
+  - jokes-website/src/components/layout/Layout.module.css
+  - jokes-website/src/components/common/ErrorBoundary.jsx
+  - jokes-website/src/components/common/NotFound.jsx
+  - jokes-website/src/components/common/NotFound.module.css
+  id: jokes-website-feat-layout-components
+  name: Layout and Navigation Components
+  project: jokes-website
+  type: feature
+- dependencies:
+  - jokes-website-feat-data-hooks
+  description: Create JokeCard, JokeList, and JokeNavigation components with multiple
+    variants and responsive grid/list layouts
+  estimatedComplexity: medium
+  files:
+  - jokes-website/src/components/jokes/JokeCard.jsx
+  - jokes-website/src/components/jokes/JokeCard.module.css
+  - jokes-website/src/components/jokes/JokeList.jsx
+  - jokes-website/src/components/jokes/JokeList.module.css
+  - jokes-website/src/components/jokes/JokeNavigation.jsx
+  - jokes-website/src/components/jokes/JokeNavigation.module.css
+  id: jokes-website-feat-joke-display
+  name: Joke Display Components
+  project: jokes-website
+  type: feature
+- dependencies:
+  - jokes-website-feat-data-hooks
+  description: Build CategoryCard and CategoryList components with joke counts and
+    responsive grid layout
   estimatedComplexity: low
   files:
-  - jokes-website/src/components/Layout/Header.jsx
-  - jokes-website/src/components/Layout/Header.module.css
-  - jokes-website/src/components/Layout/Footer.jsx
-  - jokes-website/src/components/Layout/Footer.module.css
-  - jokes-website/src/components/Layout/Layout.jsx
-  - jokes-website/src/components/Layout/Layout.module.css
-  id: jokes-website-feat-layout-components
-  name: Layout Components (Header, Footer, Layout)
+  - jokes-website/src/components/categories/CategoryCard.jsx
+  - jokes-website/src/components/categories/CategoryCard.module.css
+  - jokes-website/src/components/categories/CategoryList.jsx
+  - jokes-website/src/components/categories/CategoryList.module.css
+  id: jokes-website-feat-category-components
+  name: Category Display Components
   project: jokes-website
   type: feature
 - dependencies:
   - jokes-website-feat-layout-components
-  description: Implement JokeCard component to display individual jokes with setup/punchline
-    reveal, category link, share functionality using Web Share API, and permalink
-    generation
-  estimatedComplexity: medium
+  description: Set up React Router v6 with routes for home, browse, individual jokes,
+    categories, and 404 handling
+  estimatedComplexity: low
   files:
-  - jokes-website/src/components/JokeCard/JokeCard.jsx
-  - jokes-website/src/components/JokeCard/JokeCard.module.css
-  id: jokes-website-feat-joke-card
-  name: Joke Card Component
-  project: jokes-website
-  type: feature
-- dependencies:
-  - jokes-website-feat-layout-components
-  description: Configure React Router v6 with BrowserRouter for SPA navigation, define
-    routes for home, jokes list, joke detail, categories, and 404 page, with error
-    boundary integration
-  estimatedComplexity: medium
-  files:
+  - jokes-website/src/router.jsx
   - jokes-website/src/App.jsx
-  - jokes-website/src/App.module.css
   - jokes-website/src/main.jsx
-  - jokes-website/src/components/ErrorBoundary/ErrorBoundary.jsx
-  - jokes-website/src/components/ErrorBoundary/ErrorBoundary.module.css
+  - jokes-website/src/utils/navigation.js
   id: jokes-website-feat-routing
-  name: Client-Side Routing Setup
+  name: Client-Side Routing Configuration
   project: jokes-website
   type: enabler
 - dependencies:
   - jokes-website-feat-routing
-  - jokes-website-feat-custom-hooks
-  - jokes-website-feat-joke-card
-  description: Create landing page with hero section, random featured joke display,
-    and navigation buttons to browse jokes and categories
-  estimatedComplexity: low
+  - jokes-website-feat-joke-display
+  - jokes-website-feat-category-components
+  description: Landing page displaying random featured joke, category overview, and
+    call-to-action to browse jokes
+  estimatedComplexity: medium
   files:
-  - jokes-website/src/pages/Home/Home.jsx
-  - jokes-website/src/pages/Home/Home.module.css
+  - jokes-website/src/pages/HomePage.jsx
+  - jokes-website/src/pages/HomePage.module.css
   id: jokes-website-feat-home-page
-  name: Home/Landing Page
+  name: Home Page with Featured Joke
   project: jokes-website
   type: feature
 - dependencies:
   - jokes-website-feat-routing
-  - jokes-website-feat-custom-hooks
-  - jokes-website-feat-joke-card
-  description: Build joke detail page that displays a single joke with navigation
-    controls (prev/next), handles invalid joke IDs with redirects to 404, and supports
-    shareable URLs
+  - jokes-website-feat-joke-display
+  description: Browse all jokes page with category filter dropdown and responsive
+    grid display
   estimatedComplexity: medium
   files:
-  - jokes-website/src/pages/JokeDetail/JokeDetail.jsx
-  - jokes-website/src/pages/JokeDetail/JokeDetail.module.css
-  - jokes-website/src/components/JokeNavigation/JokeNavigation.jsx
-  - jokes-website/src/components/JokeNavigation/JokeNavigation.module.css
-  id: jokes-website-feat-joke-detail-page
-  name: Individual Joke Detail Page
+  - jokes-website/src/pages/BrowsePage.jsx
+  - jokes-website/src/pages/BrowsePage.module.css
+  id: jokes-website-feat-browse-page
+  name: Browse Page with Filtering
   project: jokes-website
   type: feature
 - dependencies:
   - jokes-website-feat-routing
-  - jokes-website-feat-custom-hooks
-  - jokes-website-feat-joke-card
-  description: Create jokes browsing page that displays all jokes or filtered by category,
-    with responsive grid layout and category filter controls
+  - jokes-website-feat-joke-display
+  description: Single joke detail page with next/previous/random navigation controls
+    and 404 handling for invalid IDs
+  estimatedComplexity: low
+  files:
+  - jokes-website/src/pages/JokePage.jsx
+  - jokes-website/src/pages/JokePage.module.css
+  id: jokes-website-feat-joke-page
+  name: Individual Joke Page with Navigation
+  project: jokes-website
+  type: feature
+- dependencies:
+  - jokes-website-feat-routing
+  - jokes-website-feat-joke-display
+  description: Display jokes filtered by specific category with category description
+    and joke count
+  estimatedComplexity: low
+  files:
+  - jokes-website/src/pages/CategoryPage.jsx
+  - jokes-website/src/pages/CategoryPage.module.css
+  id: jokes-website-feat-category-page
+  name: Category-Filtered Joke Page
+  project: jokes-website
+  type: feature
+- dependencies:
+  - jokes-website-feat-project-setup
+  description: Global CSS, variables, mobile-first responsive design with breakpoints
+    for all components
   estimatedComplexity: medium
   files:
-  - jokes-website/src/pages/JokesList/JokesList.jsx
-  - jokes-website/src/pages/JokesList/JokesList.module.css
-  - jokes-website/src/components/CategoryFilter/CategoryFilter.jsx
-  - jokes-website/src/components/CategoryFilter/CategoryFilter.module.css
-  id: jokes-website-feat-jokes-list-page
-  name: Browse Jokes List Page
+  - jokes-website/src/styles/global.css
+  - jokes-website/src/styles/variables.css
+  - jokes-website/src/App.css
+  id: jokes-website-feat-responsive-styles
+  name: Responsive Styling and Design System
   project: jokes-website
-  type: feature
-- dependencies:
-  - jokes-website-feat-routing
-  - jokes-website-feat-custom-hooks
-  description: Implement category browser page that displays all joke categories as
-    clickable cards with joke counts, responsive grid layout, and links to filtered
-    joke views
-  estimatedComplexity: low
-  files:
-  - jokes-website/src/pages/Categories/Categories.jsx
-  - jokes-website/src/pages/Categories/Categories.module.css
-  id: jokes-website-feat-categories-page
-  name: Categories Browser Page
-  project: jokes-website
-  type: feature
-- dependencies:
-  - jokes-website-feat-routing
-  description: Create 404 error page for invalid routes with user-friendly messaging
-    and navigation back to home page
-  estimatedComplexity: low
-  files:
-  - jokes-website/src/pages/NotFound/NotFound.jsx
-  - jokes-website/src/pages/NotFound/NotFound.module.css
-  id: jokes-website-feat-404-page
-  name: 404 Not Found Page
-  project: jokes-website
-  type: feature
+  type: enabler
 - dependencies:
   - jokes-website-feat-home-page
-  - jokes-website-feat-joke-detail-page
-  - jokes-website-feat-jokes-list-page
-  - jokes-website-feat-categories-page
-  description: Implement comprehensive test suite with Jest and React Testing Library
-    covering components, hooks, utilities, and integration tests for critical user
-    flows
+  - jokes-website-feat-browse-page
+  - jokes-website-feat-joke-page
+  - jokes-website-feat-category-page
+  description: Unit tests for components and hooks, integration tests for navigation
+    and filtering, E2E tests with Playwright
   estimatedComplexity: high
   files:
-  - jokes-website/jest.config.js
-  - jokes-website/src/__tests__/components/JokeCard.test.jsx
-  - jokes-website/src/__tests__/components/CategoryFilter.test.jsx
-  - jokes-website/src/__tests__/hooks/useJokes.test.js
-  - jokes-website/src/__tests__/utils/jokeDataLoader.test.js
-  - jokes-website/src/__tests__/utils/filterHelpers.test.js
-  - jokes-website/src/__tests__/integration/JokeViewing.test.jsx
-  - jokes-website/src/__tests__/integration/CategoryBrowsing.test.jsx
+  - jokes-website/tests/unit/components/JokeCard.test.jsx
+  - jokes-website/tests/unit/components/JokeList.test.jsx
+  - jokes-website/tests/unit/components/CategoryCard.test.jsx
+  - jokes-website/tests/unit/hooks/useJokes.test.js
+  - jokes-website/tests/unit/utils/jokeHelpers.test.js
+  - jokes-website/tests/integration/navigation.test.jsx
+  - jokes-website/tests/integration/filtering.test.jsx
+  - jokes-website/tests/e2e/homepage.spec.js
+  - jokes-website/tests/e2e/browsing.spec.js
+  - jokes-website/tests/e2e/categories.spec.js
+  - jokes-website/tests/e2e/mobile.spec.js
   id: jokes-website-feat-testing-suite
-  name: Testing Suite (Unit & Integration Tests)
+  name: Comprehensive Testing Suite
   project: jokes-website
   type: enabler
 - dependencies:
   - jokes-website-feat-testing-suite
-  description: Set up AWS S3 bucket for static hosting, configure CloudFront CDN,
-    implement GitHub Actions workflow for automated build/test/deploy, and configure
-    cache headers
+  description: Configure Vite for code splitting, tree shaking, compression, and bundle
+    size optimization under 500KB
   estimatedComplexity: medium
   files:
-  - .github/workflows/deploy.yml
-  - .github/workflows/lighthouse.yml
-  - jokes-website/deploy/s3-sync.sh
-  - jokes-website/deploy/cloudfront-invalidate.sh
-  - jokes-website/deploy/bucket-policy.json
-  id: jokes-website-feat-deployment-pipeline
-  name: AWS S3 Deployment with CI/CD
+  - jokes-website/vite.config.js
+  - jokes-website/scripts/build-prod.sh
+  id: jokes-website-feat-build-optimization
+  name: Production Build Optimization
+  project: jokes-website
+  type: enabler
+- dependencies:
+  - jokes-website-feat-build-optimization
+  description: S3 bucket configuration, deployment scripts, GitHub Actions workflow
+    for automated deployment with CloudFront integration
+  estimatedComplexity: medium
+  files:
+  - jokes-website/scripts/deploy-s3.sh
+  - jokes-website/.github/workflows/deploy.yml
+  - jokes-website/scripts/validate-deployment.sh
+  id: jokes-website-feat-s3-deployment
+  name: S3 Static Hosting and CI/CD
   project: jokes-website
   type: enabler
 Version: v1alpha1
