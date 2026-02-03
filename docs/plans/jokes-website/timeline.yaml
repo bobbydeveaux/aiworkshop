@@ -1,0 +1,64 @@
+# Project Timeline
+
+metadata:
+  generated: 2026-02-03T08:54:09Z
+  totalSprints: 1
+  totalDuration: 14 days
+
+sprints:
+  - number: 1
+    startDate: 2026-02-03
+    endDate: 2026-02-17
+    duration: 14 days
+    features:
+      - id: jokes-website-feat-project-setup
+        name: React Project Setup with Vite
+        type: enabler
+      - id: jokes-website-feat-joke-data-structure
+        name: Joke Data Structure and JSON Files
+        type: enabler
+      - id: jokes-website-feat-data-loading-utils
+        name: Data Loading Utilities
+        type: enabler
+      - id: jokes-website-feat-custom-hooks
+        name: Custom React Hooks for Data Management
+        type: enabler
+      - id: jokes-website-feat-layout-components
+        name: Layout Components (Header, Footer, Layout)
+        type: feature
+      - id: jokes-website-feat-joke-card
+        name: Joke Card Component
+        type: feature
+      - id: jokes-website-feat-routing
+        name: Client-Side Routing Setup
+        type: enabler
+      - id: jokes-website-feat-home-page
+        name: Home/Landing Page
+        type: feature
+      - id: jokes-website-feat-joke-detail-page
+        name: Individual Joke Detail Page
+        type: feature
+      - id: jokes-website-feat-jokes-list-page
+        name: Browse Jokes List Page
+        type: feature
+      - id: jokes-website-feat-categories-page
+        name: Categories Browser Page
+        type: feature
+      - id: jokes-website-feat-404-page
+        name: 404 Not Found Page
+        type: feature
+      - id: jokes-website-feat-testing-suite
+        name: Testing Suite (Unit & Integration Tests)
+        type: enabler
+      - id: jokes-website-feat-deployment-pipeline
+        name: AWS S3 Deployment with CI/CD
+        type: enabler
+
+criticalPath:
+  - jokes-website-feat-project-setup
+  - jokes-website-feat-joke-data-structure
+  - jokes-website-feat-data-loading-utils
+  - jokes-website-feat-custom-hooks
+  - jokes-website-feat-home-page
+  - jokes-website-feat-testing-suite
+  - jokes-website-feat-deployment-pipeline
