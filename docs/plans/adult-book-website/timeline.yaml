@@ -1,0 +1,63 @@
+# Project Timeline
+
+metadata:
+  generated: 2026-02-03T13:39:15Z
+  totalSprints: 2
+  totalDuration: 29 days
+
+sprints:
+  - number: 1
+    startDate: 2026-02-03
+    endDate: 2026-02-17
+    duration: 14 days
+    features:
+      - id: adult-book-website-feat-project-setup
+        name: Project Setup and Infrastructure
+        type: enabler
+      - id: adult-book-website-feat-data-pipeline
+        name: Book Data Pipeline and Search Index
+        type: enabler
+      - id: adult-book-website-feat-state-management
+        name: Redux State Management and Storage
+        type: enabler
+      - id: adult-book-website-feat-ui-components
+        name: Core UI Component Library
+        type: enabler
+      - id: adult-book-website-feat-book-catalog
+        name: Book Catalog and Search
+        type: feature
+      - id: adult-book-website-feat-book-details
+        name: Book Detail Pages and Author Profiles
+        type: feature
+      - id: adult-book-website-feat-reading-lists
+        name: Personal Reading Lists Management
+        type: feature
+      - id: adult-book-website-feat-security
+        name: Security Implementation
+        type: enabler
+  - number: 2
+    startDate: 2026-02-18
+    endDate: 2026-03-04
+    duration: 14 days
+    features:
+      - id: adult-book-website-feat-reviews-ratings
+        name: User Reviews and Ratings System
+        type: feature
+      - id: adult-book-website-feat-recommendations
+        name: Personalized Book Recommendations
+        type: feature
+      - id: adult-book-website-feat-homepage
+        name: Homepage with Featured Content
+        type: feature
+      - id: adult-book-website-feat-monitoring
+        name: Performance Monitoring and Analytics
+        type: enabler
+
+criticalPath:
+  - adult-book-website-feat-project-setup
+  - adult-book-website-feat-state-management
+  - adult-book-website-feat-ui-components
+  - adult-book-website-feat-book-catalog
+  - adult-book-website-feat-book-details
+  - adult-book-website-feat-reviews-ratings
+  - adult-book-website-feat-homepage
