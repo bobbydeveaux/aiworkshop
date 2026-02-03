@@ -1,0 +1,61 @@
+# Sprint Slices (Horizontal Decomposition)
+
+sprints:
+  - number: 1
+    features:
+      - id: jokes-website-feat-project-setup
+        name: React Project Setup with Vite
+        type: enabler
+        files: [jokes-website/package.json jokes-website/vite.config.js jokes-website/index.html jokes-website/.gitignore]
+      - id: jokes-website-feat-joke-data-structure
+        name: Joke Data Structure and JSON Files
+        type: enabler
+        files: [jokes-website/public/data/jokes.json jokes-website/public/data/categories.json]
+      - id: jokes-website-feat-layout-components
+        name: Layout Components (Header, Footer, Layout)
+        type: feature
+        files: [jokes-website/src/components/Layout/Header.jsx jokes-website/src/components/Layout/Header.module.css jokes-website/src/components/Layout/Footer.jsx jokes-website/src/components/Layout/Footer.module.css jokes-website/src/components/Layout/Layout.jsx jokes-website/src/components/Layout/Layout.module.css]
+      - id: jokes-website-feat-data-loading-utils
+        name: Data Loading Utilities
+        type: enabler
+        files: [jokes-website/src/utils/jokeDataLoader.js jokes-website/src/utils/filterHelpers.js jokes-website/src/utils/urlHelpers.js]
+      - id: jokes-website-feat-joke-card
+        name: Joke Card Component
+        type: feature
+        files: [jokes-website/src/components/JokeCard/JokeCard.jsx jokes-website/src/components/JokeCard/JokeCard.module.css]
+      - id: jokes-website-feat-routing
+        name: Client-Side Routing Setup
+        type: enabler
+        files: [jokes-website/src/App.jsx jokes-website/src/App.module.css jokes-website/src/main.jsx jokes-website/src/components/ErrorBoundary/ErrorBoundary.jsx jokes-website/src/components/ErrorBoundary/ErrorBoundary.module.css]
+      - id: jokes-website-feat-custom-hooks
+        name: Custom React Hooks for Data Management
+        type: enabler
+        files: [jokes-website/src/hooks/useJokes.js jokes-website/src/hooks/useCategories.js jokes-website/src/hooks/usePersistedState.js]
+      - id: jokes-website-feat-404-page
+        name: 404 Not Found Page
+        type: feature
+        files: [jokes-website/src/pages/NotFound/NotFound.jsx jokes-website/src/pages/NotFound/NotFound.module.css]
+      - id: jokes-website-feat-home-page
+        name: Home/Landing Page
+        type: feature
+        files: [jokes-website/src/pages/Home/Home.jsx jokes-website/src/pages/Home/Home.module.css]
+      - id: jokes-website-feat-joke-detail-page
+        name: Individual Joke Detail Page
+        type: feature
+        files: [jokes-website/src/pages/JokeDetail/JokeDetail.jsx jokes-website/src/pages/JokeDetail/JokeDetail.module.css jokes-website/src/components/JokeNavigation/JokeNavigation.jsx jokes-website/src/components/JokeNavigation/JokeNavigation.module.css]
+      - id: jokes-website-feat-jokes-list-page
+        name: Browse Jokes List Page
+        type: feature
+        files: [jokes-website/src/pages/JokesList/JokesList.jsx jokes-website/src/pages/JokesList/JokesList.module.css jokes-website/src/components/CategoryFilter/CategoryFilter.jsx jokes-website/src/components/CategoryFilter/CategoryFilter.module.css]
+      - id: jokes-website-feat-categories-page
+        name: Categories Browser Page
+        type: feature
+        files: [jokes-website/src/pages/Categories/Categories.jsx jokes-website/src/pages/Categories/Categories.module.css]
+      - id: jokes-website-feat-testing-suite
+        name: Testing Suite (Unit & Integration Tests)
+        type: enabler
+        files: [jokes-website/jest.config.js jokes-website/src/__tests__/components/JokeCard.test.jsx jokes-website/src/__tests__/components/CategoryFilter.test.jsx jokes-website/src/__tests__/hooks/useJokes.test.js jokes-website/src/__tests__/utils/jokeDataLoader.test.js jokes-website/src/__tests__/utils/filterHelpers.test.js jokes-website/src/__tests__/integration/JokeViewing.test.jsx jokes-website/src/__tests__/integration/CategoryBrowsing.test.jsx]
+      - id: jokes-website-feat-deployment-pipeline
+        name: AWS S3 Deployment with CI/CD
+        type: enabler
+        files: [.github/workflows/deploy.yml .github/workflows/lighthouse.yml jokes-website/deploy/s3-sync.sh jokes-website/deploy/cloudfront-invalidate.sh jokes-website/deploy/bucket-policy.json]
