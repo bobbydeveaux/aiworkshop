@@ -1,0 +1,2196 @@
+GeneratedAt: "2026-02-03T11:24:21Z"
+Plan: jokes-website-plan
+Sprints:
+- Features:
+  - FeatureID: jokes-website-feat-build-optimization
+    FeatureTitle: Production Build Optimization
+    Tasks:
+    - AcceptanceCriteria:
+      - Vite config includes rollupOptions with manual chunk splitting strategy
+      - Build target set to ES2020 with minification enabled
+      - Asset inline limit configured for optimal performance
+      - Source maps configured for production debugging
+      - Build analysis plugin integrated for bundle visualization
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Update vite.config.js to enable code splitting, tree shaking, and
+        minification. Configure rollup options for optimal chunk splitting strategies.
+        Set target bundle size limits and enable build analysis. Configure asset inlining
+        thresholds and compression settings.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/vite.config.js
+      ID: task-jokes-website-feat-build-optimization-1
+      Title: Configure Vite build optimization settings
+    - AcceptanceCriteria:
+      - All route components wrapped with React.lazy()
+      - Suspense boundaries added at router level with fallback UI
+      - Route-based code splitting produces separate chunks in build output
+      - Loading states display correctly during navigation
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-build-optimization-1
+      Description: Refactor React Router configuration to use lazy loading for all
+        route components. Implement React.lazy and Suspense boundaries for each major
+        route. Create loading fallback components for better UX during chunk loading.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/App.jsx
+      - jokes-website/src/routes/index.jsx
+      ID: task-jokes-website-feat-build-optimization-2
+      Title: Implement code splitting for routes
+    - AcceptanceCriteria:
+      - Compression plugin generates .gz and .br files for all assets
+      - CSS extracted into separate optimized files
+      - JavaScript minified with terser configured for size optimization
+      - Build output shows compression ratios for all assets
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-build-optimization-1
+      Description: Add vite-plugin-compression to generate gzip and brotli compressed
+        assets. Configure image optimization for any static assets. Set up CSS code
+        splitting and minification. Configure terser options for optimal JavaScript
+        minification.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/vite.config.js
+      - jokes-website/package.json
+      ID: task-jokes-website-feat-build-optimization-3
+      Title: Configure compression and asset optimization
+    - AcceptanceCriteria:
+      - All unused dependencies removed from package.json
+      - sideEffects field configured correctly in package.json
+      - Build output shows reduced vendor chunk size
+      - No default imports from large libraries that prevent tree shaking
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-build-optimization-1
+      Description: Audit package.json for unused dependencies and remove them. Configure
+        sideEffects in package.json for optimal tree shaking. Replace large libraries
+        with lighter alternatives where possible. Ensure all imports use ES module
+        syntax for tree shaking.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/package.json
+      - jokes-website/src/utils/index.js
+      ID: task-jokes-website-feat-build-optimization-4
+      Title: Optimize bundle dependencies and tree shaking
+    - AcceptanceCriteria:
+      - build-prod.sh script executes clean production build
+      - Script validates total bundle size is under 500KB threshold
+      - Script fails with clear error if size limits exceeded
+      - Bundle analysis report generated in build output
+      - Script returns appropriate exit codes for CI/CD integration
+      AgentType: devops-engineer
+      Dependencies:
+      - task-jokes-website-feat-build-optimization-1
+      Description: Create build-prod.sh script that runs production build, analyzes
+        bundle sizes, and validates total size is under 500KB. Include checks for
+        chunk sizes and fail build if thresholds exceeded. Add bundle visualization
+        output for debugging.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/scripts/build-prod.sh
+      ID: task-jokes-website-feat-build-optimization-5
+      Title: Create production build script with validation
+    - AcceptanceCriteria:
+      - Performance budgets defined in vite.config.js
+      - Build warns when chunks approach size limits
+      - Build fails when chunks exceed hard limits
+      - Budget configuration covers vendor, main, and async chunks
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-build-optimization-1
+      - task-jokes-website-feat-build-optimization-5
+      Description: Configure Vite to enforce performance budgets for chunk sizes.
+        Add bundle size tracking to build output. Create configuration for maximum
+        chunk size limits. Set up warnings and errors for budget violations.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/vite.config.js
+      ID: task-jokes-website-feat-build-optimization-6
+      Title: Add performance budgets and monitoring
+    - AcceptanceCriteria:
+      - Tests verify total bundle size is under 500KB
+      - Tests validate all compressed assets are generated
+      - Tests confirm code splitting produces expected chunks
+      - Tests verify build script fails appropriately for oversized bundles
+      - All optimization-related tests pass in CI
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-build-optimization-2
+      - task-jokes-website-feat-build-optimization-3
+      - task-jokes-website-feat-build-optimization-5
+      Description: Create integration tests that validate production build output
+        meets size requirements. Test that code splitting works correctly and chunks
+        load properly. Verify compression artifacts are generated. Test build script
+        validation logic catches oversized bundles.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/tests/integration/build.test.js
+      - jokes-website/scripts/build-prod.sh
+      ID: task-jokes-website-feat-build-optimization-7
+      Title: Test and validate optimized build
+  - FeatureID: jokes-website-feat-s3-deployment
+    FeatureTitle: S3 Static Hosting and CI/CD
+    Tasks:
+    - AcceptanceCriteria:
+      - Script validates AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are present
+      - aws s3 sync command configured with correct headers and exclusions
+      - CloudFront invalidation triggered after successful sync
+      - Script exits with proper error codes on failure
+      - Deployment progress logged to stdout
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Implement the deploy-s3.sh script that handles syncing build artifacts
+        to S3 bucket. The script should validate AWS credentials, sync the jokes-website/dist
+        directory to S3, set proper content types and cache headers, and invalidate
+        CloudFront cache. Include error handling and logging for each deployment step.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/scripts/deploy-s3.sh
+      ID: task-jokes-website-feat-s3-deployment-1
+      Title: Create S3 deployment script
+    - AcceptanceCriteria:
+      - Script compares S3 file count with local dist/ directory
+      - Critical files (index.html, main JS/CSS bundles) verified present
+      - Content-type headers validated for HTML, JS, CSS files
+      - HTTP 200 response confirmed from CloudFront URL
+      - Validation results printed with pass/fail status
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Implement validate-deployment.sh to verify successful deployment.
+        Script should check S3 bucket contents match local build, verify critical
+        files are present and accessible, validate content-type headers, and test
+        CloudFront endpoint responds correctly. Output detailed validation results.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/scripts/validate-deployment.sh
+      ID: task-jokes-website-feat-s3-deployment-2
+      Title: Create deployment validation script
+    - AcceptanceCriteria:
+      - Workflow triggers on push to main branch and workflow_dispatch
+      - Job runs on ubuntu-latest runner
+      - actions/checkout@v4 and actions/setup-node@v4 configured
+      - AWS credential secrets referenced (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+      - Node.js version set to match project requirements
+      AgentType: devops-engineer
+      Dependencies: []
+      Description: Create the deploy.yml GitHub Actions workflow file with proper
+        structure. Define workflow triggers (push to main, manual dispatch), set up
+        job structure with appropriate runner, and configure checkout and Node.js
+        setup steps. Include environment variable definitions for AWS credentials
+        as secrets.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/.github/workflows/deploy.yml
+      ID: task-jokes-website-feat-s3-deployment-3
+      Title: Setup GitHub Actions workflow structure
+    - AcceptanceCriteria:
+      - Dependencies installed with cache enabled
+      - Build command executed from jokes-website working directory
+      - Build artifacts verified to exist in dist/ directory
+      - Build artifacts uploaded as workflow artifact
+      - Build step fails workflow on error
+      AgentType: devops-engineer
+      Dependencies:
+      - task-jokes-website-feat-s3-deployment-3
+      Description: Add workflow steps to install dependencies and build the production-ready
+        static site. Configure npm/pnpm install with caching, run the build command
+        from jokes-website directory, and verify build artifacts are created. Include
+        build artifact upload for debugging.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/.github/workflows/deploy.yml
+      ID: task-jokes-website-feat-s3-deployment-4
+      Title: Implement build step in workflow
+    - AcceptanceCriteria:
+      - AWS credentials configured using official GitHub action
+      - deploy-s3.sh executed with bash and proper working directory
+      - Script has execute permissions set
+      - Deployment step depends on successful build
+      - Deployment failures propagate to workflow status
+      AgentType: devops-engineer
+      Dependencies:
+      - task-jokes-website-feat-s3-deployment-1
+      - task-jokes-website-feat-s3-deployment-4
+      Description: Add workflow steps to configure AWS credentials and execute the
+        S3 deployment script. Use aws-actions/configure-aws-credentials action for
+        secure credential management, execute deploy-s3.sh with proper permissions,
+        and handle deployment failures appropriately.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/.github/workflows/deploy.yml
+      ID: task-jokes-website-feat-s3-deployment-5
+      Title: Implement deployment step in workflow
+    - AcceptanceCriteria:
+      - validate-deployment.sh executed after deployment completes
+      - Validation results displayed in workflow logs
+      - Step fails workflow if critical validations fail
+      - Retry logic handles CloudFront propagation delays
+      - Validation step depends on deployment step completion
+      AgentType: devops-engineer
+      Dependencies:
+      - task-jokes-website-feat-s3-deployment-2
+      - task-jokes-website-feat-s3-deployment-5
+      Description: Add workflow step to run validate-deployment.sh after successful
+        deployment. Configure the step to verify deployment health, output validation
+        results to workflow logs, and optionally fail the workflow if validation fails.
+        Include retry logic for transient failures.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/.github/workflows/deploy.yml
+      ID: task-jokes-website-feat-s3-deployment-6
+      Title: Implement validation step in workflow
+    - AcceptanceCriteria:
+      - Workflow concurrency configured to cancel in-progress runs
+      - Success/failure notifications added to workflow summary
+      - Temporary files cleaned up in finally block
+      - Deployment URL included in workflow output
+      - Workflow generates deployment summary with key metrics
+      AgentType: devops-engineer
+      Dependencies:
+      - task-jokes-website-feat-s3-deployment-6
+      Description: Implement workflow completion notifications (success/failure),
+        add cleanup steps for temporary files, and configure workflow concurrency
+        to prevent simultaneous deployments. Include workflow status badge generation
+        and deployment summary output.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/.github/workflows/deploy.yml
+      ID: task-jokes-website-feat-s3-deployment-7
+      Title: Add workflow notifications and cleanup
+  Sprint: 2
+- Features:
+  - FeatureID: jokes-website-feat-project-setup
+    FeatureTitle: Project Setup and Configuration
+    Tasks:
+    - AcceptanceCriteria:
+      - jokes-website directory created with Vite React TypeScript template
+      - Core dependencies installed (react, react-dom, vite, typescript)
+      - Project builds successfully with 'npm run build'
+      - Development server runs successfully with 'npm run dev'
+      - package.json contains correct project metadata and scripts
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the jokes-website directory and initialize a new Vite React
+        project with TypeScript support. Set up the basic project structure including
+        public, src, and configuration directories. Install core dependencies including
+        React, React DOM, and Vite. Verify the project builds and runs successfully
+        with the default Vite template.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/package.json
+      - jokes-website/vite.config.js
+      - jokes-website/tsconfig.json
+      - jokes-website/src/main.tsx
+      - jokes-website/src/App.tsx
+      - jokes-website/index.html
+      ID: task-jokes-website-feat-project-setup-1
+      Title: Initialize Vite React project structure
+    - AcceptanceCriteria:
+      - ESLint installed with React, TypeScript, and accessibility plugins
+      - Prettier installed and configured with project code style preferences
+      - .eslintrc.json created with appropriate rules for React/TypeScript
+      - .prettierrc created with formatting configuration
+      - npm run lint and npm run format scripts work correctly
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-project-setup-1
+      Description: Install and configure ESLint with React and TypeScript plugins
+        for code quality enforcement. Set up Prettier for consistent code formatting
+        across the project. Configure both tools to work together without conflicts
+        using eslint-config-prettier. Add npm scripts for linting and formatting.
+        Ensure all existing code passes linting rules.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/package.json
+      - jokes-website/.eslintrc.json
+      - jokes-website/.prettierrc
+      - jokes-website/.eslintignore
+      - jokes-website/.prettierignore
+      ID: task-jokes-website-feat-project-setup-2
+      Title: Configure ESLint and Prettier
+    - AcceptanceCriteria:
+      - Vitest and React Testing Library installed with required dependencies
+      - vitest.config.js created with jsdom environment and coverage configuration
+      - Test scripts added to package.json (test, test:ui, test:coverage)
+      - Example test file created and passes successfully
+      - Coverage reports generate correctly with 'npm run test:coverage'
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-project-setup-1
+      Description: Install and configure Vitest as the unit testing framework with
+        React Testing Library for component testing. Set up the vitest.config.js file
+        with proper configuration for React components, including jsdom environment
+        and coverage settings. Create example test file to verify setup. Configure
+        test scripts in package.json for running tests and generating coverage reports.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/package.json
+      - jokes-website/vitest.config.js
+      - jokes-website/src/App.test.tsx
+      ID: task-jokes-website-feat-project-setup-3
+      Title: Configure Vitest unit testing framework
+    - AcceptanceCriteria:
+      - Playwright installed with all browser binaries
+      - playwright.config.js created with multi-browser configuration
+      - tests/e2e directory structure created
+      - Basic smoke test created and passes in all configured browsers
+      - E2E test scripts added to package.json (test:e2e, test:e2e:ui)
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-project-setup-1
+      Description: Install and configure Playwright for end-to-end testing with support
+        for Chromium, Firefox, and WebKit browsers. Create playwright.config.js with
+        appropriate configuration including base URL, test directory, and browser
+        settings. Set up the tests directory structure and create a basic smoke test
+        to verify the setup. Add Playwright scripts to package.json.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/package.json
+      - jokes-website/playwright.config.js
+      - jokes-website/tests/e2e/smoke.spec.ts
+      ID: task-jokes-website-feat-project-setup-4
+      Title: Configure Playwright E2E testing framework
+    - AcceptanceCriteria:
+      - Vite config includes code splitting and chunk optimization rules
+      - Source map configuration appropriate for production use
+      - Build size analysis plugin integrated and functional
+      - Production build generates optimized chunks under recommended size limits
+      - Build command produces deployment-ready artifacts in dist directory
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-project-setup-1
+      - task-jokes-website-feat-project-setup-2
+      Description: Enhance vite.config.js with production build optimizations including
+        code splitting strategies, chunk size limits, and asset optimization settings.
+        Configure source maps for production debugging. Set up environment-specific
+        configurations for development and production. Add build analysis tools to
+        monitor bundle size. Verify optimized builds meet performance targets.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/vite.config.js
+      - jokes-website/package.json
+      ID: task-jokes-website-feat-project-setup-5
+      Title: Configure Vite build optimization
+    - AcceptanceCriteria:
+      - README.md created with setup instructions and script documentation
+      - All configuration files have inline comments explaining settings
+      - CONTRIBUTING.md created with development guidelines
+      - Documentation includes troubleshooting section for common issues
+      - Quick start guide allows new developer to run project within 10 minutes
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-project-setup-5
+      - task-jokes-website-feat-project-setup-3
+      - task-jokes-website-feat-project-setup-4
+      Description: Create comprehensive README.md documenting project setup, development
+        workflow, testing procedures, and build processes. Document all npm scripts
+        with usage examples. Add inline documentation to configuration files explaining
+        key settings. Create CONTRIBUTING.md with code style guidelines and development
+        best practices. Ensure documentation covers local development setup for new
+        contributors.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/README.md
+      - jokes-website/CONTRIBUTING.md
+      - jokes-website/vite.config.js
+      - jokes-website/vitest.config.js
+      - jokes-website/playwright.config.js
+      ID: task-jokes-website-feat-project-setup-6
+      Title: Create development and build documentation
+    - AcceptanceCriteria:
+      - All linting rules pass with zero errors or warnings
+      - All unit tests pass with adequate initial coverage
+      - All E2E tests pass in configured browsers
+      - Production build completes successfully and artifacts are valid
+      - Clean install from package.json works without manual interventions
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-project-setup-2
+      - task-jokes-website-feat-project-setup-3
+      - task-jokes-website-feat-project-setup-4
+      - task-jokes-website-feat-project-setup-5
+      Description: Run comprehensive validation of the entire project setup including
+        all linting, formatting, unit tests, and E2E tests. Verify all npm scripts
+        work correctly in both development and CI environments. Test the complete
+        development workflow from clean install through build. Document any remaining
+        configuration issues and create a project health checklist.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/package.json
+      ID: task-jokes-website-feat-project-setup-7
+      Title: Validate complete project setup
+  - FeatureID: jokes-website-feat-static-data
+    FeatureTitle: Static Joke Data and Categories
+    Tasks:
+    - AcceptanceCriteria:
+      - jokes.json file created with 20-50 jokes in valid JSON format
+      - Each joke contains all required fields (id, setup, punchline, category, tags,
+        rating, author, dateAdded, popularity)
+      - Jokes span at least 5 different categories
+      - JSON is properly formatted and validates against standard JSON schema
+      - All joke IDs are unique
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the jokes.json file with 20-50 jokes following a consistent
+        schema. Each joke should include id, setup, punchline, category, tags array,
+        rating (G/PG/PG-13), author, dateAdded, and popularity score. Ensure diverse
+        joke categories and include metadata fields for filtering and sorting.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/data/jokes.json
+      ID: task-jokes-website-feat-static-data-1
+      Title: Create jokes JSON data file structure
+    - AcceptanceCriteria:
+      - categories.json file created with all categories used in jokes.json
+      - Each category contains id, name, description, icon, color, and jokeCount fields
+      - All categories referenced in jokes.json exist in categories.json
+      - JSON is properly formatted and validates
+      - Category metadata is consistent and user-friendly
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-static-data-1
+      Description: Create the categories.json file defining all joke categories with
+        metadata. Each category should include id, name, description, icon/emoji,
+        color code, and joke count. Ensure categories align with those referenced
+        in jokes.json and provide meaningful descriptions for user navigation.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/data/categories.json
+      ID: task-jokes-website-feat-static-data-2
+      Title: Create categories JSON data file
+    - AcceptanceCriteria:
+      - JSON Schema file created for jokes data structure
+      - Schema validates all required fields and data types
+      - Schema includes constraints for ratings (G/PG/PG-13 enum)
+      - Schema validates category references exist
+      - Schema is valid according to JSON Schema Draft 7 or later
+      AgentType: backend-engineer
+      Dependencies:
+      - task-jokes-website-feat-static-data-2
+      Description: Create a JSON Schema file that defines the structure and validation
+        rules for jokes and categories. Include constraints for required fields, data
+        types, string patterns, enum values for ratings, and referential integrity
+        between jokes and categories. This schema will serve as documentation and
+        enable validation tooling.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/data/schema.json
+      ID: task-jokes-website-feat-static-data-3
+      Title: Create JSON schema validation file
+    - AcceptanceCriteria:
+      - TypeScript validation utility module created
+      - Utility validates jokes.json against schema
+      - Utility validates categories.json against schema
+      - Utility checks referential integrity between jokes and categories
+      - Utility provides clear error messages for validation failures
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-static-data-3
+      Description: Create a TypeScript utility module that validates jokes and categories
+        data against the JSON schema. Include functions to validate individual jokes,
+        categories, and cross-references. This utility should be usable at build time
+        and in tests to ensure data integrity.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/utils/validateData.ts
+      ID: task-jokes-website-feat-static-data-4
+      Title: Implement data validation utility
+    - AcceptanceCriteria:
+      - TypeScript types file created with Joke and Category interfaces
+      - Types match JSON schema structure exactly
+      - Types exported for use throughout application
+      - Types include proper documentation comments
+      - Types compile without errors
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-static-data-3
+      Description: Create TypeScript interface definitions for Joke, Category, and
+        related types. Define types that match the JSON schema structure to provide
+        type safety throughout the application. Include utility types for filtered/sorted
+        joke collections.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/types/jokes.ts
+      ID: task-jokes-website-feat-static-data-5
+      Title: Create TypeScript type definitions
+    - AcceptanceCriteria:
+      - Data loading module created with typed imports
+      - Helper functions implemented for filtering and sorting jokes
+      - Module exports getJokeById, getJokesByCategory, filterByRating, and searchByTags
+        functions
+      - All functions include proper TypeScript types
+      - Module is properly tree-shakeable
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-static-data-5
+      Description: Implement a TypeScript module that imports and exports the jokes
+        and categories JSON data with proper typing. Include helper functions to get
+        jokes by category, filter by rating, search by tags, and sort by popularity.
+        Ensure the module is tree-shakeable for optimal bundle size.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/data/index.ts
+      ID: task-jokes-website-feat-static-data-6
+      Title: Create data loading module
+    - AcceptanceCriteria:
+      - Unit tests created for validateData.ts with Vitest
+      - Unit tests created for data loading module
+      - Tests cover all validation scenarios including invalid data
+      - Tests verify filtering, sorting, and search functions work correctly
+      - All tests pass and achieve 100% code coverage for utilities
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-static-data-4
+      - task-jokes-website-feat-static-data-6
+      Description: Create comprehensive unit tests for the data validation utility
+        and data loading module using Vitest. Test all validation scenarios, filtering
+        functions, sorting logic, and edge cases. Ensure 100% code coverage for data
+        utility functions.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/utils/validateData.test.ts
+      - jokes-website/src/data/index.test.ts
+      ID: task-jokes-website-feat-static-data-7
+      Title: Write unit tests for data utilities
+    - AcceptanceCriteria:
+      - Vite plugin or build script added to validate data at build time
+      - Build fails with clear error messages if data is invalid
+      - npm run validate-data script added for manual validation
+      - Validation runs automatically during npm run build
+      - Documentation added to README about data validation
+      AgentType: devops-engineer
+      Dependencies:
+      - task-jokes-website-feat-static-data-4
+      Description: Integrate the data validation utility into the Vite build process
+        to ensure jokes and categories data is validated at build time. Configure
+        the build to fail if data validation fails. Add a npm script to manually validate
+        data during development.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/vite.config.ts
+      - jokes-website/package.json
+      - jokes-website/scripts/validate-data.ts
+      ID: task-jokes-website-feat-static-data-8
+      Title: Add build-time data validation
+  - FeatureID: jokes-website-feat-data-hooks
+    FeatureTitle: Custom Data Access Hooks
+    Tasks:
+    - AcceptanceCriteria:
+      - useJokes.js file created with proper React hook structure
+      - Hook imports jokes data from static data source
+      - Hook returns jokes array and loading state
+      - Hook follows React hooks naming conventions and rules
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Implement the useJokes custom hook with basic structure to import
+        and manage jokes data. Set up state management for the jokes array and establish
+        the hook's core interface. Create the initial hook file with proper imports
+        and exports.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/hooks/useJokes.js
+      ID: task-jokes-website-feat-data-hooks-1
+      Title: Create useJokes hook foundation
+    - AcceptanceCriteria:
+      - Search function filters jokes by text in setup and punchline
+      - Category filter returns jokes matching selected category
+      - Helper functions in jokeHelpers.js are pure and testable
+      - Hook returns filtered/searched results based on input parameters
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-data-hooks-1
+      Description: Add filtering and search functionality to useJokes hook. Implement
+        search by text matching joke content and punchlines. Add category-based filtering
+        support. Create helper functions in jokeHelpers.js for search and filter operations.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/hooks/useJokes.js
+      - jokes-website/src/utils/jokeHelpers.js
+      ID: task-jokes-website-feat-data-hooks-2
+      Title: Implement joke filtering and search logic
+    - AcceptanceCriteria:
+      - useCategories.js file created with proper hook structure
+      - Hook extracts unique categories from jokes data
+      - Hook returns category list with joke counts per category
+      - Categories are sorted alphabetically
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-data-hooks-1
+      Description: Implement useCategories custom hook to extract and manage unique
+        categories from jokes data. Provide category counts and category-based operations.
+        Include sorting and filtering of categories based on joke availability.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/hooks/useCategories.js
+      - jokes-website/src/utils/jokeHelpers.js
+      ID: task-jokes-website-feat-data-hooks-3
+      Title: Create useCategories hook
+    - AcceptanceCriteria:
+      - validation.js file created with validation functions
+      - Joke object validation checks required fields (id, setup, punchline, category)
+      - Search query validation handles empty strings and special characters
+      - Category validation ensures category exists in data
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-data-hooks-2
+      - task-jokes-website-feat-data-hooks-3
+      Description: Create validation utility functions for joke data structure and
+        hook parameters. Add validation for search queries, category filters, and
+        joke object integrity. Implement input sanitization for search terms.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/utils/validation.js
+      - jokes-website/src/hooks/useJokes.js
+      - jokes-website/src/hooks/useCategories.js
+      ID: task-jokes-website-feat-data-hooks-4
+      Title: Implement validation utilities
+    - AcceptanceCriteria:
+      - Hook supports multiple simultaneous category filters
+      - Pagination parameters (page, pageSize) control returned results
+      - Sorting options implemented (newest, oldest, random)
+      - useMemo used to optimize expensive filtering operations
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-data-hooks-2
+      - task-jokes-website-feat-data-hooks-4
+      Description: Extend useJokes hook with advanced filtering capabilities including
+        multiple category selection, pagination support, and sorting options (by date,
+        popularity, or random). Implement memoization for performance optimization.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/hooks/useJokes.js
+      - jokes-website/src/utils/jokeHelpers.js
+      ID: task-jokes-website-feat-data-hooks-5
+      Title: Add advanced filtering options to useJokes
+    - AcceptanceCriteria:
+      - Hooks return error state when data loading fails
+      - Invalid search/filter parameters handled without crashes
+      - Empty results return appropriate empty array with helpful state
+      - Console warnings logged for malformed joke data
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-data-hooks-4
+      - task-jokes-website-feat-data-hooks-5
+      Description: Implement comprehensive error handling for both hooks including
+        handling of missing data, malformed jokes, and invalid parameters. Add error
+        states to hook return values. Handle edge cases like empty results and invalid
+        filters gracefully.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/hooks/useJokes.js
+      - jokes-website/src/hooks/useCategories.js
+      - jokes-website/src/utils/validation.js
+      ID: task-jokes-website-feat-data-hooks-6
+      Title: Add hook error handling and edge cases
+    - AcceptanceCriteria:
+      - Test files created for useJokes.test.js and useCategories.test.js
+      - All hook functions have test coverage above 90%
+      - Tests cover success cases, error cases, and edge cases
+      - Tests use renderHook from React Testing Library
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-data-hooks-6
+      Description: Create comprehensive unit tests for useJokes and useCategories
+        hooks using React Testing Library and Vitest. Test all filtering, searching,
+        and category operations. Mock static data for consistent test results.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/hooks/__tests__/useJokes.test.js
+      - jokes-website/src/hooks/__tests__/useCategories.test.js
+      ID: task-jokes-website-feat-data-hooks-7
+      Title: Write unit tests for custom hooks
+    - AcceptanceCriteria:
+      - Test files created for jokeHelpers.test.js and validation.test.js
+      - All utility functions have 100% test coverage
+      - Tests verify correct behavior with valid and invalid inputs
+      - Performance tests added for filtering large datasets
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-data-hooks-7
+      Description: Create unit tests for jokeHelpers.js and validation.js utility
+        functions. Ensure all helper functions are thoroughly tested with various
+        input scenarios including edge cases and invalid inputs.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/utils/__tests__/jokeHelpers.test.js
+      - jokes-website/src/utils/__tests__/validation.test.js
+      ID: task-jokes-website-feat-data-hooks-8
+      Title: Write unit tests for utility functions
+  - FeatureID: jokes-website-feat-layout-components
+    FeatureTitle: Layout and Navigation Components
+    Tasks:
+    - AcceptanceCriteria:
+      - Header.jsx created with logo and navigation structure
+      - Desktop navigation displays all links inline
+      - Mobile view shows hamburger icon that toggles menu
+      - Navigation links include Home, Browse Jokes, Categories, Random
+      - Component uses functional component with useState hook
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the Header component with basic structure including logo
+        area, navigation links, and mobile hamburger menu button. Implement responsive
+        behavior that shows full navigation on desktop and hamburger menu on mobile.
+        Use React hooks for managing mobile menu open/close state.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/layout/Header.jsx
+      - jokes-website/src/components/layout/Header.module.css
+      ID: task-jokes-website-feat-layout-components-1
+      Title: Implement Header component structure
+    - AcceptanceCriteria:
+      - Footer.jsx created with copyright and links
+      - Footer uses semantic HTML footer element
+      - Responsive styling adjusts layout for mobile/desktop
+      - Footer positioned at bottom of viewport
+      - CSS Module provides scoped styling
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the Footer component with copyright information, social
+        media links placeholders, and any additional footer content. Style the footer
+        to be responsive and stick to the bottom of the page. Include proper semantic
+        HTML structure.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/components/layout/Footer.jsx
+      - jokes-website/src/components/layout/Footer.module.css
+      ID: task-jokes-website-feat-layout-components-2
+      Title: Implement Footer component
+    - AcceptanceCriteria:
+      - Layout.jsx created with Header, main, and Footer sections
+      - Uses children prop to render page content
+      - Main content area has proper spacing and constraints
+      - Layout ensures footer stays at bottom even with minimal content
+      - Responsive padding and margins applied via CSS Module
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-layout-components-1
+      - task-jokes-website-feat-layout-components-2
+      Description: Create the main Layout component that wraps all pages with Header
+        and Footer. Implement proper flexbox/grid structure to ensure footer stays
+        at bottom. Include a main content area with proper spacing and max-width constraints.
+        Integrate Header and Footer components.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/layout/Layout.jsx
+      - jokes-website/src/components/layout/Layout.module.css
+      ID: task-jokes-website-feat-layout-components-3
+      Title: Implement Layout wrapper component
+    - AcceptanceCriteria:
+      - ErrorBoundary.jsx created as class component
+      - Catches and handles React component errors
+      - Displays fallback UI with error message
+      - Provides reload/retry functionality
+      - Errors logged to console for debugging
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create an ErrorBoundary class component following React error boundary
+        patterns. Implement componentDidCatch and getDerivedStateFromError lifecycle
+        methods. Display user-friendly error message with option to reload. Log errors
+        to console for debugging.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/common/ErrorBoundary.jsx
+      ID: task-jokes-website-feat-layout-components-4
+      Title: Implement ErrorBoundary component
+    - AcceptanceCriteria:
+      - NotFound.jsx created with 404 message
+      - Includes link to navigate back to home
+      - Uses semantic HTML and accessible markup
+      - Styled with NotFound.module.css for visual appeal
+      - Component can be used in React Router route config
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create a NotFound component for handling 404 errors when users
+        navigate to invalid routes. Include helpful messaging, link back to home page,
+        and visually appealing 404 design. Style the component to match overall site
+        aesthetic.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/components/common/NotFound.jsx
+      - jokes-website/src/components/common/NotFound.module.css
+      ID: task-jokes-website-feat-layout-components-5
+      Title: Implement NotFound (404) component
+    - AcceptanceCriteria:
+      - Mobile-first CSS with breakpoints at 768px and 1024px
+      - Hamburger menu has smooth open/close animation
+      - Navigation links have hover and active states
+      - Header maintains consistent height across breakpoints
+      - Logo and navigation properly aligned and spaced
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-layout-components-1
+      Description: Implement comprehensive CSS Module styling for Header component
+        including mobile-first responsive design. Add media queries for tablet and
+        desktop breakpoints. Style the hamburger menu animation, navigation links
+        hover states, and mobile menu slide-in transition.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/layout/Header.module.css
+      ID: task-jokes-website-feat-layout-components-6
+      Title: Style Header with responsive design
+    - AcceptanceCriteria:
+      - ErrorBoundary wraps entire application at root
+      - Layout component used for all page routes
+      - Header navigation links properly integrated with router
+      - NotFound component configured as fallback route
+      - All components render without console errors
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-layout-components-3
+      - task-jokes-website-feat-layout-components-4
+      - task-jokes-website-feat-layout-components-5
+      Description: Wire up all layout components in the main App component or routing
+        structure. Wrap the application with ErrorBoundary at the root level. Ensure
+        Layout component is used consistently across all routes. Test that header
+        navigation works with routing.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/App.jsx
+      - jokes-website/src/main.jsx
+      ID: task-jokes-website-feat-layout-components-7
+      Title: Integrate Layout components in app structure
+    - AcceptanceCriteria:
+      - Unit tests written for Header, Footer, Layout, ErrorBoundary, NotFound
+      - Header mobile menu toggle behavior tested
+      - ErrorBoundary catches and displays errors correctly
+      - Layout renders children and structural elements
+      - All tests pass with minimum 80% coverage
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-layout-components-7
+      Description: Create unit tests for all layout components using Vitest and React
+        Testing Library. Test Header menu toggle, Layout rendering with children,
+        ErrorBoundary error catching, and NotFound display. Verify responsive behavior
+        and accessibility.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/layout/Header.test.jsx
+      - jokes-website/src/components/layout/Footer.test.jsx
+      - jokes-website/src/components/layout/Layout.test.jsx
+      - jokes-website/src/components/common/ErrorBoundary.test.jsx
+      - jokes-website/src/components/common/NotFound.test.jsx
+      ID: task-jokes-website-feat-layout-components-8
+      Title: Test layout components functionality
+  - FeatureID: jokes-website-feat-joke-display
+    FeatureTitle: Joke Display Components
+    Tasks:
+    - AcceptanceCriteria:
+      - JokeCard component renders all three variants (compact, detailed, featured)
+      - Component accepts and validates joke props (text, category, id, setup, punchline)
+      - CSS Module styles are responsive and work on mobile/tablet/desktop
+      - Prop types or TypeScript interfaces are defined
+      - Component handles missing optional props gracefully
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Implement the JokeCard component with compact, detailed, and featured
+        variants. The component should accept props for joke data (text, category,
+        id, setup/punchline) and display variant. Include proper prop validation and
+        responsive design. Use CSS Modules for scoped styling with mobile-first approach.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/jokes/JokeCard.jsx
+      - jokes-website/src/components/jokes/JokeCard.module.css
+      ID: task-jokes-website-feat-joke-display-1
+      Title: Create JokeCard component with multiple variants
+    - AcceptanceCriteria:
+      - JokeList component renders multiple JokeCard components
+      - Grid and list layout modes are both functional and responsive
+      - Category filtering works correctly
+      - Search functionality filters jokes by text content
+      - Empty state displays when no jokes match criteria
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-display-1
+      Description: Create the JokeList component that renders collections of JokeCard
+        components. Support both grid and list layout modes. Implement filtering by
+        category and search functionality. The component should accept an array of
+        jokes and layout preferences as props. Include empty state handling when no
+        jokes match filters.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/jokes/JokeList.jsx
+      - jokes-website/src/components/jokes/JokeList.module.css
+      ID: task-jokes-website-feat-joke-display-2
+      Title: Implement JokeList component with grid and list layouts
+    - AcceptanceCriteria:
+      - Previous and next buttons navigate correctly with proper disabled states
+      - Current page and total pages display accurately
+      - Jump-to-page input allows direct navigation to specific pages
+      - Keyboard navigation works with arrow keys
+      - ARIA labels and roles are properly implemented for accessibility
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Implement the JokeNavigation component with previous/next buttons,
+        page number display, and jump-to-page functionality. Support both numbered
+        pagination and infinite scroll modes. The component should calculate and display
+        total pages based on items per page. Include keyboard navigation support (arrow
+        keys) and accessibility attributes.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/jokes/JokeNavigation.jsx
+      - jokes-website/src/components/jokes/JokeNavigation.module.css
+      ID: task-jokes-website-feat-joke-display-3
+      Title: Build JokeNavigation component with pagination controls
+    - AcceptanceCriteria:
+      - JokeList displays only jokes for the current page
+      - JokeNavigation controls update JokeList content correctly
+      - Page state persists across layout changes (grid/list toggle)
+      - Changing filters resets to page 1 automatically
+      - Page transitions are smooth without layout shifts
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-display-2
+      - task-jokes-website-feat-joke-display-3
+      Description: Connect the JokeList and JokeNavigation components to create a
+        complete paginated joke browsing experience. Implement state management for
+        current page, items per page, and filtered results. Ensure navigation controls
+        update the displayed jokes correctly. Add loading states and smooth transitions
+        between pages.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/jokes/JokeList.jsx
+      - jokes-website/src/components/jokes/JokeNavigation.jsx
+      ID: task-jokes-website-feat-joke-display-4
+      Title: Integrate JokeList with JokeNavigation for pagination
+    - AcceptanceCriteria:
+      - All components render correctly on mobile, tablet, and desktop viewports
+      - Grid layout adjusts column count based on screen size
+      - Touch targets are minimum 44x44px on mobile
+      - Text remains readable at all breakpoints without horizontal scrolling
+      - Navigation controls are thumb-friendly on mobile devices
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-display-1
+      - task-jokes-website-feat-joke-display-2
+      - task-jokes-website-feat-joke-display-3
+      Description: Implement comprehensive responsive design across all three components.
+        Define breakpoints for mobile (320px-767px), tablet (768px-1023px), and desktop
+        (1024px+). Optimize grid layouts to show 1 column on mobile, 2 on tablet,
+        and 3-4 on desktop. Ensure touch-friendly button sizes and proper spacing
+        on mobile devices.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/jokes/JokeCard.module.css
+      - jokes-website/src/components/jokes/JokeList.module.css
+      - jokes-website/src/components/jokes/JokeNavigation.module.css
+      ID: task-jokes-website-feat-joke-display-5
+      Title: Add responsive breakpoints and mobile optimization
+    - AcceptanceCriteria:
+      - All interactive elements are keyboard accessible
+      - ARIA labels describe component purpose clearly
+      - Focus indicators are visible on all interactive elements
+      - Screen readers announce page changes and filter updates
+      - Components pass automated accessibility testing (axe-core)
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-display-4
+      Description: Add comprehensive accessibility support to all components including
+        ARIA labels, roles, and live regions. Ensure keyboard navigation works throughout
+        (tab order, focus indicators). Add screen reader announcements for dynamic
+        content changes (page updates, filter results). Test with keyboard-only navigation
+        and verify focus management.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/jokes/JokeCard.jsx
+      - jokes-website/src/components/jokes/JokeList.jsx
+      - jokes-website/src/components/jokes/JokeNavigation.jsx
+      ID: task-jokes-website-feat-joke-display-6
+      Title: Implement accessibility features and ARIA support
+    - AcceptanceCriteria:
+      - All three JokeCard variants have test coverage
+      - Tests verify correct rendering with valid props
+      - Tests handle missing or invalid props appropriately
+      - Edge cases (long text, special characters) are tested
+      - Code coverage is at least 90% for JokeCard component
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-display-1
+      Description: Create comprehensive unit tests for JokeCard using Vitest and React
+        Testing Library. Test all three variants (compact, detailed, featured), prop
+        validation, conditional rendering, and edge cases. Ensure tests cover missing
+        props, long text content, and special characters in jokes. Achieve minimum
+        90% code coverage.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/components/jokes/JokeCard.test.jsx
+      ID: task-jokes-website-feat-joke-display-7
+      Title: Write unit tests for JokeCard component
+    - AcceptanceCriteria:
+      - JokeList tests cover grid/list layouts and filtering
+      - JokeNavigation tests verify pagination controls and keyboard navigation
+      - Integration between JokeList and JokeNavigation is tested
+      - Empty states and edge cases are covered
+      - Code coverage is at least 90% for both components
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-display-4
+      Description: Create unit tests for JokeList and JokeNavigation components using
+        Vitest and React Testing Library. Test layout switching, filtering, pagination
+        logic, navigation controls, and integration between components. Mock the data
+        hooks dependency. Verify empty states, loading states, and user interactions.
+        Achieve minimum 90% code coverage.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/jokes/JokeList.test.jsx
+      - jokes-website/src/components/jokes/JokeNavigation.test.jsx
+      ID: task-jokes-website-feat-joke-display-8
+      Title: Write unit tests for JokeList and JokeNavigation
+  - FeatureID: jokes-website-feat-category-components
+    FeatureTitle: Category Display Components
+    Tasks:
+    - AcceptanceCriteria:
+      - CategoryCard.jsx file created with functional component
+      - Component accepts name, jokeCount, and description props
+      - PropTypes or TypeScript interface defined for type safety
+      - Component renders all props correctly in semantic HTML
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Implement the CategoryCard component with props interface for category
+        name, joke count, and description. Set up the component file with proper exports
+        and prop validation. Create the basic JSX structure with semantic HTML elements
+        for displaying category information.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/components/categories/CategoryCard.jsx
+      ID: task-jokes-website-feat-category-components-1
+      Title: Create CategoryCard component structure
+    - AcceptanceCriteria:
+      - CategoryCard.module.css file created with scoped styles
+      - Card has defined dimensions, padding, border, and shadow
+      - Hover state implemented with smooth transition
+      - Styles are responsive and work on mobile, tablet, and desktop
+      - Joke count badge styled distinctively
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-components-1
+      Description: Create CSS Module styles for CategoryCard with card layout, hover
+        effects, and visual hierarchy. Implement responsive typography and spacing
+        using CSS custom properties. Add smooth transitions for interactive states
+        and ensure mobile-first responsive design.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/components/categories/CategoryCard.module.css
+      ID: task-jokes-website-feat-category-components-2
+      Title: Style CategoryCard with CSS Modules
+    - AcceptanceCriteria:
+      - CategoryCard accepts onClick prop and fires on click
+      - Component is keyboard accessible with Enter and Space key support
+      - ARIA role and attributes added for accessibility
+      - Focus styles implemented and visible
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-components-2
+      Description: Integrate click handling and navigation functionality into CategoryCard.
+        Add onClick prop to enable parent components to handle category selection.
+        Implement keyboard accessibility (Enter/Space key support) and ARIA attributes
+        for screen reader support.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/components/categories/CategoryCard.jsx
+      - jokes-website/src/components/categories/CategoryCard.module.css
+      ID: task-jokes-website-feat-category-components-3
+      Title: Add CategoryCard interactivity
+    - AcceptanceCriteria:
+      - CategoryList.jsx file created with functional component
+      - Component accepts categories array prop
+      - Maps over categories and renders CategoryCard for each
+      - Empty state message displayed when no categories exist
+      - Loading state prop supported and rendered appropriately
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-components-3
+      Description: Implement the CategoryList component that accepts an array of category
+        objects and renders them using CategoryCard. Set up prop validation, handle
+        empty states, and implement proper key management for list rendering. Add
+        loading state support for async data fetching.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/categories/CategoryList.jsx
+      ID: task-jokes-website-feat-category-components-4
+      Title: Create CategoryList component structure
+    - AcceptanceCriteria:
+      - CategoryList.module.css file created with grid layout
+      - Grid displays 1 column on mobile (<640px)
+      - Grid displays 2 columns on tablet (640-1024px)
+      - Grid displays 3-4 columns on desktop (>1024px)
+      - Grid gap and alignment properties set appropriately
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-components-4
+      Description: Create CSS Module styles for CategoryList with responsive CSS Grid
+        layout. Implement mobile-first breakpoints that adjust grid columns based
+        on viewport width (1 column mobile, 2 tablet, 3-4 desktop). Add proper gap
+        spacing and ensure cards fill available space evenly.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/components/categories/CategoryList.module.css
+      ID: task-jokes-website-feat-category-components-5
+      Title: Implement responsive grid layout
+    - AcceptanceCriteria:
+      - CategoryList imports and uses useCategories hook
+      - Loading spinner or skeleton displayed during data fetch
+      - Error message displayed if data fetch fails
+      - Category data correctly passed to CategoryCard components
+      - Joke counts accurately calculated and displayed
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-components-5
+      Description: Connect CategoryList to the custom data hooks from the data-hooks
+        feature. Implement useCategories hook integration to fetch and display category
+        data with joke counts. Handle loading, error, and success states with appropriate
+        UI feedback.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/categories/CategoryList.jsx
+      ID: task-jokes-website-feat-category-components-6
+      Title: Integrate data hooks with CategoryList
+    - AcceptanceCriteria:
+      - Test file created for CategoryCard component
+      - Tests verify all props render correctly
+      - Tests verify onClick handler is called on click and keyboard events
+      - Tests verify accessibility attributes are present
+      - Tests achieve >80% code coverage for component
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-components-3
+      Description: Write comprehensive unit tests for CategoryCard using React Testing
+        Library. Test prop rendering, click handlers, keyboard interactions, and accessibility
+        features. Verify CSS module classes are applied correctly and component handles
+        edge cases.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/categories/CategoryCard.test.jsx
+      ID: task-jokes-website-feat-category-components-7
+      Title: Add CategoryCard unit tests
+    - AcceptanceCriteria:
+      - Test file created for CategoryList component
+      - Tests verify categories render as CategoryCard components
+      - Tests verify empty state displays when no categories
+      - Tests verify loading state displays appropriately
+      - Tests mock useCategories hook and verify integration
+      - Tests achieve >80% code coverage for component
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-components-6
+      Description: Write comprehensive unit tests for CategoryList using React Testing
+        Library. Test list rendering with various data scenarios, empty states, loading
+        states, and grid layout behavior. Mock the data hooks dependency and verify
+        proper integration.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/components/categories/CategoryList.test.jsx
+      ID: task-jokes-website-feat-category-components-8
+      Title: Add CategoryList unit tests
+  - FeatureID: jokes-website-feat-routing
+    FeatureTitle: Client-Side Routing Configuration
+    Tasks:
+    - AcceptanceCriteria:
+      - react-router-dom v6 added to package.json dependencies
+      - npm install completes without errors
+      - Package version is locked in package-lock.json
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Add React Router v6 as a dependency to the jokes-website project.
+        Verify the installation is successful and the package is properly added to
+        package.json. This establishes the foundation for all routing functionality
+        in the application.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/package.json
+      ID: task-jokes-website-feat-routing-1
+      Title: Install and configure React Router v6
+    - AcceptanceCriteria:
+      - router.jsx exports a configured router instance
+      - All five route paths are defined with correct patterns
+      - 404 catch-all route configured for unmatched paths
+      - Route definitions use lazy loading for components
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-routing-1
+      Description: Create the router.jsx file that defines all application routes
+        using createBrowserRouter. Define routes for home (/), browse (/browse), individual
+        jokes (/joke/:id), category pages (/category/:name), and 404 handling. Use
+        lazy loading for route components to optimize bundle size.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/router.jsx
+      ID: task-jokes-website-feat-routing-2
+      Title: Create router configuration with route definitions
+    - AcceptanceCriteria:
+      - App.jsx imports and uses RouterProvider component
+      - Router instance from router.jsx is passed to RouterProvider
+      - Application renders without console errors
+      - Root component structure is clean and minimal
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-routing-2
+      Description: Update App.jsx to use RouterProvider with the configured router
+        instance. Remove any existing routing logic or placeholder components. Ensure
+        the router is properly connected to the React component tree and renders route
+        components correctly.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/App.jsx
+      ID: task-jokes-website-feat-routing-3
+      Title: Integrate RouterProvider into App component
+    - AcceptanceCriteria:
+      - main.jsx properly initializes the React app with router
+      - Base URL configuration is environment-aware
+      - Development server starts without warnings
+      - Hot reload works correctly when editing route components
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-routing-3
+      Description: Update main.jsx to ensure proper router initialization. Configure
+        base URL if needed for deployment environments. Verify the React app mounts
+        correctly with the router and that hot module replacement works during development.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/main.jsx
+      ID: task-jokes-website-feat-routing-4
+      Title: Configure base URL and router setup in main.jsx
+    - AcceptanceCriteria:
+      - navigation.js exports at least 4 navigation helper functions
+      - Functions handle URL parameter encoding correctly
+      - Utility functions use React Router's navigation hooks appropriately
+      - Functions include JSDoc comments for documentation
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-routing-2
+      Description: Implement the navigation.js utility module with helper functions
+        for programmatic navigation, route path generation, and URL parameter handling.
+        Include functions like navigateToJoke(id), navigateToCategory(name), and getJokeUrl(id)
+        to provide a clean API for navigation throughout the app.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/utils/navigation.js
+      ID: task-jokes-website-feat-routing-5
+      Title: Create navigation utility functions
+    - AcceptanceCriteria:
+      - 404 component displays user-friendly error message
+      - Component includes working navigation link to home page
+      - 404 route triggers when accessing invalid URLs
+      - Page styling matches application theme
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-routing-2
+      Description: Create a custom 404 error page component that displays when users
+        navigate to non-existent routes. Include helpful messaging, a link back to
+        the home page, and styling consistent with the application design. The component
+        should be referenced in the router's catch-all route.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/NotFound.jsx
+      - jokes-website/src/router.jsx
+      ID: task-jokes-website-feat-routing-6
+      Title: Implement 404 error page component
+    - AcceptanceCriteria:
+      - Invalid joke IDs redirect to 404 page
+      - Invalid category names are handled gracefully
+      - Error boundary catches and displays routing errors
+      - Console warnings appear for invalid parameter access
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-routing-5
+      - task-jokes-website-feat-routing-6
+      Description: Implement validation logic for route parameters like joke IDs and
+        category names. Add error boundaries to catch routing errors gracefully. Ensure
+        invalid parameters redirect to appropriate error pages or show helpful error
+        messages rather than causing application crashes.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/router.jsx
+      - jokes-website/src/utils/navigation.js
+      ID: task-jokes-website-feat-routing-7
+      Title: Add route parameter validation and error handling
+    - AcceptanceCriteria:
+      - Tests verify all route paths render correct components
+      - Tests confirm URL parameters are parsed correctly
+      - Tests validate 404 handling for invalid routes
+      - Tests cover navigation utility function behavior
+      - All tests pass with 100% coverage for routing code
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-routing-7
+      Description: Create comprehensive tests for routing functionality using React
+        Testing Library and Vitest. Test navigation between routes, URL parameter
+        handling, 404 behavior, and navigation utility functions. Ensure all routes
+        render correctly and navigation state is managed properly.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/router.test.jsx
+      - jokes-website/src/utils/navigation.test.js
+      ID: task-jokes-website-feat-routing-8
+      Title: Write routing integration tests
+  - FeatureID: jokes-website-feat-home-page
+    FeatureTitle: Home Page with Featured Joke
+    Tasks:
+    - AcceptanceCriteria:
+      - HomePage.jsx file created with functional component structure
+      - Component exports default HomePage function
+      - State hooks declared for featured joke data
+      - Component renders without errors when imported
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the HomePage.jsx component file with basic functional component
+        structure. Set up the component to use React hooks (useState, useEffect) for
+        managing featured joke state. Import necessary dependencies and establish
+        the component export pattern. This task focuses on the skeleton structure
+        without implementing the full logic.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/HomePage.jsx
+      ID: task-jokes-website-feat-home-page-1
+      Title: Create HomePage component structure
+    - AcceptanceCriteria:
+      - Random joke selected on component mount
+      - Featured joke state updated with selected joke data
+      - Edge cases handled (empty list, missing data)
+      - New random joke selected on each page load
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-home-page-1
+      Description: Add logic to randomly select a featured joke from the jokes data
+        source. Implement useEffect hook to load and select a random joke on component
+        mount. Handle edge cases like empty joke lists and ensure the random selection
+        is truly random. Connect to the jokes data store or API endpoint as specified
+        in dependencies.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/HomePage.jsx
+      ID: task-jokes-website-feat-home-page-2
+      Title: Implement featured joke selection logic
+    - AcceptanceCriteria:
+      - Category overview section renders all available categories
+      - Each category displays with proper formatting
+      - Categories are clickable and link to category pages
+      - Section has proper className for CSS Module styling
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-home-page-1
+      Description: Implement the category overview section that displays available
+        joke categories. Create the JSX structure to render category cards or links.
+        Integrate with category components from dependencies to display category names
+        and potentially joke counts. Ensure proper styling hooks are in place for
+        CSS Modules.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/HomePage.jsx
+      ID: task-jokes-website-feat-home-page-3
+      Title: Build category overview section
+    - AcceptanceCriteria:
+      - CTA section renders with clear action button
+      - Button navigates to correct joke browsing route
+      - Section includes engaging copy text
+      - Accessible markup with proper ARIA labels
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-home-page-1
+      Description: Create the call-to-action (CTA) section that encourages users to
+        browse jokes. Implement buttons or links that navigate to the joke browsing
+        page. Add compelling copy and ensure proper routing integration with React
+        Router. Include proper aria labels and semantic HTML for accessibility.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/HomePage.jsx
+      ID: task-jokes-website-feat-home-page-4
+      Title: Add call-to-action section
+    - AcceptanceCriteria:
+      - HomePage.module.css created with all component styles
+      - Mobile-first responsive design implemented (320px to 1920px)
+      - All sections styled with consistent design tokens
+      - Hover states and interactive elements properly styled
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-home-page-1
+      - task-jokes-website-feat-home-page-2
+      - task-jokes-website-feat-home-page-3
+      - task-jokes-website-feat-home-page-4
+      Description: Implement comprehensive CSS Module styles for the HomePage component.
+        Create mobile-first responsive design that adapts to tablet and desktop viewports.
+        Style the featured joke section, category overview, and CTA section with consistent
+        spacing, typography, and colors. Ensure visual hierarchy and readability across
+        all screen sizes.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/HomePage.module.css
+      ID: task-jokes-website-feat-home-page-5
+      Title: Create responsive CSS Module styles
+    - AcceptanceCriteria:
+      - JokeDisplay component imported and used in HomePage
+      - Featured joke data correctly passed as props
+      - Loading state displayed while joke is being selected
+      - Error states handled gracefully
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-home-page-2
+      Description: Import and integrate the JokeDisplay component from dependencies
+        to render the featured joke. Pass the selected joke data as props to the JokeDisplay
+        component. Ensure proper prop types and error handling. Add loading states
+        while joke data is being fetched or selected.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/HomePage.jsx
+      ID: task-jokes-website-feat-home-page-6
+      Title: Integrate JokeDisplay component
+    - AcceptanceCriteria:
+      - Page title set to descriptive text
+      - Meta description added for SEO
+      - Proper heading hierarchy (h1, h2, etc.) implemented
+      - Open Graph tags added for social sharing
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-home-page-1
+      Description: Implement page title, meta description, and other SEO-related elements
+        for the home page. Use React Helmet or similar library if available. Ensure
+        the page has proper semantic HTML structure with heading hierarchy. Add Open
+        Graph tags for social media sharing.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/HomePage.jsx
+      ID: task-jokes-website-feat-home-page-7
+      Title: Add page metadata and SEO elements
+    - AcceptanceCriteria:
+      - Unit test file created with minimum 5 test cases
+      - All major component functionality tested
+      - Mocks properly configured for dependencies
+      - Tests pass with minimum 80% code coverage
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-home-page-2
+      - task-jokes-website-feat-home-page-3
+      - task-jokes-website-feat-home-page-4
+      - task-jokes-website-feat-home-page-6
+      Description: Create comprehensive unit tests for the HomePage component using
+        React Testing Library and Vitest. Test random joke selection logic, component
+        rendering, category overview display, and CTA functionality. Mock dependencies
+        like routing and joke data. Achieve minimum 80% code coverage.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/HomePage.test.jsx
+      ID: task-jokes-website-feat-home-page-8
+      Title: Write unit tests for HomePage component
+  - FeatureID: jokes-website-feat-browse-page
+    FeatureTitle: Browse Page with Filtering
+    Tasks:
+    - AcceptanceCriteria:
+      - BrowsePage.jsx file created with functional component structure
+      - Component imports JokeCard from jokes-website/src/components/JokeCard.jsx
+      - State variables initialized for jokes array and category filter
+      - Component renders without errors when mounted
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the base BrowsePage component with proper React hooks setup
+        (useState, useEffect). Import JokeCard component and set up the component
+        skeleton with proper props handling. Initialize state management for jokes
+        data, selected category filter, and loading states.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/BrowsePage.jsx
+      ID: task-jokes-website-feat-browse-page-1
+      Title: Create BrowsePage component structure
+    - AcceptanceCriteria:
+      - useEffect hook successfully loads jokes from static data file
+      - Jokes array populated in component state after mount
+      - Loading state displays appropriately during data fetch
+      - Error handling implemented for failed data loads
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-browse-page-1
+      Description: Add useEffect hook to load jokes data from the static JSON file.
+        Parse the jokes data and store it in component state. Handle loading and error
+        states appropriately. Ensure the data structure matches the expected format
+        with id, text, category, and setup/punchline fields.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/BrowsePage.jsx
+      ID: task-jokes-website-feat-browse-page-2
+      Title: Implement jokes data loading logic
+    - AcceptanceCriteria:
+      - Dropdown renders with 'All Categories' plus all unique categories from jokes
+        data
+      - Selecting a category updates component state correctly
+      - Dropdown is keyboard accessible and follows ARIA guidelines
+      - Filter persists visual selected state
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-browse-page-2
+      Description: Implement a category filter dropdown that extracts unique categories
+        from loaded jokes data. Add onChange handler to update selected category state.
+        Include an 'All Categories' option to show unfiltered results. Style the dropdown
+        to match the application design system.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/BrowsePage.jsx
+      - jokes-website/src/pages/BrowsePage.module.css
+      ID: task-jokes-website-feat-browse-page-3
+      Title: Create category filter dropdown
+    - AcceptanceCriteria:
+      - Filtering function correctly filters jokes by selected category
+      - Selecting 'All Categories' displays all jokes
+      - Empty state message shown when no jokes match selected category
+      - Filter updates immediately when category changes
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-browse-page-3
+      Description: Create a filtering function that takes the jokes array and selected
+        category, returning filtered results. Apply filter whenever category selection
+        changes. Handle edge cases like empty categories or no matching jokes. Implement
+        memoization with useMemo if needed for performance.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/BrowsePage.jsx
+      ID: task-jokes-website-feat-browse-page-4
+      Title: Implement jokes filtering logic
+    - AcceptanceCriteria:
+      - Grid layout displays 1 column on mobile (<768px)
+      - Grid layout displays 2 columns on tablet (768px-1024px)
+      - Grid layout displays 3-4 columns on desktop (>1024px)
+      - Grid gap provides appropriate spacing between cards
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-browse-page-4
+      Description: Implement a CSS Grid layout that displays JokeCard components in
+        a responsive grid. Use CSS Grid with auto-fit/auto-fill for automatic column
+        adjustment. Ensure the layout works on mobile (1 column), tablet (2 columns),
+        and desktop (3-4 columns) viewports. Add appropriate gap spacing between cards.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/BrowsePage.jsx
+      - jokes-website/src/pages/BrowsePage.module.css
+      ID: task-jokes-website-feat-browse-page-5
+      Title: Create responsive grid layout
+    - AcceptanceCriteria:
+      - Each joke in filtered array renders as a JokeCard component
+      - JokeCard components receive correct props for display
+      - Unique key prop assigned to each JokeCard using joke ID
+      - Grid updates correctly when filter changes
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-browse-page-5
+      Description: Map over filtered jokes array to render JokeCard components within
+        the grid container. Pass necessary props (joke data, onClick handlers) to
+        each JokeCard. Implement key prop correctly using joke IDs. Add loading skeleton
+        or placeholder cards during data fetch if applicable.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/BrowsePage.jsx
+      ID: task-jokes-website-feat-browse-page-6
+      Title: Render JokeCard components in grid
+    - AcceptanceCriteria:
+      - Page header styled with proper spacing and typography
+      - Filter dropdown styled consistently with application theme
+      - Page container has appropriate max-width and centering
+      - Styles are scoped using CSS Modules to prevent conflicts
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-browse-page-6
+      Description: Create comprehensive CSS Module styles for the BrowsePage including
+        page container, header section with filter controls, and grid container. Implement
+        proper spacing, typography, and color scheme consistent with the application
+        design. Add hover states and transitions for interactive elements.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/BrowsePage.module.css
+      ID: task-jokes-website-feat-browse-page-7
+      Title: Style BrowsePage layout and filter controls
+    - AcceptanceCriteria:
+      - BrowsePage route added to router configuration
+      - Navigating to browse URL renders BrowsePage component
+      - Browser back/forward buttons work correctly with the route
+      - Navigation links from other pages route to BrowsePage successfully
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-browse-page-7
+      Description: Import and configure the BrowsePage component in the React Router
+        setup. Add the route path for the browse page (e.g., '/browse' or '/jokes').
+        Ensure navigation from other pages (home, navigation menu) works correctly.
+        Test that the route loads the BrowsePage component as expected.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/App.jsx
+      - jokes-website/src/components/Navigation.jsx
+      ID: task-jokes-website-feat-browse-page-8
+      Title: Add BrowsePage to routing configuration
+  - FeatureID: jokes-website-feat-joke-page
+    FeatureTitle: Individual Joke Page with Navigation
+    Tasks:
+    - AcceptanceCriteria:
+      - JokePage.jsx file created with functional component structure
+      - useParams hook extracts joke ID from route
+      - Component renders placeholder content successfully
+      - State variables defined for joke data and loading status
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the base JokePage component with route parameter extraction
+        using useParams hook. Implement component shell with proper imports for React
+        Router and data access. Set up state management for current joke data and
+        loading states.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/JokePage.jsx
+      ID: task-jokes-website-feat-joke-page-1
+      Title: Create JokePage component structure
+    - AcceptanceCriteria:
+      - useEffect fetches joke data on component mount and ID change
+      - Invalid joke IDs trigger not-found state
+      - Valid joke IDs populate joke state with correct data
+      - Loading state properly managed during data fetch
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-page-1
+      Description: Add useEffect hook to fetch joke data based on URL parameter. Implement
+        logic to validate joke ID and handle cases where joke is not found. Update
+        component state with fetched joke or error state accordingly.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/JokePage.jsx
+      ID: task-jokes-website-feat-joke-page-2
+      Title: Implement joke data fetching and validation
+    - AcceptanceCriteria:
+      - Next button navigates to subsequent joke or wraps to first
+      - Previous button navigates to prior joke or wraps to last
+      - Random button navigates to different random joke
+      - Navigation uses React Router programmatic navigation
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-page-2
+      Description: Implement next, previous, and random joke navigation handlers.
+        Calculate next/previous joke IDs from current position. Handle edge cases
+        for first/last jokes in the list. Implement random joke selection excluding
+        current joke.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/JokePage.jsx
+      ID: task-jokes-website-feat-joke-page-3
+      Title: Build navigation controls logic
+    - AcceptanceCriteria:
+      - Joke content displays with proper formatting when found
+      - Navigation buttons render with correct labels and handlers
+      - 404 state shows appropriate error message for invalid IDs
+      - Error state includes navigation link to return home
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-page-3
+      Description: Build complete JSX structure for joke display including setup and
+        punchline. Add navigation button UI with appropriate labels. Implement 404
+        error state rendering for invalid joke IDs with user-friendly messaging and
+        link back to home.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/JokePage.jsx
+      ID: task-jokes-website-feat-joke-page-4
+      Title: Implement JSX rendering and 404 handling
+    - AcceptanceCriteria:
+      - JokePage.module.css file created with scoped styles
+      - Joke content styled in centered card layout
+      - Navigation buttons styled with clear visual hierarchy
+      - Responsive design works on mobile, tablet, and desktop
+      - Hover and focus states implemented for interactive elements
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-page-4
+      Description: Design and implement CSS Module styles for joke page layout. Create
+        responsive card-based design for joke content. Style navigation buttons with
+        hover states and accessibility considerations. Implement mobile-first responsive
+        breakpoints for optimal viewing on all devices.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/JokePage.module.css
+      ID: task-jokes-website-feat-joke-page-5
+      Title: Create responsive CSS styling
+    - AcceptanceCriteria:
+      - Loading state displays visual indicator centered on page
+      - 404 error page styled consistently with site design
+      - Transitions between states are smooth and non-jarring
+      - All text content properly sized and spaced
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-page-5
+      Description: Implement visual feedback for loading state with spinner or skeleton
+        screen. Style 404 error page with consistent branding. Ensure smooth transitions
+        between loading, content, and error states. Add appropriate spacing and typography
+        for all states.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/JokePage.module.css
+      ID: task-jokes-website-feat-joke-page-6
+      Title: Add loading and error states styling
+    - AcceptanceCriteria:
+      - Test file created with setup and teardown functions
+      - Tests cover successful joke display scenario
+      - Tests verify 404 handling for invalid IDs
+      - Navigation button click handlers tested with mocks
+      - All tests pass with adequate coverage metrics
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-joke-page-6
+      Description: Create comprehensive unit tests for JokePage component using Vitest
+        and React Testing Library. Test joke fetching, navigation handlers, 404 state,
+        and loading states. Mock route parameters and navigation functions. Verify
+        correct rendering for all component states.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/JokePage.test.jsx
+      ID: task-jokes-website-feat-joke-page-7
+      Title: Write component unit tests
+  - FeatureID: jokes-website-feat-category-page
+    FeatureTitle: Category-Filtered Joke Page
+    Tasks:
+    - AcceptanceCriteria:
+      - CategoryPage.jsx file created with functional component export
+      - useParams hook integrated to extract category from URL
+      - State variables defined for jokes, category info, loading, and errors
+      - Component renders without errors when mounted
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Create the CategoryPage.jsx component file with basic React functional
+        component structure. Set up component imports including React, hooks (useState,
+        useEffect), and React Router hooks (useParams). Define the component skeleton
+        with props and state management for category data, jokes list, loading state,
+        and error handling.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/CategoryPage.jsx
+      ID: task-jokes-website-feat-category-page-1
+      Title: Create CategoryPage component structure
+    - AcceptanceCriteria:
+      - Jokes data imported and filtered by category parameter
+      - Category metadata (name, description, count) extracted correctly
+      - Invalid category names handled with appropriate error state
+      - Loading state properly managed during data fetch
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-page-1
+      Description: Implement the useEffect hook to load and filter jokes data based
+        on the category parameter from the URL. Import the jokes JSON data file and
+        filter jokes matching the current category. Calculate category-specific metadata
+        including joke count and category description. Handle edge cases for invalid
+        categories and empty results.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/CategoryPage.jsx
+      ID: task-jokes-website-feat-category-page-2
+      Title: Implement category data filtering logic
+    - AcceptanceCriteria:
+      - Category name displayed as page heading
+      - Category description rendered below heading
+      - Joke count displayed (e.g., '15 jokes in this category')
+      - Navigation link back to home page implemented
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-page-2
+      Description: Create the category header section displaying the category name,
+        description, and joke count. Implement responsive typography and layout for
+        the header. Add breadcrumb or back navigation link to return to home/all jokes.
+        Style the header section with proper spacing and visual hierarchy.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/CategoryPage.jsx
+      - jokes-website/src/pages/CategoryPage.module.css
+      ID: task-jokes-website-feat-category-page-3
+      Title: Build category header section
+    - AcceptanceCriteria:
+      - Filtered jokes rendered using existing joke display component
+      - Each joke card has unique React key
+      - Loading indicator shown during data fetch
+      - Empty state displays meaningful message when no jokes exist
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-page-3
+      Description: Integrate the JokeCard or joke display component to render the
+        filtered list of jokes. Map over the filtered jokes array and render each
+        joke with proper key props. Implement loading skeleton or spinner while data
+        loads. Add empty state message when no jokes found in category.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/CategoryPage.jsx
+      ID: task-jokes-website-feat-category-page-4
+      Title: Render filtered jokes list
+    - AcceptanceCriteria:
+      - CSS Module file created with scoped styles
+      - Mobile-first responsive layout implemented
+      - Category header styled with proper typography hierarchy
+      - Jokes grid/list responsive at 3+ breakpoints
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-page-4
+      Description: Create CSS Module styles for the CategoryPage component with mobile-first
+        responsive design. Style the category header, joke list container, and layout
+        grid/flexbox. Implement spacing, typography, and color scheme consistent with
+        the site design. Add responsive breakpoints for tablet and desktop views.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/CategoryPage.module.css
+      - jokes-website/src/pages/CategoryPage.jsx
+      ID: task-jokes-website-feat-category-page-5
+      Title: Style CategoryPage with responsive CSS
+    - AcceptanceCriteria:
+      - Invalid category URLs display user-friendly error message
+      - Runtime errors caught and displayed gracefully
+      - Category name matching is case-insensitive or normalized
+      - Error UI provides link back to valid navigation
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-page-5
+      Description: Implement comprehensive error handling for invalid category URLs,
+        missing data, and runtime errors. Add error boundary or error state UI. Handle
+        URL parameter edge cases (case sensitivity, special characters, URL encoding).
+        Implement 404-style error page for non-existent categories.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/pages/CategoryPage.jsx
+      - jokes-website/src/pages/CategoryPage.module.css
+      ID: task-jokes-website-feat-category-page-6
+      Title: Add error handling and edge cases
+    - AcceptanceCriteria:
+      - CategoryPage route added to router configuration
+      - Route path uses category parameter correctly
+      - Navigation from other pages to CategoryPage works
+      - Browser back/forward buttons work correctly
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-page-6
+      Description: Update the React Router configuration to add the CategoryPage route.
+        Define the route path pattern (e.g., /category/:categoryName). Ensure the
+        route is properly nested within the app router structure. Verify navigation
+        to and from CategoryPage works correctly with browser history.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/App.jsx
+      - jokes-website/src/pages/CategoryPage.jsx
+      ID: task-jokes-website-feat-category-page-7
+      Title: Integrate CategoryPage into routing
+    - AcceptanceCriteria:
+      - Test file created with 8+ test cases
+      - Data filtering logic tested with valid and invalid categories
+      - Loading, error, and empty states tested
+      - Code coverage above 80% for CategoryPage component
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-category-page-7
+      Description: Create comprehensive unit tests for the CategoryPage component
+        using Vitest and React Testing Library. Test data filtering logic, category
+        parameter handling, loading states, error states, and empty states. Mock the
+        jokes data import and router hooks. Achieve 80%+ code coverage.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/pages/CategoryPage.test.jsx
+      ID: task-jokes-website-feat-category-page-8
+      Title: Write unit tests for CategoryPage
+  - FeatureID: jokes-website-feat-responsive-styles
+    FeatureTitle: Responsive Styling and Design System
+    Tasks:
+    - AcceptanceCriteria:
+      - variables.css file created with all color, typography, spacing, and effect
+        variables
+      - Variables follow consistent naming convention (--color-*, --font-*, --space-*,
+        etc.)
+      - All values use modern units (rem for fonts, px for spacing)
+      - Design tokens documented with inline comments
+      AgentType: frontend-engineer
+      Dependencies: []
+      Description: Establish a comprehensive design system by creating CSS custom
+        properties in variables.css. Define color palette (primary, secondary, neutrals,
+        semantic colors), typography scale (font families, sizes, weights, line heights),
+        spacing scale (4px base grid), border radii, shadows, and transitions. Organize
+        variables by category with clear naming conventions.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/styles/variables.css
+      ID: task-jokes-website-feat-responsive-styles-1
+      Title: Create CSS variables and design tokens
+    - AcceptanceCriteria:
+      - global.css implements comprehensive CSS reset
+      - Base typography and colors applied using CSS variables
+      - Focus indicators visible and accessible
+      - Smooth scrolling and basic accessibility features enabled
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-responsive-styles-1
+      Description: Create global.css with modern CSS reset (box-sizing, margins, padding
+        normalization). Set up base styles for html/body including font-family, color,
+        and background using CSS variables. Define fluid typography with clamp() for
+        responsive font scaling. Establish focus styles for accessibility and smooth
+        scrolling behavior.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/styles/global.css
+      ID: task-jokes-website-feat-responsive-styles-2
+      Title: Implement CSS reset and global styles
+    - AcceptanceCriteria:
+      - Breakpoint variables defined in variables.css
+      - Media query approach documented (mobile-first)
+      - Breakpoint values align with modern device sizes
+      - Clear documentation for developers on breakpoint usage
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-responsive-styles-1
+      - task-jokes-website-feat-responsive-styles-2
+      Description: Establish mobile-first responsive breakpoints in variables.css
+        using CSS custom properties. Define breakpoints for mobile (320px), tablet
+        (768px), desktop (1024px), and wide (1440px). Create utility classes or mixins
+        for common responsive patterns. Document breakpoint usage guidelines in comments.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/styles/variables.css
+      - jokes-website/src/styles/global.css
+      ID: task-jokes-website-feat-responsive-styles-3
+      Title: Define responsive breakpoints and media queries
+    - AcceptanceCriteria:
+      - Container class with responsive max-widths implemented
+      - Flex and grid utility classes created
+      - Spacing utilities (margin/padding) implemented with responsive variants
+      - Visibility helper classes work across all breakpoints
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-responsive-styles-3
+      Description: Implement global utility classes for common layout patterns including
+        container widths, flex/grid layouts, spacing utilities, and responsive visibility
+        helpers. Create responsive container with max-widths and padding. Add utility
+        classes for text alignment, display properties, and gap spacing that work
+        across breakpoints.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/styles/global.css
+      ID: task-jokes-website-feat-responsive-styles-4
+      Title: Create responsive layout utilities
+    - AcceptanceCriteria:
+      - App.css uses design tokens from variables.css
+      - Layout responds appropriately at all breakpoints
+      - Header and navigation adapt from mobile hamburger to desktop horizontal layout
+      - Footer maintains proper spacing and alignment across devices
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-responsive-styles-4
+      Description: Apply design system to App.css by styling the main application
+        container, header, navigation, and footer. Implement responsive layout that
+        adapts from mobile (stacked) to desktop (multi-column). Use CSS Grid or Flexbox
+        for main layout structure. Apply proper spacing, colors, and typography using
+        CSS variables.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/App.css
+      ID: task-jokes-website-feat-responsive-styles-5
+      Title: Style App component with responsive layout
+    - AcceptanceCriteria:
+      - All heading levels styled with responsive font sizes
+      - Paragraph and text styles maintain readability across devices
+      - Line-height and letter-spacing optimized for each text size
+      - Typography utilities accessible via CSS classes
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-responsive-styles-3
+      Description: Create a comprehensive typography system in global.css with responsive
+        heading styles (h1-h6), paragraph styles, and text utilities. Implement fluid
+        typography using clamp() for headings that scale between mobile and desktop.
+        Add utility classes for font weights, text transforms, and text colors using
+        design tokens.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/styles/global.css
+      ID: task-jokes-website-feat-responsive-styles-6
+      Title: Implement typography system and text styles
+    - AcceptanceCriteria:
+      - Button styles implemented with all interactive states
+      - Card component base styles responsive across breakpoints
+      - Form inputs styled with proper sizing and spacing
+      - All touch targets meet WCAG minimum size requirements
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-responsive-styles-4
+      - task-jokes-website-feat-responsive-styles-6
+      Description: Document and implement reusable responsive patterns for common
+        components (cards, buttons, forms) in global.css. Create base button styles
+        with hover/focus states, card component styles with responsive padding, and
+        form input styles. Ensure all interactive elements have proper touch targets
+        (44px minimum) for mobile.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/src/styles/global.css
+      ID: task-jokes-website-feat-responsive-styles-7
+      Title: Create component-level responsive patterns
+    - AcceptanceCriteria:
+      - Style imports configured in correct cascade order
+      - CSS variables accessible in all components
+      - No style conflicts or override issues
+      - Responsive behavior verified in browser dev tools across all breakpoints
+      AgentType: frontend-engineer
+      Dependencies:
+      - task-jokes-website-feat-responsive-styles-5
+      - task-jokes-website-feat-responsive-styles-7
+      Description: Import style files in correct order in main application entry point
+        (main.jsx or App.jsx). Ensure variables.css loads first, followed by global.css,
+        then App.css. Verify styles cascade correctly and CSS custom properties are
+        available throughout the application. Test responsive behavior across all
+        defined breakpoints.
+      EstimatedEffort: S
+      Files:
+      - jokes-website/src/App.css
+      - jokes-website/src/styles/global.css
+      ID: task-jokes-website-feat-responsive-styles-8
+      Title: Integrate styles into application entry point
+  - FeatureID: jokes-website-feat-testing-suite
+    FeatureTitle: Comprehensive Testing Suite
+    Tasks:
+    - AcceptanceCriteria:
+      - Vitest configured with React Testing Library integration
+      - Playwright configured with browser automation setup
+      - Test scripts added to package.json (test, test:e2e, test:coverage)
+      - Test utilities and helpers created for common testing patterns
+      - Coverage reporting configured for unit and integration tests
+      AgentType: qa-engineer
+      Dependencies: []
+      Description: Initialize Vitest for unit/integration tests and Playwright for
+        E2E tests. Create test configuration files, setup scripts, and establish testing
+        utilities. Configure test runners with appropriate reporters and coverage
+        tools. Set up test directory structure under jokes-website/tests/.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/vitest.config.js
+      - jokes-website/playwright.config.js
+      - jokes-website/tests/setup.js
+      - jokes-website/tests/utils/testHelpers.js
+      - jokes-website/package.json
+      ID: task-jokes-website-feat-testing-suite-1
+      Title: Setup testing infrastructure and configuration
+    - AcceptanceCriteria:
+      - JokeCard tests cover rendering, interactions, and edge cases with 80%+ coverage
+      - JokeList tests verify list rendering, empty states, and filtering logic
+      - CategoryCard tests validate category display and navigation behavior
+      - All tests pass with clear assertions and descriptive test names
+      - Snapshot tests created for component visual regression
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-testing-suite-1
+      Description: Create comprehensive unit tests for JokeCard, JokeList, and CategoryCard
+        components. Test component rendering, prop handling, user interactions, and
+        edge cases. Ensure components render correctly with different data inputs
+        and handle missing or malformed data gracefully.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/tests/unit/components/JokeCard.test.jsx
+      - jokes-website/tests/unit/components/JokeList.test.jsx
+      - jokes-website/tests/unit/components/CategoryCard.test.jsx
+      ID: task-jokes-website-feat-testing-suite-2
+      Title: Implement unit tests for components
+    - AcceptanceCriteria:
+      - useJokes hook tests cover all state transitions and data operations
+      - jokeHelpers utility tests verify filtering, sorting, and formatting functions
+      - Error handling and edge cases tested thoroughly
+      - Mock data and fixtures created for consistent test scenarios
+      - All tests achieve 90%+ code coverage
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-testing-suite-1
+      Description: Create unit tests for useJokes custom hook and jokeHelpers utility
+        functions. Test hook state management, data fetching simulation, filtering
+        logic, and error handling. Verify utility functions correctly process joke
+        data, format output, and handle edge cases.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/tests/unit/hooks/useJokes.test.js
+      - jokes-website/tests/unit/utils/jokeHelpers.test.js
+      ID: task-jokes-website-feat-testing-suite-3
+      Title: Implement unit tests for hooks and utilities
+    - AcceptanceCriteria:
+      - Tests verify navigation between home, browse, joke detail, and category pages
+      - URL parameters correctly passed and parsed in route transitions
+      - Browser back/forward navigation tested and working
+      - 404 page renders for invalid routes
+      - Navigation state and context preserved across route changes
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-testing-suite-1
+      Description: Create integration tests that verify React Router navigation flows
+        across the application. Test route transitions, URL parameter handling, browser
+        history integration, and 404 error pages. Ensure navigation state persists
+        correctly and deep linking works as expected.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/tests/integration/navigation.test.jsx
+      ID: task-jokes-website-feat-testing-suite-4
+      Title: Implement integration tests for navigation
+    - AcceptanceCriteria:
+      - Category filter tests verify correct joke subset displayed
+      - Search functionality tested with various query inputs
+      - Combined filters (category + search) work correctly together
+      - Filter state persists in URL query parameters
+      - Empty states render when no jokes match filters
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-testing-suite-1
+      Description: Create integration tests for joke filtering and search functionality.
+        Test category filtering, search input handling, combined filters, and result
+        updates. Verify that filter state synchronizes correctly with URL query parameters
+        and UI updates reflect filter changes.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/tests/integration/filtering.test.jsx
+      ID: task-jokes-website-feat-testing-suite-5
+      Title: Implement integration tests for filtering
+    - AcceptanceCriteria:
+      - Homepage E2E test verifies initial load and featured jokes display
+      - Browsing test validates joke list rendering and interaction
+      - Category navigation tested end-to-end from homepage to filtered results
+      - Tests run against production-like build with realistic data
+      - All critical user paths covered with assertions on DOM state
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-testing-suite-1
+      Description: Create Playwright E2E tests for homepage and browse page user journeys.
+        Test initial page load, joke display, category navigation, and pagination.
+        Simulate real user interactions and verify complete workflows from homepage
+        through browsing jokes.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/tests/e2e/homepage.spec.js
+      - jokes-website/tests/e2e/browsing.spec.js
+      ID: task-jokes-website-feat-testing-suite-6
+      Title: Implement E2E tests for homepage and browsing
+    - AcceptanceCriteria:
+      - Category page E2E tests verify filtering and joke display
+      - Mobile tests validate responsive design at various viewport sizes
+      - Touch interaction tests confirm mobile gesture support
+      - Mobile navigation menu tested for open/close behavior
+      - Cross-browser testing configured for Chrome, Firefox, and Safari
+      AgentType: qa-engineer
+      Dependencies:
+      - task-jokes-website-feat-testing-suite-1
+      Description: Create Playwright E2E tests for category page functionality and
+        mobile responsive behavior. Test category filtering, joke display within categories,
+        and mobile viewport interactions. Verify touch gestures, responsive layout
+        changes, and mobile navigation patterns.
+      EstimatedEffort: M
+      Files:
+      - jokes-website/tests/e2e/categories.spec.js
+      - jokes-website/tests/e2e/mobile.spec.js
+      ID: task-jokes-website-feat-testing-suite-7
+      Title: Implement E2E tests for categories and mobile
+    - AcceptanceCriteria:
+      - GitHub Actions workflow runs unit, integration, and E2E tests automatically
+      - Tests execute in parallel to minimize CI/CD pipeline duration
+      - Test results and coverage reports published as workflow artifacts
+      - PR status checks block merging on test failures
+      - Slack or GitHub notifications configured for test failure alerts
+      AgentType: devops-engineer
+      Dependencies:
+      - task-jokes-website-feat-testing-suite-2
+      - task-jokes-website-feat-testing-suite-3
+      - task-jokes-website-feat-testing-suite-4
+      - task-jokes-website-feat-testing-suite-5
+      - task-jokes-website-feat-testing-suite-6
+      - task-jokes-website-feat-testing-suite-7
+      Description: Integrate all test suites into GitHub Actions workflow for automated
+        testing on pull requests and commits. Configure parallel test execution, test
+        result reporting, and failure notifications. Set up test artifacts and coverage
+        report uploads for tracking test quality over time.
+      EstimatedEffort: M
+      Files:
+      - .github/workflows/jokes-website-tests.yml
+      ID: task-jokes-website-feat-testing-suite-8
+      Title: Configure CI/CD test automation
+  Sprint: 1

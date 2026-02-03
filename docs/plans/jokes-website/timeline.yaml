@@ -1,0 +1,73 @@
+# Project Timeline
+
+metadata:
+  generated: 2026-02-03T11:16:07Z
+  totalSprints: 2
+  totalDuration: 22 days
+
+sprints:
+  - number: 1
+    startDate: 2026-02-03
+    endDate: 2026-02-17
+    duration: 14 days
+    features:
+      - id: jokes-website-feat-project-setup
+        name: Project Setup and Configuration
+        type: enabler
+      - id: jokes-website-feat-static-data
+        name: Static Joke Data and Categories
+        type: enabler
+      - id: jokes-website-feat-data-hooks
+        name: Custom Data Access Hooks
+        type: enabler
+      - id: jokes-website-feat-layout-components
+        name: Layout and Navigation Components
+        type: feature
+      - id: jokes-website-feat-joke-display
+        name: Joke Display Components
+        type: feature
+      - id: jokes-website-feat-category-components
+        name: Category Display Components
+        type: feature
+      - id: jokes-website-feat-routing
+        name: Client-Side Routing Configuration
+        type: enabler
+      - id: jokes-website-feat-home-page
+        name: Home Page with Featured Joke
+        type: feature
+      - id: jokes-website-feat-browse-page
+        name: Browse Page with Filtering
+        type: feature
+      - id: jokes-website-feat-joke-page
+        name: Individual Joke Page with Navigation
+        type: feature
+      - id: jokes-website-feat-category-page
+        name: Category-Filtered Joke Page
+        type: feature
+      - id: jokes-website-feat-responsive-styles
+        name: Responsive Styling and Design System
+        type: enabler
+      - id: jokes-website-feat-testing-suite
+        name: Comprehensive Testing Suite
+        type: enabler
+  - number: 2
+    startDate: 2026-02-18
+    endDate: 2026-02-25
+    duration: 7 days
+    features:
+      - id: jokes-website-feat-build-optimization
+        name: Production Build Optimization
+        type: enabler
+      - id: jokes-website-feat-s3-deployment
+        name: S3 Static Hosting and CI/CD
+        type: enabler
+
+criticalPath:
+  - jokes-website-feat-project-setup
+  - jokes-website-feat-static-data
+  - jokes-website-feat-data-hooks
+  - jokes-website-feat-joke-display
+  - jokes-website-feat-home-page
+  - jokes-website-feat-testing-suite
+  - jokes-website-feat-build-optimization
+  - jokes-website-feat-s3-deployment
