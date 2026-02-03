@@ -1,0 +1,55 @@
+# Sprint Slices (Horizontal Decomposition)
+
+sprints:
+  - number: 1
+    features:
+      - id: adult-book-website-feat-project-setup
+        name: Project Setup and Infrastructure
+        type: enabler
+        files: [package.json vite.config.ts tsconfig.json .github/workflows/deploy.yml lighthouse-ci.config.js]
+      - id: adult-book-website-feat-data-pipeline
+        name: Book Data Pipeline and Search Index
+        type: enabler
+        files: [scripts/fetch-books.js src/services/DataLoader.ts public/data/books.json public/data/authors.json public/data/search-index.json]
+      - id: adult-book-website-feat-state-management
+        name: Redux State Management and Storage
+        type: enabler
+        files: [src/store/index.ts src/store/slices/bookSlice.ts src/store/slices/reviewSlice.ts src/store/slices/readingListSlice.ts src/store/slices/userSlice.ts src/services/StorageService.ts]
+      - id: adult-book-website-feat-security
+        name: Security Implementation
+        type: enabler
+        files: [public/_headers src/utils/sanitization.ts cloudfront-config.json s3-bucket-policy.json]
+      - id: adult-book-website-feat-ui-components
+        name: Core UI Component Library
+        type: enabler
+        files: [src/components/book/BookCard.tsx src/components/book/BookCover.tsx src/components/common/SearchBar.tsx src/components/common/FilterPanel.tsx src/components/common/RatingStars.tsx src/components/review/ReviewCard.tsx]
+      - id: adult-book-website-feat-book-catalog
+        name: Book Catalog and Search
+        type: feature
+        files: [src/services/BookService.ts src/services/SearchService.ts src/pages/CatalogPage.tsx src/hooks/useSearch.ts src/hooks/useIntersectionObserver.ts]
+      - id: adult-book-website-feat-book-details
+        name: Book Detail Pages and Author Profiles
+        type: feature
+        files: [src/pages/BookDetailPage.tsx src/pages/AuthorProfilePage.tsx src/services/AuthorService.ts src/components/book/BookDetail.tsx src/components/author/AuthorProfile.tsx]
+      - id: adult-book-website-feat-reading-lists
+        name: Personal Reading Lists Management
+        type: feature
+        files: [src/services/ReadingListService.ts src/pages/ReadingListsPage.tsx src/components/list/ReadingListManager.tsx src/components/list/ReadingListCard.tsx src/utils/exportData.ts]
+  - number: 2
+    features:
+      - id: adult-book-website-feat-monitoring
+        name: Performance Monitoring and Analytics
+        type: enabler
+        files: [src/utils/analytics.ts src/utils/performance.ts src/utils/errorTracking.ts lighthouse-ci.config.js]
+      - id: adult-book-website-feat-reviews-ratings
+        name: User Reviews and Ratings System
+        type: feature
+        files: [src/services/ReviewService.ts src/components/review/ReviewForm.tsx src/components/review/ReviewList.tsx src/utils/sanitization.ts]
+      - id: adult-book-website-feat-recommendations
+        name: Personalized Book Recommendations
+        type: feature
+        files: [src/services/RecommendationService.ts public/recommendation-worker.js src/pages/RecommendationsPage.tsx src/algorithms/contentBasedFiltering.ts src/algorithms/collaborativeFiltering.ts]
+      - id: adult-book-website-feat-homepage
+        name: Homepage with Featured Content
+        type: feature
+        files: [src/pages/HomePage.tsx src/components/home/FeaturedBooks.tsx src/components/home/TrendingBooks.tsx src/services/FeaturedContentService.ts]

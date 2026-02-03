@@ -1,6 +1,7 @@
 Epic: adult-book-website
 Features:
-- dependencies: []
+- Sprint: 1
+  dependencies: []
   description: Initialize React 18 + TypeScript 5 project with Vite 5, configure AWS
     S3 bucket for static hosting, set up CloudFront CDN, configure GitHub Actions
     CI/CD pipeline, and establish build tooling with ESLint, Prettier, and testing
@@ -16,7 +17,8 @@ Features:
   name: Project Setup and Infrastructure
   project: adult-book-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - adult-book-website-feat-project-setup
   description: Build-time data fetching from Google Books API and Open Library API,
     transform and normalize book metadata, generate Lunr.js search index, create static
@@ -33,7 +35,8 @@ Features:
   name: Book Data Pipeline and Search Index
   project: adult-book-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - adult-book-website-feat-project-setup
   description: Implement Redux Toolkit store with slices for books, reviews, reading
     lists, and user preferences. Configure local storage persistence middleware with
@@ -51,7 +54,8 @@ Features:
   name: Redux State Management and Storage
   project: adult-book-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - adult-book-website-feat-project-setup
   - adult-book-website-feat-state-management
   description: 'Implement reusable React components with Material-UI: BookCard, BookCover
@@ -69,7 +73,8 @@ Features:
   name: Core UI Component Library
   project: adult-book-website
   type: enabler
-- dependencies:
+- Sprint: 1
+  dependencies:
   - adult-book-website-feat-data-pipeline
   - adult-book-website-feat-state-management
   - adult-book-website-feat-ui-components
@@ -88,7 +93,8 @@ Features:
   name: Book Catalog and Search
   project: adult-book-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - adult-book-website-feat-book-catalog
   description: Create book detail pages displaying cover, metadata, synopsis, average
     rating, and user reviews. Implement author profile pages with biography, photo,
@@ -105,7 +111,8 @@ Features:
   name: Book Detail Pages and Author Profiles
   project: adult-book-website
   type: feature
-- dependencies:
+- Sprint: 2
+  dependencies:
   - adult-book-website-feat-book-details
   - adult-book-website-feat-state-management
   description: Implement review submission with star rating (1-5) and text validation
@@ -122,7 +129,8 @@ Features:
   name: User Reviews and Ratings System
   project: adult-book-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - adult-book-website-feat-book-catalog
   - adult-book-website-feat-state-management
   description: Enable users to create, name, and manage multiple reading lists (To
@@ -140,7 +148,8 @@ Features:
   name: Personal Reading Lists Management
   project: adult-book-website
   type: feature
-- dependencies:
+- Sprint: 2
+  dependencies:
   - adult-book-website-feat-reviews-ratings
   - adult-book-website-feat-reading-lists
   description: Implement hybrid recommendation engine with content-based filtering
@@ -159,7 +168,8 @@ Features:
   name: Personalized Book Recommendations
   project: adult-book-website
   type: feature
-- dependencies:
+- Sprint: 2
+  dependencies:
   - adult-book-website-feat-book-catalog
   - adult-book-website-feat-reviews-ratings
   description: Design and implement homepage displaying trending books, top-rated
@@ -176,7 +186,8 @@ Features:
   name: Homepage with Featured Content
   project: adult-book-website
   type: feature
-- dependencies:
+- Sprint: 1
+  dependencies:
   - adult-book-website-feat-project-setup
   description: Configure Content Security Policy headers to prevent XSS. Implement
     HTTPS-only resource loading. Set up CORS policies on S3 bucket. Configure CloudFront
@@ -192,7 +203,8 @@ Features:
   name: Security Implementation
   project: adult-book-website
   type: enabler
-- dependencies:
+- Sprint: 2
+  dependencies:
   - adult-book-website-feat-project-setup
   description: Integrate Google Analytics 4 for user behavior tracking and custom
     events (search, reviews, reading lists). Implement Sentry for client-side error
